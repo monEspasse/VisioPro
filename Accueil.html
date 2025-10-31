@@ -6522,7 +6522,7 @@ body.modal-open {
     </style>
 </head>
 <body>
-<div class="dashboard">
+ <div class="dashboard">
     <!-- Barre latérale unique début -->
     <aside class="sidebar">
         <div class="logo-container">
@@ -7859,8 +7859,7 @@ body.modal-open {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-   
-  <script>
+    <script>
 
 async function openDevis() {
     const modal = getElementSafe('proformaModal');
@@ -8245,7 +8244,7 @@ async function loadFournisseurs(selectId) {
         supplierSelect.disabled = true;
         supplierSelect.innerHTML = '<option value="">-- Chargement en cours --</option>';
         
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=catalogue';
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=catalogue';
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Erreur de chargement des fournisseurs');
@@ -8552,7 +8551,7 @@ async function submitProductForm() {
     submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=addProduct";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addProduct";
 
         await fetch(apiUrl, {
             method: 'POST',
@@ -8676,7 +8675,7 @@ async function submitAddUserForm() {
     submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=adduser";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=adduser";
 
         await fetch(apiUrl, {
             method: 'POST',
@@ -8803,7 +8802,7 @@ const modalHTML = `
         messageDiv.style.display = 'none';
 
         try {
-            const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=entree`;
+            const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=entree`;
             const response = await fetch(apiUrl);
             if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
 
@@ -9118,7 +9117,7 @@ async function loadCaisse(action) {
     }
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=${action}`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=${action}`;
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
 
@@ -9395,7 +9394,7 @@ async function loadDepensesData() {
   messageDiv.classList.remove('error', 'success');
 
   try {
-    const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=depense`;
+    const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=depense`;
     const response = await fetch(apiUrl);
     if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
 
@@ -9764,7 +9763,7 @@ async function loadVerreData() {
     messageDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=importverre`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=importverre`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
@@ -10032,7 +10031,7 @@ async function loadMontureData() {
     messageDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=importmonture`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=importmonture`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
@@ -10300,7 +10299,7 @@ async function loadFactureData() {
     messageDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=importassurance`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=importassurance`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
@@ -10697,7 +10696,7 @@ function submitFactureUpdate(index) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
     submitBtn.disabled = true;
 
-    const url = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=updateFacture`;
+    const url = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=updateFacture`;
     
     fetch(url, {
         method: 'POST',
@@ -10740,7 +10739,7 @@ async function cancelFacture(index) {
     btn.disabled = true;
 
     try {
-        await fetch(`https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=deleteFacture`, {
+        await fetch(`https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=deleteFacture`, {
             method: 'POST',
             mode: 'no-cors',
             headers: {
@@ -11000,7 +10999,7 @@ async function submitNewFacture() {
     submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=addfacture";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addfacture";
 
         await fetch(apiUrl, {
             method: 'POST',
@@ -11117,7 +11116,7 @@ async function genererFacture() {
     console.log("Données à envoyer:", data);
     
     // URL du script Google Apps AVEC l'action dans l'URL
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=adddepotData';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=adddepotData';
     
     // Afficher un message de confirmation
     if (!confirm(`Confirmez-vous l'ajout de ce dépôt ?\n\nDu: ${dateDebut}\nAu: ${dateFin}\nAssurance: ${assurance}\nCompagnie: ${compagnie}`)) {
@@ -11294,7 +11293,7 @@ async function loadFacturationData() {
     messageDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=pointfacturation`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=pointfacturation`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
@@ -11789,7 +11788,7 @@ async function loadProduitData() {
     messageDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=importproduits`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=importproduits`;
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
 
@@ -11952,7 +11951,7 @@ let currentSortDirection = 'asc';
 async function loadClientsFromScript() {
     showLoading();
 
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=liste";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=liste";
 
     try {
         const response = await fetch(apiUrl);
@@ -12318,7 +12317,7 @@ function updateTableAndPagination() {
 
 async function fetchDataFromGoogleSheet() {
     try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=getconfigdata');
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=getconfigdata');
 
         if (!response.ok) {
             throw new Error(`Erreur HTTP! statut: ${response.status}`);
@@ -12493,7 +12492,7 @@ if (isNaN(depenseData.montant)) {
     submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=addDepense";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addDepense";
 
             await fetch(apiUrl, {
               method: 'POST',
@@ -12533,7 +12532,7 @@ if (isNaN(depenseData.montant)) {
 
 
 // URL pour soumettre les données
-const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=addCommandeClient";
+const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addCommandeClient";
 
 let currentStep = 1;
 const totalSteps = 4;
@@ -13532,7 +13531,7 @@ function openNewSale() {
 
  
  // URL de votre Web App Google Apps Script
-const DATA_SOURCE_URL = 'https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=catalogue';   // Initialisation de la modal
+const DATA_SOURCE_URL = 'https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=catalogue';   // Initialisation de la modal
 function initModal() {
     // Configurer les événements
     setupEventListeners();
@@ -14710,7 +14709,7 @@ async function loadGrandCaisseData() {
     msgDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=grandcaisse`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=grandcaisse`;
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
 
@@ -15000,7 +14999,7 @@ async function submitGrandCaisse() {
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Enregistrement...';
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=addGrandCaisse";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addGrandCaisse";
 
         await fetch(apiUrl, {
             method: 'POST',
@@ -15070,7 +15069,7 @@ let banqueCategories = [];
 // Charger les catégories de configuration
 async function loadConfigData() {
     try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=getconfigdata');
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=getconfigdata');
         const json = await response.json();
 
         if (json.success && json.data?.categories) {
@@ -15195,7 +15194,7 @@ async function loadBanqueData() {
     messageDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=banque`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=banque`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
@@ -15563,7 +15562,7 @@ function submitBanqueUpdate(index) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
     submitBtn.disabled = true;
 
-    const url = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=updatebanque`;
+    const url = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=updatebanque`;
     
     fetch(url, {
         method: 'POST',
@@ -16773,7 +16772,7 @@ async function loadProformaData() {
     messageDiv.style.display = 'none';
 
     try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=historiquedesdevis`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=historiquedesdevis`;
         
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
