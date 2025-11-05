@@ -6519,326 +6519,6 @@ body.modal-open {
     border-style: solid;
     border-color: #667eea transparent transparent transparent;
 }
-
-
-
-.confirmation-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
-    backdrop-filter: blur(10px) saturate(180%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    animation: hologramIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.confirmation-box {
-    background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.1) 0%, 
-        rgba(255, 255, 255, 0.05) 100%);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    padding: 32px;
-    max-width: 420px;
-    width: 85%;
-    box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
-    animation: floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Effet de bordure lumineuse */
-.confirmation-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 24px;
-    padding: 2px;
-    background: linear-gradient(135deg, 
-        rgba(255,255,255,0.4) 0%, 
-        transparent 30%,
-        transparent 70%, 
-        rgba(255,255,255,0.4) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: borderGlow 3s ease-in-out infinite;
-}
-
-.confirmation-box h3 {
-    margin: 0 0 20px 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-align: center;
-    position: relative;
-}
-
-.confirmation-box p {
-    margin: 0 0 32px 0;
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    font-weight: 300;
-}
-
-.confirmation-buttons {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    position: relative;
-}
-
-.confirmation-buttons .btn {
-    padding: 14px 28px;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    min-width: 120px;
-    position: relative;
-    overflow: hidden;
-    background: transparent;
-    color: white;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-.btn-confirm {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.btn-confirm::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s;
-}
-
-.btn-confirm:hover::before {
-    left: 100%;
-}
-
-.btn-confirm:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 
-        0 12px 25px rgba(255, 107, 107, 0.4),
-        0 0 20px rgba(255, 107, 107, 0.3);
-}
-
-.btn-cancel {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.btn-cancel::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transition: all 0.4s ease;
-    transform: translate(-50%, -50%);
-}
-
-.btn-cancel:hover::after {
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-}
-
-.btn-cancel:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 
-        0 12px 25px rgba(79, 70, 229, 0.4),
-        0 0 20px rgba(79, 70, 229, 0.3);
-}
-
-/* Loader élégant pour les actions en cours */
-.loading-spinner {
-    display: none;
-    width: 40px;
-    height: 40px;
-    margin: 20px auto;
-    position: relative;
-}
-
-.loading-spinner::before,
-.loading-spinner::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    animation: spin 1.5s linear infinite;
-}
-
-.loading-spinner::before {
-    width: 100%;
-    height: 100%;
-    border: 3px solid transparent;
-    border-top: 3px solid #ff6b6b;
-    border-right: 3px solid #4f46e5;
-}
-
-.loading-spinner::after {
-    width: 60%;
-    height: 60%;
-    top: 20%;
-    left: 20%;
-    border: 3px solid transparent;
-    border-bottom: 3px solid #7c3aed;
-    border-left: 3px solid #ee5a52;
-    animation-direction: reverse;
-}
-
-/* État de chargement */
-.confirmation-box.loading .confirmation-buttons {
-    opacity: 0.3;
-    pointer-events: none;
-}
-
-.confirmation-box.loading .loading-spinner {
-    display: block;
-}
-
-/* Animations avancées */
-@keyframes hologramIn {
-    0% {
-        opacity: 0;
-        backdrop-filter: blur(0px) saturate(100%);
-        transform: scale(1.1);
-    }
-    50% {
-        backdrop-filter: blur(15px) saturate(200%);
-    }
-    100% {
-        opacity: 1;
-        backdrop-filter: blur(10px) saturate(180%);
-        transform: scale(1);
-    }
-}
-
-@keyframes floatIn {
-    0% {
-        opacity: 0;
-        transform: translateY(50px) rotateX(-45deg) scale(0.8);
-    }
-    60% {
-        transform: translateY(-10px) rotateX(0deg) scale(1.02);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) rotateX(0deg) scale(1);
-    }
-}
-
-@keyframes borderGlow {
-    0%, 100% {
-        opacity: 0.5;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.02);
-    }
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Particules flottantes */
-.confirmation-box::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-    animation: floatParticles 20s linear infinite;
-    pointer-events: none;
-    z-index: -1;
-}
-
-@keyframes floatParticles {
-    0% {
-        transform: translateY(0) translateX(0);
-    }
-    100% {
-        transform: translateY(-20px) translateX(20px);
-    }
-}
-
-/* Version responsive améliorée */
-@media (max-width: 480px) {
-    .confirmation-box {
-        padding: 24px 20px;
-        margin: 20px;
-        border-radius: 20px;
-        width: 90%;
-    }
-    
-    .confirmation-buttons {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .confirmation-buttons .btn {
-        width: 100%;
-        min-width: auto;
-        padding: 16px 24px;
-    }
-    
-    .btn-confirm:hover,
-    .btn-cancel:hover {
-        transform: none;
-    }
-}
-
-/* Support réduit de mouvement */
-@media (prefers-reduced-motion: reduce) {
-    .confirmation-overlay,
-    .confirmation-box,
-    .btn,
-    .loading-spinner::before,
-    .loading-spinner::after,
-    .confirmation-box::before,
-    .confirmation-box::after {
-        animation: none;
-        transition: none;
-    }
-}
     </style>
 </head>
 <body>
@@ -12851,7 +12531,8 @@ if (isNaN(depenseData.montant)) {
 }
 
 
-"https://https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addCommandeClient";
+// URL pour soumettre les données
+const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addCommandeClient";
 
 let currentStep = 1;
 const totalSteps = 4;
@@ -13850,7 +13531,7 @@ function openNewSale() {
 
  
  // URL de votre Web App Google Apps Script
-const DATA_SOURCE_URL = 'https://https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=catalogue';   // Initialisation de la modal
+const DATA_SOURCE_URL = 'https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=catalogue';   // Initialisation de la modal
 function initModal() {
     // Configurer les événements
     setupEventListeners();
@@ -14360,7 +14041,7 @@ function setupEventListeners() {
     }
 }
 
-function showConfirmation(title, message, confirmText = 'Confirmer', cancelText = 'Annuler') {
+    function showConfirmation(title, message, confirmText = 'Confirmer', cancelText = 'Annuler') {
     return new Promise((resolve) => {
         // Créer l'overlay
         const overlay = document.createElement('div');
@@ -14372,7 +14053,6 @@ function showConfirmation(title, message, confirmText = 'Confirmer', cancelText 
         box.innerHTML = `
             <h3>${title}</h3>
             <p>${message}</p>
-            <div class="loading-spinner"></div>
             <div class="confirmation-buttons">
                 <button class="btn btn-confirm">${confirmText}</button>
                 <button class="btn btn-cancel">${cancelText}</button>
@@ -14385,43 +14065,20 @@ function showConfirmation(title, message, confirmText = 'Confirmer', cancelText 
         // Gérer les clics
         const confirmBtn = box.querySelector('.btn-confirm');
         const cancelBtn = box.querySelector('.btn-cancel');
-        const spinner = box.querySelector('.loading-spinner');
 
         const cleanUp = () => {
             document.body.removeChild(overlay);
         };
 
-        const handleConfirm = () => {
-            box.classList.add('loading');
-            setTimeout(() => {
-                cleanUp();
-                resolve(true);
-            }, 1000); // Simule un chargement
-        };
+        confirmBtn.addEventListener('click', () => {
+            cleanUp();
+            resolve(true);
+        });
 
-        const handleCancel = () => {
+        cancelBtn.addEventListener('click', () => {
             cleanUp();
             resolve(false);
-        };
-
-        confirmBtn.addEventListener('click', handleConfirm);
-        cancelBtn.addEventListener('click', handleCancel);
-        
-        // Fermer en cliquant sur l'overlay
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                handleCancel();
-            }
         });
-        
-        // Fermer avec la touche Échap
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') {
-                handleCancel();
-                document.removeEventListener('keydown', handleEscape);
-            }
-        };
-        document.addEventListener('keydown', handleEscape);
     });
 }
 // Calculs financiers
@@ -14583,7 +14240,7 @@ function populateFormWithData(data) {
         { id: 'ophtalmo', data: data.ophtalmos },
         { id: 'assurance', data: data.assurances },
         { id: 'compagnie', data: data.compagnies },
-        { id: 'infos_complementaires', data: data.infos_complementaires}
+        { id: 'infos_complementaires', data: data.infos_complementaires }
     
     ];
 
@@ -14780,6 +14437,7 @@ function showSubmitButton() {
     // 3. Gestion de la navigation par étapes (formulaire proforma)
     setupFormStepNavigation();
 });
+
 // ==================== Fonctions séparées pour plus de clarté ====================
 
 function handleUserSession() {
