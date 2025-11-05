@@ -6519,6 +6519,325 @@ body.modal-open {
     border-style: solid;
     border-color: #667eea transparent transparent transparent;
 }
+
+
+.confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+    backdrop-filter: blur(10px) saturate(180%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: hologramIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.confirmation-box {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 32px;
+    max-width: 420px;
+    width: 85%;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    animation: floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Effet de bordure lumineuse */
+.confirmation-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, 
+        rgba(255,255,255,0.4) 0%, 
+        transparent 30%,
+        transparent 70%, 
+        rgba(255,255,255,0.4) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: borderGlow 3s ease-in-out infinite;
+}
+
+.confirmation-box h3 {
+    margin: 0 0 20px 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    position: relative;
+}
+
+.confirmation-box p {
+    margin: 0 0 32px 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-weight: 300;
+}
+
+.confirmation-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    position: relative;
+}
+
+.confirmation-buttons .btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-confirm::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+}
+
+.btn-confirm:hover::before {
+    left: 100%;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 12px 25px rgba(255, 107, 107, 0.4),
+        0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-cancel::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: all 0.4s ease;
+    transform: translate(-50%, -50%);
+}
+
+.btn-cancel:hover::after {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+}
+
+.btn-cancel:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 12px 25px rgba(79, 70, 229, 0.4),
+        0 0 20px rgba(79, 70, 229, 0.3);
+}
+
+/* Loader élégant pour les actions en cours */
+.loading-spinner {
+    display: none;
+    width: 40px;
+    height: 40px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.loading-spinner::before,
+.loading-spinner::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite;
+}
+
+.loading-spinner::before {
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top: 3px solid #ff6b6b;
+    border-right: 3px solid #4f46e5;
+}
+
+.loading-spinner::after {
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    border: 3px solid transparent;
+    border-bottom: 3px solid #7c3aed;
+    border-left: 3px solid #ee5a52;
+    animation-direction: reverse;
+}
+
+/* État de chargement */
+.confirmation-box.loading .confirmation-buttons {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.confirmation-box.loading .loading-spinner {
+    display: block;
+}
+
+/* Animations avancées */
+@keyframes hologramIn {
+    0% {
+        opacity: 0;
+        backdrop-filter: blur(0px) saturate(100%);
+        transform: scale(1.1);
+    }
+    50% {
+        backdrop-filter: blur(15px) saturate(200%);
+    }
+    100% {
+        opacity: 1;
+        backdrop-filter: blur(10px) saturate(180%);
+        transform: scale(1);
+    }
+}
+
+@keyframes floatIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px) rotateX(-45deg) scale(0.8);
+    }
+    60% {
+        transform: translateY(-10px) rotateX(0deg) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg) scale(1);
+    }
+}
+
+@keyframes borderGlow {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Particules flottantes */
+.confirmation-box::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: floatParticles 20s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes floatParticles {
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+    100% {
+        transform: translateY(-20px) translateX(20px);
+    }
+}
+
+/* Version responsive améliorée */
+@media (max-width: 480px) {
+    .confirmation-box {
+        padding: 24px 20px;
+        margin: 20px;
+        border-radius: 20px;
+        width: 90%;
+    }
+    
+    .confirmation-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .confirmation-buttons .btn {
+        width: 100%;
+        min-width: auto;
+        padding: 16px 24px;
+    }
+    
+    .btn-confirm:hover,
+    .btn-cancel:hover {
+        transform: none;
+    }
+}
+
+/* Support réduit de mouvement */
+@media (prefers-reduced-motion: reduce) {
+    .confirmation-overlay,
+    .confirmation-box,
+    .btn,
+    .loading-spinner::before,
+    .loading-spinner::after,
+    .confirmation-box::before,
+    .confirmation-box::after {
+        animation: none;
+        transition: none;
+    }
+}
     </style>
 </head>
 <body>
@@ -7875,7 +8194,7 @@ async function openDevis() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     } catch (error) {
-        console.error("Erreur lors du chargement:", error);
+        
         alert("Erreur lors du chargement des données");
     } finally {
         loaderOverlay.classList.remove('active');
@@ -7898,7 +8217,6 @@ async function generatePDFWithLoader() {
         await new Promise(resolve => setTimeout(resolve, 100));
         await generatePDF();
     } catch (error) {
-        console.error("Erreur lors de la génération du PDF:", error);
         alert("Erreur lors de la génération du PDF: " + error.message);
     } finally {
         loader.classList.remove('active');
@@ -7919,7 +8237,7 @@ if (clientForm) {
         try {
             await generatePDF();
         } catch (error) {
-            console.error("Erreur:", error);
+            
             alert("Erreur lors de la génération du PDF");
         } finally {
             if (submitLoader) {
@@ -8034,7 +8352,7 @@ async function generatePDF() {
             })
         });
 
-        console.log("✅ Données envoyées (mode no-cors)");
+       
 
         // Attendre 3 secondes pour la génération du PDF
         setTimeout(() => {
@@ -8045,7 +8363,6 @@ async function generatePDF() {
         }, 3000);
 
     } catch (error) {
-        console.log("⚠️ Erreur ignorée (mode no-cors):", error);
         
         // Même en cas d'erreur, fermer et ouvrir le PDF
         setTimeout(() => {
@@ -8062,7 +8379,6 @@ async function generatePDF() {
 // Fonction unique pour récupérer et ouvrir le PDF (version robuste)
 async function checkAndOpenPDF() {
     try {
-        console.log("🔍 Recherche du PDF...");
         
         const url = `https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=getlastpdf`;
         
@@ -8074,7 +8390,6 @@ async function checkAndOpenPDF() {
         
         const result = await response.json();
         
-        console.log("📄 Réponse API:", result);
         
         // Vérifier les deux orthographes possibles (succès/success)
         const isSuccess = result.succès || result.success;
@@ -8085,27 +8400,22 @@ async function checkAndOpenPDF() {
         
         if (isSuccess && message && message.pdfUrl) {
             pdfUrl = message.pdfUrl;
-            console.log("✅ PDF trouvé:", pdfUrl);
         } else if (message && isMessageSuccess === false) {
-            console.warn("⚠️ Aucun PDF disponible:", message);
             alert("Le PDF est en cours de génération. Veuillez patienter quelques secondes puis réessayer.");
             return;
         } else {
-            console.warn("⚠️ Structure de réponse inattendue:", result);
             alert("Erreur inattendue lors de la génération du PDF.");
             return;
         }
         
         // Ouvrir le PDF
         if (pdfUrl) {
-            console.log("📄 Ouverture du PDF:", pdfUrl);
             closeModal();
             window.open(pdfUrl, '_blank');
             alert("PDF généré avec succès! Ouverture dans un nouvel onglet.");
         }
         
     } catch (error) {
-        console.error("❌ Erreur ouverture PDF:", error);
         alert("Erreur lors de l'ouverture du PDF: " + error.message);
     }
 }
@@ -8168,7 +8478,6 @@ function openLooker() {
                 const salePath = 'Accueil.html';
                 window.location.href = salePath;
             } catch (error) {
-                console.error("Erreur d'ouverture:", error);
                 alert("Impossible d'ouvrir la page. Contactez l'administrateur.");
             }
         };
@@ -8268,7 +8577,6 @@ async function loadFournisseurs(selectId) {
             supplierSelect.appendChild(newOption);
         }
     } catch (error) {
-        console.error('Erreur chargement fournisseurs:', error);
         supplierSelect.innerHTML = '<option value="">-- Erreur de chargement --</option>';
     } finally {
         supplierSelect.disabled = false;
@@ -8573,7 +8881,7 @@ async function submitProductForm() {
         }, 1500);
 
     } catch (error) {
-        console.error("Erreur:", error);
+        
         formMessage.innerHTML = `❌ ${error.message || "Une erreur est survenue lors de l'enregistrement"}`;
         formMessage.classList.add('error');
     } finally {
@@ -8696,7 +9004,7 @@ async function submitAddUserForm() {
 
 
     } catch (error) {
-        console.error("Erreur:", error);
+        
         formMessage.innerHTML = `❌ ${error.message || "Une erreur est survenue lors de l'enregistrement"}`;
         formMessage.classList.add('error');
     } finally {
@@ -8825,7 +9133,6 @@ const modalHTML = `
             displayFilteredEntrees(allEntreesData);
 
         } catch (error) {
-            console.error('[Entrées] Erreur:', error);
             showEntreesMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'danger');
             entreesData.innerHTML = '<tr><td colspan="6" class="text-center">Erreur de chargement</td></tr>';
         }
@@ -9005,7 +9312,6 @@ printWindow.onload = function () {
 };
         
         } catch (error) {
-            console.error('Erreur d\'impression:', error);
             alert("Une erreur est survenue lors de l'impression");
         }
     }
@@ -9154,7 +9460,6 @@ async function loadCaisse(action) {
         }
 
     } catch (error) {
-        console.error(`[${action}] Erreur:`, error);
         showCaisseMessage(action, `❌ Erreur: ${error.message || 'Chargement échoué'}`, 'danger');
         tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Erreur de chargement</td></tr>';
         if (currentCaisseDiv) {
@@ -9405,7 +9710,6 @@ async function loadDepensesData() {
     applyFilters(); // 🔥 Affiche directement avec filtre appliqué
 
   } catch (error) {
-    console.error("Erreur :", error);
     messageDiv.innerHTML = `❌ Erreur de chargement : ${error.message}`;
     messageDiv.classList.add('error');
     depensesData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
@@ -9655,7 +9959,6 @@ function printDepenses() {
 };
         
     } catch (error) {
-        console.error("Erreur lors de l'impression:", error);
         alert("Une erreur est survenue lors de la préparation de l'impression");
     }
 }
@@ -9801,7 +10104,6 @@ async function loadVerreData() {
         displayFilteredVerre(allVerreData);
         
     } catch (error) {
-        console.error('Erreur:', error);
         showVerreMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         verreData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -10067,7 +10369,6 @@ async function loadMontureData() {
         displayFilteredMonture(allMontureData);
         
     } catch (error) {
-        console.error('Erreur:', error);
         showMontureMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         montureData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -10338,7 +10639,6 @@ async function loadFactureData() {
         displayFilteredFactures(allFactureData, headers);
         
     } catch (error) {
-        console.error('Erreur:', error);
         showFactureMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         factureData.innerHTML = '<tr><td colspan="12" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -10388,7 +10688,6 @@ function refreshFilters() {
 function populateFactureFilter(selectId, values) {
     const select = document.getElementById(selectId);
     if (!select) {
-        console.error(`Element #${selectId} non trouvé`);
         return;
     }
     
@@ -10408,7 +10707,6 @@ function populateFactureFilter(selectId, values) {
 
 // Application des filtres
 function applyFactureFilter() {
-    console.log("Application des filtres...");
     
     const dateStart = document.getElementById('filterFactureDateStart').value;
     const dateEnd = document.getElementById('filterFactureDateEnd').value;
@@ -10445,7 +10743,6 @@ function applyFactureFilter() {
         return dateMatch && societeMatch && assuranceMatch && compagnieMatch && proprietaireMatch;
     });
     
-    console.log(`Filtres appliqués - ${filteredData.length} résultats`);
     
     const headers = Object.keys(allFactureData[0] || {});
     displayFilteredFactures(filteredData, headers);
@@ -10453,7 +10750,6 @@ function applyFactureFilter() {
 
 // Réinitialiser les filtres
 function resetFactureFilter() {
-    console.log("Réinitialisation des filtres");
     
     document.getElementById('filterFactureDateStart').value = '';
     document.getElementById('filterFactureDateEnd').value = '';
@@ -10715,7 +11011,6 @@ function submitFactureUpdate(index) {
         closeModalAndOpenFacturation();
     })
     .catch(error => {
-        console.error("Erreur d'envoi:", error);
         closeModalAndOpenFacturation();
     })
     .finally(() => {
@@ -10756,7 +11051,6 @@ async function cancelFacture(index) {
         refreshFilters();
         closeModalAndOpenFacturation();
     } catch (e) {
-        console.error('Erreur réseau:', e);
     } finally {
         btn.innerHTML = originalContent;
         btn.disabled = false;
@@ -11028,7 +11322,6 @@ async function submitNewFacture() {
         }, 1500);
 
     } catch (error) {
-        console.error("Erreur:", error);
         formMessage.textContent = '❌ Une erreur est survenue lors de l\'enregistrement';
         formMessage.classList.add('error');
         logError(`Facture: ${error.message}`);
@@ -11083,7 +11376,6 @@ async function loadDynamicOptions() {
         });
 
     } catch (error) {
-        console.error('Erreur lors du chargement des options:', error);
     }
 }
 
@@ -11113,7 +11405,6 @@ async function genererFacture() {
         dateDuJour: dateDuJour
     };
     
-    console.log("Données à envoyer:", data);
     
     // URL du script Google Apps AVEC l'action dans l'URL
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=adddepotData';
@@ -11144,7 +11435,6 @@ async function genererFacture() {
             body: JSON.stringify(data)
         });
         
-        console.log("Données envoyées avec succès");
         
         // Message de succès
         alert("✅ Dépôt enregistré avec succès !\nOuverture de la pointage de facturation dans 5 secondes...");
@@ -11154,13 +11444,11 @@ async function genererFacture() {
             if (typeof openPointFacturation === 'function') {
                 openPointFacturation();
             } else {
-                console.error("La fonction openPointFacturation n'est pas définie");
                 alert("Erreur: fonction openPointFacturation non trouvée");
             }
         }, 5000);
         
     } catch (error) {
-        console.error("Erreur lors de l'envoi:", error);
         alert("❌ Erreur lors de l'enregistrement du dépôt");
         logError(`Génération Facture: ${error.message}`);
         
@@ -11341,7 +11629,6 @@ async function loadFacturationData() {
         displayFilteredFacturation(allFacturationData);
        
     } catch (error) {
-        console.error('Erreur:', error);
         showFacturationMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         facturationData.innerHTML = '<tr><td colspan="11" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -11816,7 +12103,6 @@ async function loadProduitData() {
 
         displayFilteredProduit(allProduitData);
     } catch (error) {
-        console.error(error);
         showProduitMessage(`❌ Erreur: ${error.message}`, 'danger');
         produitData.innerHTML = '<tr><td colspan="9" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -11933,7 +12219,6 @@ function printProduitList() {
 function getElementSafe(id) {
     const element = document.getElementById(id);
     if (!element) {
-        console.warn(`Élément #${id} non trouvé`);
     }
     return element;
 }
@@ -11959,7 +12244,6 @@ async function loadClientsFromScript() {
 
         const responseData = await response.json();
         
-        console.log("Réponse API:", responseData);
         
         if (!responseData.success || !responseData.data) {
             throw new Error("Réponse inattendue de l'API");
@@ -11981,7 +12265,6 @@ async function loadClientsFromScript() {
         }, 500);
         
     } catch (error) {
-        console.error("Erreur de chargement:", error);
         displayError(error.message || "Erreur lors du chargement des clients");
     } finally {
         hideLoading();
@@ -12064,7 +12347,6 @@ function renderTableRows(rows) {
                         td.textContent = cell;
                     }
                 } catch (error) {
-                    console.error("Erreur de formatage de date:", error);
                     td.textContent = cell;
                 }
             }
@@ -12119,7 +12401,6 @@ function createClientTooltip(clientData) {
             </div>
         `;
     } catch (error) {
-        console.error("Erreur création tooltip:", error);
         return null;
     }
 }
@@ -12324,7 +12605,6 @@ async function fetchDataFromGoogleSheet() {
         }
 
         const responseData = await response.json();
-        console.log("Réponse complète:", responseData); // Pour débogage
         
         // Modification ici: vérifier responseData.data au lieu de responseData
         if (!responseData.success || !responseData.data) {
@@ -12339,8 +12619,6 @@ async function fetchDataFromGoogleSheet() {
             throw new Error("Structure de données incomplète");
         }
 
-        console.log("Catégories reçues:", categories);
-        console.log("Agences reçues:", agences);
 
         return {
             success: true,
@@ -12349,7 +12627,6 @@ async function fetchDataFromGoogleSheet() {
         };
 
     } catch (error) {
-        console.error("Erreur fetchDataFromGoogleSheet:", error);
         throw error;
     }
 }
@@ -12430,7 +12707,6 @@ window.openDepense = async function() {
         }, 10);
 
     } catch (error) {
-        console.error("Erreur:", error);
         modalContainer.innerHTML = `
             <div class="modal-overlay active" id="errorModal">
                 <div class="modal-content" style="text-align: center; padding: 2rem;">
@@ -12520,7 +12796,6 @@ if (isNaN(depenseData.montant)) {
         }, 1500);
 
     } catch (error) {
-        console.error("Erreur:", error);
         formMessage.innerHTML = `❌ ${error.message || "Une erreur est survenue lors de l'enregistrement"}`;
         logError(`Dépense: ${errorMsg}`);
         formMessage.classList.add('error');
@@ -13968,7 +14243,6 @@ function setupEventListeners() {
     // Soumission du formulaire
     if (form) {
         showSubmitButton();
-        console.log('Formulaire trouvé, ajout de l\'écouteur d\'événement submit');
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
 
@@ -14034,14 +14308,13 @@ function setupEventListeners() {
 
 
             } catch (error) {
-                console.error('Erreur lors de l\'envoi des données :', error);
                 showError('Erreur lors de l\'envoi des données. Veuillez réessayer.');
             }
         });
     }
 }
 
-    function showConfirmation(title, message, confirmText = 'Confirmer', cancelText = 'Annuler') {
+function showConfirmation(title, message, confirmText = 'Confirmer', cancelText = 'Annuler') {
     return new Promise((resolve) => {
         // Créer l'overlay
         const overlay = document.createElement('div');
@@ -14053,6 +14326,7 @@ function setupEventListeners() {
         box.innerHTML = `
             <h3>${title}</h3>
             <p>${message}</p>
+            <div class="loading-spinner"></div>
             <div class="confirmation-buttons">
                 <button class="btn btn-confirm">${confirmText}</button>
                 <button class="btn btn-cancel">${cancelText}</button>
@@ -14065,20 +14339,43 @@ function setupEventListeners() {
         // Gérer les clics
         const confirmBtn = box.querySelector('.btn-confirm');
         const cancelBtn = box.querySelector('.btn-cancel');
+        const spinner = box.querySelector('.loading-spinner');
 
         const cleanUp = () => {
             document.body.removeChild(overlay);
         };
 
-        confirmBtn.addEventListener('click', () => {
-            cleanUp();
-            resolve(true);
-        });
+        const handleConfirm = () => {
+            box.classList.add('loading');
+            setTimeout(() => {
+                cleanUp();
+                resolve(true);
+            }, 1000); // Simule un chargement
+        };
 
-        cancelBtn.addEventListener('click', () => {
+        const handleCancel = () => {
             cleanUp();
             resolve(false);
+        };
+
+        confirmBtn.addEventListener('click', handleConfirm);
+        cancelBtn.addEventListener('click', handleCancel);
+        
+        // Fermer en cliquant sur l'overlay
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                handleCancel();
+            }
         });
+        
+        // Fermer avec la touche Échap
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                handleCancel();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
     });
 }
 // Calculs financiers
@@ -14217,7 +14514,6 @@ async function loadDataFromSheet() {
         populateFormWithData(data.data);
         
     } catch (error) {
-        console.error('Erreur lors du chargement:', error);
         showError(`Erreur lors du chargement: ${error.message}`);
     } finally {
         hideStatusMessage();
@@ -14558,13 +14854,13 @@ function setupFormStepNavigation() {
 }
     
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Initialisation de la navigation par étapes");
+  
     setupFormStepNavigation();
     
     // Debug : Affiche tous les champs requis
     document.querySelectorAll('[required]').forEach(field => {
         field.addEventListener('change', function() {
-            console.log(`Champ ${this.name} modifié :`, this.value);
+          
         });
     });
 });
@@ -14738,7 +15034,6 @@ async function loadGrandCaisseData() {
         displayGrandCaisseData(allGrandCaisseData);
 
     } catch (err) {
-        console.error('[Grand Caisse] Erreur:', err);
         showGrandCaisseMessage(`❌ Erreur: ${err.message}`, 'danger');
         tbody.innerHTML = `<tr><td colspan="8" class="text-center">Erreur de chargement</td></tr>`;
     }
@@ -14869,7 +15164,6 @@ function printGrandCaisse() {
         printWindow.onload = () => { printWindow.print(); printWindow.close(); };
 
     } catch (err) {
-        console.error('Erreur impression:', err);
         alert("Erreur lors de l'impression");
     }
 }
@@ -14961,7 +15255,6 @@ window.openAjoutGrandCaisse = async function() {
         }, 10);
 
     } catch (err) {
-        console.error(err);
         modalContainer.innerHTML = `
             <div class="modal-overlay active">
                 <div class="modal-content" style="text-align:center; padding:2rem;">
@@ -15017,7 +15310,6 @@ async function submitGrandCaisse() {
         }, 1500);
 
     } catch (err) {
-        console.error(err);
         formMessage.textContent = `❌ Erreur: ${err.message}`;
         formMessage.classList.add('error');
     } finally {
@@ -15074,13 +15366,10 @@ async function loadConfigData() {
 
         if (json.success && json.data?.categories) {
             banqueCategories = json.data.categories;
-            console.log("✅ Catégories chargées :", banqueCategories);
         } else {
             banqueCategories = [];
-            console.warn("⚠️ Aucune catégorie trouvée");
         }
     } catch (error) {
-        console.error("❌ Erreur lors du chargement des catégories :", error);
         banqueCategories = [];
     }
 }
@@ -15180,7 +15469,6 @@ function openBanque() {
     
     // Charger les données de banque ET les catégories
     Promise.all([loadBanqueData(), loadConfigData()]).then(() => {
-        console.log("✅ Toutes les données sont chargées");
     });
 }
 
@@ -15233,7 +15521,7 @@ async function loadBanqueData() {
         displayFilteredBanque(allBanqueData, headers);
         
     } catch (error) {
-        console.error('Erreur:', error);
+        
         showBanqueMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         banqueData.innerHTML = '<tr><td colspan="8" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -15281,7 +15569,6 @@ function refreshBanqueFilters() {
 function populateBanqueFilter(selectId, values) {
     const select = document.getElementById(selectId);
     if (!select) {
-        console.error(`Element #${selectId} non trouvé`);
         return;
     }
     
@@ -15301,7 +15588,6 @@ function populateBanqueFilter(selectId, values) {
 
 // Application des filtres banque
 function applyBanqueFilter() {
-    console.log("Application des filtres banque...");
     
     const dateStart = document.getElementById('filterBanqueDateStart').value;
     const dateEnd = document.getElementById('filterBanqueDateEnd').value;
@@ -15336,7 +15622,6 @@ function applyBanqueFilter() {
         return dateMatch && designationMatch && typeMatch && categorieMatch;
     });
     
-    console.log(`Filtres appliqués - ${filteredData.length} résultats`);
     
     const headers = Object.keys(allBanqueData[0] || {});
     displayFilteredBanque(filteredData, headers);
@@ -15344,7 +15629,6 @@ function applyBanqueFilter() {
 
 // Réinitialiser les filtres banque
 function resetBanqueFilter() {
-    console.log("Réinitialisation des filtres banque");
     
     document.getElementById('filterBanqueDateStart').value = '';
     document.getElementById('filterBanqueDateEnd').value = '';
@@ -15428,7 +15712,6 @@ function editBanqueByUniqueId(idUnique) {
     );
     
     if (originalIndex === -1) {
-        console.error('Transaction non trouvée avec ID:', idUnique);
         alert('Erreur: Transaction non trouvée');
         return;
     }
@@ -15441,7 +15724,6 @@ function editBanqueByUniqueId(idUnique) {
 async function openEditBanqueModal(index, transactionData = null) {
     // S'assurer que les catégories sont chargées
     if (banqueCategories.length === 0) {
-        console.log("📥 Chargement des catégories...");
         await loadConfigData();
     }
     
@@ -15451,13 +15733,11 @@ async function openEditBanqueModal(index, transactionData = null) {
     // Générer les options de catégorie
     let categoryOptions = '';
     if (banqueCategories && banqueCategories.length > 0) {
-        console.log("✅ Affichage des catégories:", banqueCategories);
         banqueCategories.forEach(category => {
             const selected = category === transaction['Categorie'] ? 'selected' : '';
             categoryOptions += `<option value="${category.value}" ${selected}>${category.label}</option>`;
         });
     } else {
-        console.warn("⚠️ Aucune catégorie disponible");
         categoryOptions = `<option value="${transaction['Categorie'] || ''}" selected>${transaction['Categorie'] || 'Aucune catégorie'}</option>`;
     }
     
@@ -15581,7 +15861,7 @@ function submitBanqueUpdate(index) {
         closeModalAndOpenBanque();
     })
     .catch(error => {
-        console.error("Erreur d'envoi:", error);
+       
         closeModalAndOpenBanque();
     })
     .finally(() => {
@@ -15627,8 +15907,6 @@ let currentPeriod = 'thisMonth';
 
 // Initialisation des graphiques
 function initializeCharts() {
-    console.log("Initialisation des graphiques...");
-    console.log("Données clients disponibles:", allClientsData.length, "clients");
     
     setupChartPeriodListener();
     loadChartData();
@@ -15640,7 +15918,6 @@ function setupChartPeriodListener() {
     if (periodSelect) {
         periodSelect.addEventListener('change', function() {
             currentPeriod = this.value;
-            console.log("Période changée:", currentPeriod);
             loadChartData();
         });
     }
@@ -15648,39 +15925,31 @@ function setupChartPeriodListener() {
 
 // Chargement des données pour les graphiques
 async function loadChartData() {
-    console.log("Chargement des données graphiques...");
     
     try {
         if (allClientsData.length === 0) {
-            console.warn("Aucune donnée client disponible");
             return;
         }
         
         const chartData = await generateChartData(currentPeriod);
-        console.log("Données graphiques générées:", chartData);
         renderSalesChart(chartData);
         renderDataTables(chartData);
     } catch (error) {
-        console.error('Erreur chargement données graphiques:', error);
     }
 }
 
 // Fonction manquante : Génération de données de démonstration basées sur les clients
 function generateChartData(period) {
     return new Promise((resolve) => {
-        console.log("Génération données pour période:", period);
         
         // Normaliser les données clients
         const normalizedClients = normalizeClientData(allClientsData);
-        console.log("Clients normalisés:", normalizedClients);
         
         // Filtrer les données clients selon la période
         const filteredData = filterClientsByPeriod(normalizedClients, period);
-        console.log("Données filtrées:", filteredData.length, "clients");
         
         // Calculer les statistiques
         const stats = calculateStatistics(filteredData, period);
-        console.log("Statistiques calculées:", stats);
         
         resolve(stats);
     });
@@ -15715,7 +15984,6 @@ function normalizeClientData(clients) {
 function parseDate(dateString) {
     if (!dateString) return new Date();
     
-    console.log("Parsing date:", dateString);
     
     // Essayer le format DD/MM/YYYY
     const parts = dateString.split('/');
@@ -15800,7 +16068,6 @@ function filterClientsByPeriod(clients, period) {
             endDate.setHours(23, 59, 59, 999);
     }
     
-    console.log(`Filtrage période ${period}:`, startDate, "à", endDate);
     
     return clients.filter(client => {
         const dateStr = client['Date Enregistrement'] || client['Date'] || '';
@@ -15813,7 +16080,6 @@ function filterClientsByPeriod(clients, period) {
 
 // Génération des données de timeline adaptée aux nouvelles périodes
 function generateTimelineData(clients, period) {
-    console.log("Génération timeline pour période:", period);
     
     const now = new Date();
     let timeline = [];
@@ -15842,7 +16108,6 @@ function generateTimelineData(clients, period) {
             timeline = generateDailyTimeline(clients, 'thisWeek');
     }
     
-    console.log("Timeline générée:", timeline);
     return timeline;
 }
 
@@ -16123,7 +16388,6 @@ function calculateKeyMetrics(clients) {
 
 // Calcul des statistiques avec données de comparaison
 function calculateStatistics(clients, period) {
-    console.log("Calcul statistiques pour", clients.length, "clients, période:", period);
     
     const agencies = getAgenciesFromClients(clients);
     const stats = {
@@ -16285,7 +16549,6 @@ function calculateEvolution(current, previous) {
 function renderSalesChart(data) {
     const ctx = document.getElementById('salesChart');
     if (!ctx) {
-        console.error("Canvas salesChart non trouvé");
         return;
     }
     
@@ -16297,8 +16560,6 @@ function renderSalesChart(data) {
     const labels = data.timeline.map(point => point.date);
     const agencies = Object.keys(data.agencies);
     
-    console.log("Labels:", labels);
-    console.log("Agences:", agencies);
     
     const datasets = agencies.map((agency, index) => {
         const colors = [
@@ -16399,7 +16660,6 @@ function renderDataTables(data) {
 function renderAgencyStats(data) {
     const tbody = document.getElementById('agencyStatsBody');
     if (!tbody) {
-        console.error("Tableau agencyStatsBody non trouvé");
         return;
     }
     
@@ -16432,7 +16692,6 @@ function renderAgencyStats(data) {
 function renderKeyMetrics(data) {
     const tbody = document.getElementById('keyMetricsBody');
     if (!tbody) {
-        console.error("Tableau keyMetricsBody non trouvé");
         return;
     }
     
@@ -16819,7 +17078,7 @@ async function loadProformaData() {
         displayFilteredProforma(allProformaData);
        
     } catch (error) {
-        console.error('Erreur:', error);
+        
         showProformaMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         proformaData.innerHTML = '<tr><td colspan="15" class="text-center">Erreur de chargement</td></tr>';
     }
