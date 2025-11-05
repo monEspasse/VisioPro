@@ -6838,16 +6838,19 @@ body.modal-open {
         transition: none;
     }
 }
+
     </style>
+  
+
 </head>
 <body>
- <div class="dashboard">
+<div class="dashboard">
     <!-- Barre latérale unique début -->
     <aside class="sidebar">
         <div class="logo-container">
             <div class="logo">
                 <img src="logoAppli.png" alt="Logo" class="logo-image">
-                <span class="logo-text">FAR VISION</span>
+                <span class="logo-text">VisioPro</span>
             </div>
         </div>
         
@@ -8194,7 +8197,7 @@ async function openDevis() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     } catch (error) {
-        
+        console.error("Erreur lors du chargement:", error);
         alert("Erreur lors du chargement des données");
     } finally {
         loaderOverlay.classList.remove('active');
@@ -8217,6 +8220,7 @@ async function generatePDFWithLoader() {
         await new Promise(resolve => setTimeout(resolve, 100));
         await generatePDF();
     } catch (error) {
+        console.error("Erreur lors de la génération du PDF:", error);
         alert("Erreur lors de la génération du PDF: " + error.message);
     } finally {
         loader.classList.remove('active');
@@ -8237,7 +8241,7 @@ if (clientForm) {
         try {
             await generatePDF();
         } catch (error) {
-            
+            console.error("Erreur:", error);
             alert("Erreur lors de la génération du PDF");
         } finally {
             if (submitLoader) {
@@ -8353,7 +8357,6 @@ async function generatePDF() {
         });
 
        
-
         // Attendre 3 secondes pour la génération du PDF
         setTimeout(() => {
           
@@ -8363,6 +8366,7 @@ async function generatePDF() {
         }, 3000);
 
     } catch (error) {
+      
         
         // Même en cas d'erreur, fermer et ouvrir le PDF
         setTimeout(() => {
@@ -8379,6 +8383,7 @@ async function generatePDF() {
 // Fonction unique pour récupérer et ouvrir le PDF (version robuste)
 async function checkAndOpenPDF() {
     try {
+       
         
         const url = `https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=getlastpdf`;
         
@@ -8390,6 +8395,7 @@ async function checkAndOpenPDF() {
         
         const result = await response.json();
         
+       
         
         // Vérifier les deux orthographes possibles (succès/success)
         const isSuccess = result.succès || result.success;
@@ -8400,22 +8406,27 @@ async function checkAndOpenPDF() {
         
         if (isSuccess && message && message.pdfUrl) {
             pdfUrl = message.pdfUrl;
+          
         } else if (message && isMessageSuccess === false) {
+            console.warn("⚠️ Aucun PDF disponible:", message);
             alert("Le PDF est en cours de génération. Veuillez patienter quelques secondes puis réessayer.");
             return;
         } else {
+            console.warn("⚠️ Structure de réponse inattendue:", result);
             alert("Erreur inattendue lors de la génération du PDF.");
             return;
         }
         
         // Ouvrir le PDF
         if (pdfUrl) {
+           
             closeModal();
             window.open(pdfUrl, '_blank');
             alert("PDF généré avec succès! Ouverture dans un nouvel onglet.");
         }
         
     } catch (error) {
+        console.error("❌ Erreur ouverture PDF:", error);
         alert("Erreur lors de l'ouverture du PDF: " + error.message);
     }
 }
@@ -8448,7 +8459,7 @@ function openLooker() {
     }
 
     window.open(
-        'https://lookerstudio.google.com/s/g469ceRL7wQ',
+        'https://lookerstudio.google.com/s/osmFEnMBAFs',
         '_blank'
     );
 }
@@ -8478,6 +8489,7 @@ function openLooker() {
                 const salePath = 'Accueil.html';
                 window.location.href = salePath;
             } catch (error) {
+                console.error("Erreur d'ouverture:", error);
                 alert("Impossible d'ouvrir la page. Contactez l'administrateur.");
             }
         };
@@ -8487,6 +8499,8 @@ window.openCatalogueVerre = function() {
     const pdfPath = 'Catalogue.pdf';
     window.open(pdfPath, '_blank');
 };
+
+
 window.openProductEntryForm = function() {
     const modalContainer = document.getElementById('modal-container');
 
@@ -8577,6 +8591,7 @@ async function loadFournisseurs(selectId) {
             supplierSelect.appendChild(newOption);
         }
     } catch (error) {
+        console.error('Erreur chargement fournisseurs:', error);
         supplierSelect.innerHTML = '<option value="">-- Erreur de chargement --</option>';
     } finally {
         supplierSelect.disabled = false;
@@ -8881,7 +8896,7 @@ async function submitProductForm() {
         }, 1500);
 
     } catch (error) {
-        
+        console.error("Erreur:", error);
         formMessage.innerHTML = `❌ ${error.message || "Une erreur est survenue lors de l'enregistrement"}`;
         formMessage.classList.add('error');
     } finally {
@@ -9008,7 +9023,7 @@ async function submitAddUserForm() {
 
 
     } catch (error) {
-        
+        console.error("Erreur:", error);
         formMessage.innerHTML = `❌ ${error.message || "Une erreur est survenue lors de l'enregistrement"}`;
         formMessage.classList.add('error');
     } finally {
@@ -9137,6 +9152,7 @@ const modalHTML = `
             displayFilteredEntrees(allEntreesData);
 
         } catch (error) {
+            console.error('[Entrées] Erreur:', error);
             showEntreesMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'danger');
             entreesData.innerHTML = '<tr><td colspan="6" class="text-center">Erreur de chargement</td></tr>';
         }
@@ -9316,6 +9332,7 @@ printWindow.onload = function () {
 };
         
         } catch (error) {
+            console.error('Erreur d\'impression:', error);
             alert("Une erreur est survenue lors de l'impression");
         }
     }
@@ -9464,6 +9481,7 @@ async function loadCaisse(action) {
         }
 
     } catch (error) {
+        console.error(`[${action}] Erreur:`, error);
         showCaisseMessage(action, `❌ Erreur: ${error.message || 'Chargement échoué'}`, 'danger');
         tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Erreur de chargement</td></tr>';
         if (currentCaisseDiv) {
@@ -9714,6 +9732,7 @@ async function loadDepensesData() {
     applyFilters(); // 🔥 Affiche directement avec filtre appliqué
 
   } catch (error) {
+    console.error("Erreur :", error);
     messageDiv.innerHTML = `❌ Erreur de chargement : ${error.message}`;
     messageDiv.classList.add('error');
     depensesData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
@@ -9963,6 +9982,7 @@ function printDepenses() {
 };
         
     } catch (error) {
+        console.error("Erreur lors de l'impression:", error);
         alert("Une erreur est survenue lors de la préparation de l'impression");
     }
 }
@@ -10108,6 +10128,7 @@ async function loadVerreData() {
         displayFilteredVerre(allVerreData);
         
     } catch (error) {
+        console.error('Erreur:', error);
         showVerreMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         verreData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -10373,6 +10394,7 @@ async function loadMontureData() {
         displayFilteredMonture(allMontureData);
         
     } catch (error) {
+        console.error('Erreur:', error);
         showMontureMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         montureData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -10643,6 +10665,7 @@ async function loadFactureData() {
         displayFilteredFactures(allFactureData, headers);
         
     } catch (error) {
+        console.error('Erreur:', error);
         showFactureMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         factureData.innerHTML = '<tr><td colspan="12" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -10692,6 +10715,7 @@ function refreshFilters() {
 function populateFactureFilter(selectId, values) {
     const select = document.getElementById(selectId);
     if (!select) {
+        console.error(`Element #${selectId} non trouvé`);
         return;
     }
     
@@ -10711,6 +10735,7 @@ function populateFactureFilter(selectId, values) {
 
 // Application des filtres
 function applyFactureFilter() {
+  
     
     const dateStart = document.getElementById('filterFactureDateStart').value;
     const dateEnd = document.getElementById('filterFactureDateEnd').value;
@@ -10747,6 +10772,7 @@ function applyFactureFilter() {
         return dateMatch && societeMatch && assuranceMatch && compagnieMatch && proprietaireMatch;
     });
     
+   
     
     const headers = Object.keys(allFactureData[0] || {});
     displayFilteredFactures(filteredData, headers);
@@ -10754,7 +10780,7 @@ function applyFactureFilter() {
 
 // Réinitialiser les filtres
 function resetFactureFilter() {
-    
+  
     document.getElementById('filterFactureDateStart').value = '';
     document.getElementById('filterFactureDateEnd').value = '';
     document.getElementById('filterFactureSociete').value = '';
@@ -11015,6 +11041,7 @@ function submitFactureUpdate(index) {
         closeModalAndOpenFacturation();
     })
     .catch(error => {
+        console.error("Erreur d'envoi:", error);
         closeModalAndOpenFacturation();
     })
     .finally(() => {
@@ -11055,6 +11082,7 @@ async function cancelFacture(index) {
         refreshFilters();
         closeModalAndOpenFacturation();
     } catch (e) {
+        console.error('Erreur réseau:', e);
     } finally {
         btn.innerHTML = originalContent;
         btn.disabled = false;
@@ -11326,6 +11354,7 @@ async function submitNewFacture() {
         }, 1500);
 
     } catch (error) {
+        console.error("Erreur:", error);
         formMessage.textContent = '❌ Une erreur est survenue lors de l\'enregistrement';
         formMessage.classList.add('error');
         logError(`Facture: ${error.message}`);
@@ -11380,6 +11409,7 @@ async function loadDynamicOptions() {
         });
 
     } catch (error) {
+        console.error('Erreur lors du chargement des options:', error);
     }
 }
 
@@ -11408,8 +11438,7 @@ async function genererFacture() {
         compagnie: compagnie,
         dateDuJour: dateDuJour
     };
-    
-    
+   
     // URL du script Google Apps AVEC l'action dans l'URL
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=adddepotData';
     
@@ -11438,7 +11467,7 @@ async function genererFacture() {
             },
             body: JSON.stringify(data)
         });
-        
+    
         
         // Message de succès
         alert("✅ Dépôt enregistré avec succès !\nOuverture de la pointage de facturation dans 5 secondes...");
@@ -11448,11 +11477,13 @@ async function genererFacture() {
             if (typeof openPointFacturation === 'function') {
                 openPointFacturation();
             } else {
+                console.error("La fonction openPointFacturation n'est pas définie");
                 alert("Erreur: fonction openPointFacturation non trouvée");
             }
         }, 5000);
         
     } catch (error) {
+        console.error("Erreur lors de l'envoi:", error);
         alert("❌ Erreur lors de l'enregistrement du dépôt");
         logError(`Génération Facture: ${error.message}`);
         
@@ -11633,6 +11664,7 @@ async function loadFacturationData() {
         displayFilteredFacturation(allFacturationData);
        
     } catch (error) {
+        console.error('Erreur:', error);
         showFacturationMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         facturationData.innerHTML = '<tr><td colspan="11" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -12107,6 +12139,7 @@ async function loadProduitData() {
 
         displayFilteredProduit(allProduitData);
     } catch (error) {
+        console.error(error);
         showProduitMessage(`❌ Erreur: ${error.message}`, 'danger');
         produitData.innerHTML = '<tr><td colspan="9" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -12223,6 +12256,7 @@ function printProduitList() {
 function getElementSafe(id) {
     const element = document.getElementById(id);
     if (!element) {
+        console.warn(`Élément #${id} non trouvé`);
     }
     return element;
 }
@@ -12247,7 +12281,8 @@ async function loadClientsFromScript() {
         if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
 
         const responseData = await response.json();
-        
+
+                
         
         if (!responseData.success || !responseData.data) {
             throw new Error("Réponse inattendue de l'API");
@@ -12269,6 +12304,7 @@ async function loadClientsFromScript() {
         }, 500);
         
     } catch (error) {
+        console.error("Erreur de chargement:", error);
         displayError(error.message || "Erreur lors du chargement des clients");
     } finally {
         hideLoading();
@@ -12351,6 +12387,7 @@ function renderTableRows(rows) {
                         td.textContent = cell;
                     }
                 } catch (error) {
+                    console.error("Erreur de formatage de date:", error);
                     td.textContent = cell;
                 }
             }
@@ -12405,6 +12442,7 @@ function createClientTooltip(clientData) {
             </div>
         `;
     } catch (error) {
+        console.error("Erreur création tooltip:", error);
         return null;
     }
 }
@@ -12609,6 +12647,7 @@ async function fetchDataFromGoogleSheet() {
         }
 
         const responseData = await response.json();
+
         
         // Modification ici: vérifier responseData.data au lieu de responseData
         if (!responseData.success || !responseData.data) {
@@ -12631,6 +12670,7 @@ async function fetchDataFromGoogleSheet() {
         };
 
     } catch (error) {
+        console.error("Erreur fetchDataFromGoogleSheet:", error);
         throw error;
     }
 }
@@ -12711,6 +12751,7 @@ window.openDepense = async function() {
         }, 10);
 
     } catch (error) {
+        console.error("Erreur:", error);
         modalContainer.innerHTML = `
             <div class="modal-overlay active" id="errorModal">
                 <div class="modal-content" style="text-align: center; padding: 2rem;">
@@ -12800,6 +12841,7 @@ if (isNaN(depenseData.montant)) {
         }, 1500);
 
     } catch (error) {
+        console.error("Erreur:", error);
         formMessage.innerHTML = `❌ ${error.message || "Une erreur est survenue lors de l'enregistrement"}`;
         logError(`Dépense: ${errorMsg}`);
         formMessage.classList.add('error');
@@ -14247,6 +14289,7 @@ function setupEventListeners() {
     // Soumission du formulaire
     if (form) {
         showSubmitButton();
+        console.log('Formulaire trouvé, ajout de l\'écouteur d\'événement submit');
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
 
@@ -14312,6 +14355,7 @@ function setupEventListeners() {
 
 
             } catch (error) {
+                console.error('Erreur lors de l\'envoi des données :', error);
                 showError('Erreur lors de l\'envoi des données. Veuillez réessayer.');
             }
         });
@@ -14518,6 +14562,7 @@ async function loadDataFromSheet() {
         populateFormWithData(data.data);
         
     } catch (error) {
+        console.error('Erreur lors du chargement:', error);
         showError(`Erreur lors du chargement: ${error.message}`);
     } finally {
         hideStatusMessage();
@@ -14540,7 +14585,7 @@ function populateFormWithData(data) {
         { id: 'ophtalmo', data: data.ophtalmos },
         { id: 'assurance', data: data.assurances },
         { id: 'compagnie', data: data.compagnies },
-        { id: 'infos_complementaires', data: data.infos_complementaires }
+        { id: 'infos_complementaires', data: data.infos_complementaires}
     
     ];
 
@@ -14858,13 +14903,12 @@ function setupFormStepNavigation() {
 }
     
 document.addEventListener('DOMContentLoaded', function() {
-  
     setupFormStepNavigation();
     
     // Debug : Affiche tous les champs requis
     document.querySelectorAll('[required]').forEach(field => {
         field.addEventListener('change', function() {
-          
+            
         });
     });
 });
@@ -15038,6 +15082,7 @@ async function loadGrandCaisseData() {
         displayGrandCaisseData(allGrandCaisseData);
 
     } catch (err) {
+        console.error('[Grand Caisse] Erreur:', err);
         showGrandCaisseMessage(`❌ Erreur: ${err.message}`, 'danger');
         tbody.innerHTML = `<tr><td colspan="8" class="text-center">Erreur de chargement</td></tr>`;
     }
@@ -15168,6 +15213,7 @@ function printGrandCaisse() {
         printWindow.onload = () => { printWindow.print(); printWindow.close(); };
 
     } catch (err) {
+        console.error('Erreur impression:', err);
         alert("Erreur lors de l'impression");
     }
 }
@@ -15259,6 +15305,7 @@ window.openAjoutGrandCaisse = async function() {
         }, 10);
 
     } catch (err) {
+        console.error(err);
         modalContainer.innerHTML = `
             <div class="modal-overlay active">
                 <div class="modal-content" style="text-align:center; padding:2rem;">
@@ -15314,6 +15361,7 @@ async function submitGrandCaisse() {
         }, 1500);
 
     } catch (err) {
+        console.error(err);
         formMessage.textContent = `❌ Erreur: ${err.message}`;
         formMessage.classList.add('error');
     } finally {
@@ -15370,10 +15418,13 @@ async function loadConfigData() {
 
         if (json.success && json.data?.categories) {
             banqueCategories = json.data.categories;
+           
         } else {
             banqueCategories = [];
+          
         }
     } catch (error) {
+        console.error("❌ Erreur lors du chargement des catégories :", error);
         banqueCategories = [];
     }
 }
@@ -15473,6 +15524,7 @@ function openBanque() {
     
     // Charger les données de banque ET les catégories
     Promise.all([loadBanqueData(), loadConfigData()]).then(() => {
+       
     });
 }
 
@@ -15525,7 +15577,7 @@ async function loadBanqueData() {
         displayFilteredBanque(allBanqueData, headers);
         
     } catch (error) {
-        
+        console.error('Erreur:', error);
         showBanqueMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         banqueData.innerHTML = '<tr><td colspan="8" class="text-center">Erreur de chargement</td></tr>';
     }
@@ -15573,6 +15625,7 @@ function refreshBanqueFilters() {
 function populateBanqueFilter(selectId, values) {
     const select = document.getElementById(selectId);
     if (!select) {
+        console.error(`Element #${selectId} non trouvé`);
         return;
     }
     
@@ -15592,6 +15645,7 @@ function populateBanqueFilter(selectId, values) {
 
 // Application des filtres banque
 function applyBanqueFilter() {
+    
     
     const dateStart = document.getElementById('filterBanqueDateStart').value;
     const dateEnd = document.getElementById('filterBanqueDateEnd').value;
@@ -15626,6 +15680,7 @@ function applyBanqueFilter() {
         return dateMatch && designationMatch && typeMatch && categorieMatch;
     });
     
+   
     
     const headers = Object.keys(allBanqueData[0] || {});
     displayFilteredBanque(filteredData, headers);
@@ -15716,6 +15771,7 @@ function editBanqueByUniqueId(idUnique) {
     );
     
     if (originalIndex === -1) {
+        console.error('Transaction non trouvée avec ID:', idUnique);
         alert('Erreur: Transaction non trouvée');
         return;
     }
@@ -15737,11 +15793,13 @@ async function openEditBanqueModal(index, transactionData = null) {
     // Générer les options de catégorie
     let categoryOptions = '';
     if (banqueCategories && banqueCategories.length > 0) {
+       
         banqueCategories.forEach(category => {
             const selected = category === transaction['Categorie'] ? 'selected' : '';
             categoryOptions += `<option value="${category.value}" ${selected}>${category.label}</option>`;
         });
     } else {
+        console.warn("⚠️ Aucune catégorie disponible");
         categoryOptions = `<option value="${transaction['Categorie'] || ''}" selected>${transaction['Categorie'] || 'Aucune catégorie'}</option>`;
     }
     
@@ -15865,7 +15923,7 @@ function submitBanqueUpdate(index) {
         closeModalAndOpenBanque();
     })
     .catch(error => {
-       
+        console.error("Erreur d'envoi:", error);
         closeModalAndOpenBanque();
     })
     .finally(() => {
@@ -15911,6 +15969,8 @@ let currentPeriod = 'thisMonth';
 
 // Initialisation des graphiques
 function initializeCharts() {
+   
+   
     
     setupChartPeriodListener();
     loadChartData();
@@ -15922,6 +15982,7 @@ function setupChartPeriodListener() {
     if (periodSelect) {
         periodSelect.addEventListener('change', function() {
             currentPeriod = this.value;
+           
             loadChartData();
         });
     }
@@ -15932,28 +15993,35 @@ async function loadChartData() {
     
     try {
         if (allClientsData.length === 0) {
+           
             return;
         }
         
         const chartData = await generateChartData(currentPeriod);
+        
         renderSalesChart(chartData);
         renderDataTables(chartData);
     } catch (error) {
+        console.error('Erreur chargement données graphiques:', error);
     }
 }
 
 // Fonction manquante : Génération de données de démonstration basées sur les clients
 function generateChartData(period) {
     return new Promise((resolve) => {
+       
         
         // Normaliser les données clients
         const normalizedClients = normalizeClientData(allClientsData);
         
+        
         // Filtrer les données clients selon la période
         const filteredData = filterClientsByPeriod(normalizedClients, period);
+       
         
         // Calculer les statistiques
         const stats = calculateStatistics(filteredData, period);
+       
         
         resolve(stats);
     });
@@ -15988,6 +16056,7 @@ function normalizeClientData(clients) {
 function parseDate(dateString) {
     if (!dateString) return new Date();
     
+  
     
     // Essayer le format DD/MM/YYYY
     const parts = dateString.split('/');
@@ -16073,6 +16142,7 @@ function filterClientsByPeriod(clients, period) {
     }
     
     
+    
     return clients.filter(client => {
         const dateStr = client['Date Enregistrement'] || client['Date'] || '';
         if (!dateStr) return false;
@@ -16084,6 +16154,7 @@ function filterClientsByPeriod(clients, period) {
 
 // Génération des données de timeline adaptée aux nouvelles périodes
 function generateTimelineData(clients, period) {
+    
     
     const now = new Date();
     let timeline = [];
@@ -16112,6 +16183,7 @@ function generateTimelineData(clients, period) {
             timeline = generateDailyTimeline(clients, 'thisWeek');
     }
     
+   
     return timeline;
 }
 
@@ -16392,6 +16464,7 @@ function calculateKeyMetrics(clients) {
 
 // Calcul des statistiques avec données de comparaison
 function calculateStatistics(clients, period) {
+   
     
     const agencies = getAgenciesFromClients(clients);
     const stats = {
@@ -16553,6 +16626,7 @@ function calculateEvolution(current, previous) {
 function renderSalesChart(data) {
     const ctx = document.getElementById('salesChart');
     if (!ctx) {
+        console.error("Canvas salesChart non trouvé");
         return;
     }
     
@@ -16564,6 +16638,7 @@ function renderSalesChart(data) {
     const labels = data.timeline.map(point => point.date);
     const agencies = Object.keys(data.agencies);
     
+   
     
     const datasets = agencies.map((agency, index) => {
         const colors = [
@@ -16664,6 +16739,7 @@ function renderDataTables(data) {
 function renderAgencyStats(data) {
     const tbody = document.getElementById('agencyStatsBody');
     if (!tbody) {
+        console.error("Tableau agencyStatsBody non trouvé");
         return;
     }
     
@@ -16696,6 +16772,7 @@ function renderAgencyStats(data) {
 function renderKeyMetrics(data) {
     const tbody = document.getElementById('keyMetricsBody');
     if (!tbody) {
+        console.error("Tableau keyMetricsBody non trouvé");
         return;
     }
     
@@ -16893,15 +16970,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 function downloadAPK() {
+    // Créer un lien de téléchargement
     const downloadLink = document.createElement('a');
-    downloadLink.href = 'optic-app.apk'; //
-    downloadLink.setAttribute('download', 'optic-app.apk');
+    downloadLink.href = 'https://raw.githubusercontent.com/monEspasse/opticien/main/optic-app.apk';
+
     
+    // Déclencher le téléchargement
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
     
+    // Fermer le modal après téléchargement
     closeDownloadModal();
+    
 }
 
         // Fermer le modal en cliquant à l'extérieur
@@ -17082,7 +17163,7 @@ async function loadProformaData() {
         displayFilteredProforma(allProformaData);
        
     } catch (error) {
-        
+        console.error('Erreur:', error);
         showProformaMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
         proformaData.innerHTML = '<tr><td colspan="15" class="text-center">Erreur de chargement</td></tr>';
     }
