@@ -8893,14 +8893,18 @@ async function submitProductForm() {
 
 // Fonction pour vérifier les droits d'administration
 function hasAdminRights() {
-    // Récupère l'utilisateur actuel depuis sessionStorage ou localStorage
-    const currentUser = sessionStorage.getItem("utilisateur") || localStorage.getItem("utilisateur");
+    // Vérifie si l'utilisateur est connecté
+    const currentUser = sessionStorage.getItem("utilisateur");
+    if (!currentUser) {
+       
+        return false;
+    }
     
-    // Liste des utilisateurs autorisés
-    const adminUsers = ["Admin","Dosso"];
+    // Vérifie directement le statut admin
+    const isAdmin = sessionStorage.getItem("isAdmin") === "true";
     
-    // Vérifie si l'utilisateur actuel fait partie de la liste
-    return adminUsers.includes(currentUser);
+
+    return isAdmin;
 }
 
 // Fonction protégée pour ajouter un utilisateur
