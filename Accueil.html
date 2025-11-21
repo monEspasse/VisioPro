@@ -6831,12 +6831,12 @@ body.modal-open {
                     <i class="fas fa-chevron-down chevron"></i>
                 </a>
                 <div class="submenu">
-                    <a href="#" onclick="openNewSale()">
+                    <a href="#" onclick="openDataCleint()">
                         <div class="submenu-icon">
                             <i class="fas fa-plus-circle"></i>
                         </div>
-                        <span>Nouvelle Vente</span>
-                        <span class="menu-badge">New</span>
+                        <span>Liste des Clients</span>
+                        <span class="menu-badge">Data</span>
                     </a>
                     <a href="#" onclick="openHistoriqueProforma()">
                         <div class="submenu-icon">
@@ -6907,12 +6907,6 @@ body.modal-open {
                     <i class="fas fa-chevron-down chevron"></i>
                 </a>
                 <div class="submenu">
-                    <a href="#" onclick="openListeMonture()">
-                        <div class="submenu-icon">
-                            <i class="fas fa-glasses"></i>
-                        </div>
-                        <span>Montures</span>
-                    </a>
 
                     <a href="#" onclick="openCatalogueVerre('catalogueVerre')">
                         <div class="submenu-icon">
@@ -6933,20 +6927,6 @@ body.modal-open {
                     <i class="fas fa-chevron-down chevron"></i>
                 </a>
                 <div class="submenu">
-                    <a href="#" onclick="openEntreesJournal()">
-                        <div class="submenu-icon">
-                            <i class="fas fa-arrow-down"></i>
-                        </div>
-                        <span>Entrées Caisse</span>
-                    </a>
-                    <a href="#" onclick="openDepensesJournal()">
-                        <div class="submenu-icon">
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
-                        <span>Sorties Caisse</span>
-                    </a>
-                    
-                    <!-- Sous-section Caisses -->
                     <div class="submenu-section">
                         <div class="submenu-header">
                             <i class="fas fa-wallet"></i>
@@ -7237,7 +7217,7 @@ body.modal-open {
                                     <h3>Évolution du Chiffre d'Affaires</h3>
                                     <div class="chart-stats">
                                         <div class="stat-item">
-                                            <span class="stat-value" id="totalCA">0 FCFA</span>
+                                            <span class="stat-value" id="totalCA">0 </span>
                                             <span class="stat-label">CA Total</span>
                                         </div>
                                     </div>
@@ -8059,19 +8039,19 @@ body.modal-open {
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="required-field">Montant Monture (FCFA)</label>
+                                <label class="required-field">Montant Monture ()</label>
                                 <input type="number" name="montant_monture" id="montant_monture" required oninput="calculerTotalPro()" />
                             </div>
                             
                             <div class="form-group">
-                                <label class="required-field">Montant Verres (FCFA)</label>
+                                <label class="required-field">Montant Verres ()</label>
                                 <input type="number" name="montant_verres" id="montant_verres" required oninput="calculerTotalPro()" />
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Total Brut (FCFA)</label>
+                                <label>Total Brut ()</label>
                                 <input type="number" name="total_brut" id="total_brut" readonly />
                             </div>
                             
@@ -8080,7 +8060,7 @@ body.modal-open {
                                 <div style="display: flex; gap: 0.5rem;">
                                     <input type="number" name="remise" id="remise" value="0" oninput="calculerTotalPro()" style="flex: 2;" />
                                     <select name="remise_type" id="remise_type" onchange="calculerTotalPro()" style="flex: 1;">
-                                        <option value="FCFA">FCFA</option>
+                                        <option value=""></option>
                                         <option value="%">%</option>
                                     </select>
                                 </div>
@@ -8089,7 +8069,7 @@ body.modal-open {
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Net à payer (FCFA)</label>
+                                <label>Net à payer ()</label>
                                 <input type="number" name="net_a_payer" id="net_a_payer" readonly />
                             </div>
                         </div>
@@ -8400,6 +8380,14 @@ function toggleAdminMenu(event) {
     submenu.classList.toggle('open');
 }
 
+function openDataCleint() {
+    if (!hasAdminRights()) {
+        alert("⛔ Accès refusé");
+        return;
+    }
+window.location.href = 'Data.html';
+}
+
 function openLooker() {
     if (!hasAdminRights()) {
         alert("⛔ Accès refusé");
@@ -8489,7 +8477,7 @@ window.openProductEntryForm = function() {
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Fermer</button>
                     <button type="button" class="btn btn-primary" onclick="submitProductForm()">Enregistrer</button>
                 </div>
             </div>
@@ -8593,7 +8581,6 @@ function addNewSupplier(selectId) {
     newSupplierInput.value = '';
 }
 
-// Fonction pour mettre à jour les champs en fonction de la catégorie sélectionnée
 function updateProductFields() {
     const category = document.getElementById('productCategory').value;
     const dynamicFields = document.getElementById('dynamicFields');
@@ -8608,8 +8595,8 @@ function updateProductFields() {
                     <input type="text" id="montureReference" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="montureColor">Prix de vente <span class="required">*</span></label>
-                    <input type="text" id="montureColor" class="form-control" required>
+                    <label for="monturePrix">Prix de vente <span class="required">*</span></label>
+                    <input type="text" id="monturePrix" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="montureSupplier">Fournisseur <span class="required">*</span></label>
@@ -8635,11 +8622,6 @@ function updateProductFields() {
                     </button>
                 </div>
             `;
-            
-            // Charger les fournisseurs après l'insertion du HTML
-            setTimeout(() => {
-                loadFournisseurs('montureSupplier');
-            }, 100);
             break;
             
         case 'etui':
@@ -8672,10 +8654,6 @@ function updateProductFields() {
                     </button>
                 </div>
             `;
-            
-            setTimeout(() => {
-                loadFournisseurs('etuiSupplier');
-            }, 100);
             break;
             
         case 'nettoyant':
@@ -8704,10 +8682,6 @@ function updateProductFields() {
                     </button>
                 </div>
             `;
-            
-            setTimeout(() => {
-                loadFournisseurs('nettoyantSupplier');
-            }, 100);
             break;
             
         case 'autre':
@@ -8744,10 +8718,6 @@ function updateProductFields() {
                     <textarea id="autreInfo" class="form-control" rows="2"></textarea>
                 </div>
             `;
-            
-            setTimeout(() => {
-                loadFournisseurs('autreSupplier');
-            }, 100);
             break;
             
         default:
@@ -8755,6 +8725,61 @@ function updateProductFields() {
     }
     
     dynamicFields.innerHTML = fieldsHTML;
+    
+    // Charger les fournisseurs pour les champs concernés
+    if (category !== '') {
+        setTimeout(() => {
+            loadFournisseurs(category + 'Supplier');
+        }, 100);
+    }
+}
+
+// Fonctions pour gérer les nouveaux fournisseurs
+function toggleNewSupplierField(selectId) {
+    const select = document.getElementById(selectId);
+    const newField = document.getElementById('newField-' + selectId);
+    const addBtn = document.getElementById('addBtn-' + selectId);
+    
+    if (select.value === 'new') {
+        newField.style.display = 'block';
+        addBtn.style.display = 'none';
+    } else {
+        newField.style.display = 'none';
+        addBtn.style.display = 'block';
+    }
+}
+
+function addNewSupplier(selectId) {
+    const newNameInput = document.getElementById('newName-' + selectId);
+    const newSupplierName = newNameInput.value.trim();
+    
+    if (!newSupplierName) {
+        alert('Veuillez saisir un nom de fournisseur');
+        return;
+    }
+    
+    const select = document.getElementById(selectId);
+    
+    // Ajouter le nouveau fournisseur à la liste
+    const newOption = document.createElement('option');
+    newOption.value = newSupplierName;
+    newOption.textContent = newSupplierName;
+    newOption.selected = true;
+    
+    // Insérer avant l'option "Nouveau fournisseur"
+    const newOptionRef = select.querySelector('option[value="new"]');
+    if (newOptionRef) {
+        select.insertBefore(newOption, newOptionRef);
+    } else {
+        select.appendChild(newOption);
+    }
+    
+    // Cacher le champ de saisie et réafficher le bouton
+    document.getElementById('newField-' + selectId).style.display = 'none';
+    document.getElementById('addBtn-' + selectId).style.display = 'block';
+    
+    // Réinitialiser le champ de saisie
+    newNameInput.value = '';
 }
 
 // Fonction pour soumettre le formulaire de produit
@@ -8773,52 +8798,58 @@ async function submitProductForm() {
 
     const category = document.getElementById('productCategory').value;
     const quantity = document.getElementById('productQuantity').value;
-    
-    // Récupérer l'utilisateur depuis sessionStorage
     const utilisateur = sessionStorage.getItem("utilisateur") || "Utilisateur inconnu";
     
     let productData = {
         category: category,
         quantity: quantity,
-        isNewSupplier: false,
-        newSupplierName: '',
-        utilisateur: utilisateur  // Ajout de l'utilisateur
+        utilisateur: utilisateur
     };
 
     // Fonction pour gérer le fournisseur (nouveau ou existant)
     function handleSupplier(selectId) {
         const supplierSelect = document.getElementById(selectId);
         if (supplierSelect.value === 'new') {
-            productData.isNewSupplier = true;
-            productData.newSupplierName = document.getElementById(`newName-${selectId}`).value.trim();
-            return productData.newSupplierName;
+            // Si l'utilisateur a sélectionné "Nouveau" mais n'a pas rempli le champ
+            const newNameInput = document.getElementById('newName-' + selectId);
+            const newSupplierName = newNameInput.value.trim();
+            if (!newSupplierName) {
+                throw new Error('Veuillez saisir le nom du nouveau fournisseur');
+            }
+            return newSupplierName;
         } else {
             return supplierSelect.value;
         }
     }
 
-    // Ajouter les champs spécifiques à la catégorie
-    switch(category) {
-        case 'monture':
-            productData.reference = document.getElementById('montureReference').value;
-            productData.color = document.getElementById('montureColor').value;
-            productData.supplier = handleSupplier('montureSupplier');
-            break;
-            
-        case 'etui':
-            productData.reference = document.getElementById('etuiReference').value;
-            productData.supplier = handleSupplier('etuiSupplier');
-            break;
-            
-        case 'nettoyant':
-            productData.supplier = handleSupplier('nettoyantSupplier');
-            break;
-            
-        case 'autre':
-            productData.reference = document.getElementById('autreReference').value;
-            productData.supplier = handleSupplier('autreSupplier');
-            productData.info = document.getElementById('autreInfo').value;
-            break;
+    // Récupérer les données spécifiques à la catégorie
+    try {
+        switch(category) {
+            case 'monture':
+                productData.reference = document.getElementById('montureReference').value;
+                productData.prix = document.getElementById('monturePrix').value;
+                productData.supplier = handleSupplier('montureSupplier');
+                break;
+                
+            case 'etui':
+                productData.reference = document.getElementById('etuiReference').value;
+                productData.supplier = handleSupplier('etuiSupplier');
+                break;
+                
+            case 'nettoyant':
+                productData.supplier = handleSupplier('nettoyantSupplier');
+                break;
+                
+            case 'autre':
+                productData.reference = document.getElementById('autreReference').value;
+                productData.supplier = handleSupplier('autreSupplier');
+                productData.info = document.getElementById('autreInfo').value;
+                break;
+        }
+    } catch (error) {
+        formMessage.textContent = '❌ ' + error.message;
+        formMessage.classList.add('error');
+        return;
     }
 
     const submitButton = document.querySelector('#productModal .btn-primary');
@@ -8843,20 +8874,15 @@ async function submitProductForm() {
         form.reset();
         document.getElementById('dynamicFields').innerHTML = '';
 
-        setTimeout(() => {
-            //closeModal();
-        }, 1500);
-
     } catch (error) {
         console.error("Erreur:", error);
-        formMessage.innerHTML = `❌ ${error.message || "Une erreur est survenue lors de l'enregistrement"}`;
+        formMessage.textContent = "❌ Une erreur est survenue lors de l'enregistrement";
         formMessage.classList.add('error');
     } finally {
         submitButton.disabled = false;
         submitButton.textContent = 'Enregistrer';
     }
 }
-
 // Fonction pour vérifier les droits d'administration
 function hasAdminRights() {
     // Vérifie si l'utilisateur est connecté
@@ -8982,311 +9008,6 @@ async function submitAddUserForm() {
         submitButton.textContent = 'Enregistrer';
     }
 }
-    window.openEntreesJournal = function() {
-        const modalContainer = document.getElementById('modal-container');
-const modalHTML = `
-    <div class="modal-overlay" id="journalModal">
-        <div class="modal-content" style="max-width: 1000px;">
-            <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-file-invoice-dollar"></i> Journal des Entrées</h3>
-            </div>
-            <div class="modal-body">
-                <div class="filters-card">
-                    <div class="filters-container">
-                        
-                        <div class="filter-item">
-                            <label><i class="fas fa-building"></i> Agence</label>
-                            <select id="filterAgence" class="form-control">
-                                <option value="">Toutes les agences</option>
-                            </select>
-                        </div>
-                         <div class="filter-item">
-                            <label><i class="fas fa-user"></i> Client</label>
-                            <input type="text" id="searchClient" class="form-control" placeholder="Rechercher un client">
-                        </div>
-                        <div class="filter-item">
-                            <label><i class="fas fa-calendar-alt"></i> Période</label>
-                            <div class="date-range">
-                                <input type="date" id="filterDateStart" class="form-control">
-                                <span>à</span>
-                                <input type="date" id="filterDateEnd" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="filter-item">
-                            <button class="btn btn-outline-secondary" onclick="resetEntreesFilter()">
-                                <i class="fas fa-undo"></i> Réinitialiser
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-card">
-                    <div class="table-responsive">
-                        <table class="entrees-table" id="entreesTable">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Client</th>
-                                    <th>ID Client</th>
-                                    <th class="text-right">Montant</th>
-                                    <th>Catégorie</th>
-                                    <th>Agence</th>
-                                </tr>
-                            </thead>
-                            <tbody id="entreesData">
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <div class="spinner"></div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="entrees-message" class="alert alert-info mt-3" style="display: none;"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="printEntrees()">
-                    <i class="fas fa-print"></i> Imprimer
-                </button>
-                <button type="button" class="btn btn-close-modal" onclick="closeModal()">
-                    <i class="fas fa-times"></i> Fermer
-                </button>
-            </div>
-        </div>
-    </div>
-`;
-
-
-        modalContainer.innerHTML = modalHTML;
-
-        setTimeout(() => {
-            document.getElementById('journalModal').classList.add('active');
-            loadEntreesData();
-        }, 10);
-    };
-
-    // Variables globales
-    let allEntreesData = [];
-    let uniqueAgences = [];
-
-    // Chargement des données
-    async function loadEntreesData() {
-        const entreesData = document.getElementById('entreesData');
-        const messageDiv = document.getElementById('entrees-message');
-
-        entreesData.innerHTML = `<tr><td colspan="6" class="text-center"><div class="spinner"></div></td></tr>`;
-        messageDiv.style.display = 'none';
-
-        try {
-            const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=entree`;
-            const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-
-            const responseData = await response.json();
-            if (!responseData?.data?.rows) throw new Error('Structure de données invalide');
-
-            const headers = responseData.data.headers;
-            allEntreesData = responseData.data.rows.map(row => ({
-                Date: row[headers.indexOf('Date')] ? new Date(row[headers.indexOf('Date')]) : null,
-                Client: row[headers.indexOf('Nom du client')] || '',
-                ClientID: row[headers.indexOf('ID du client')] || '',
-                Montant: parseFloat(row[headers.indexOf('Montant payé')]) || 0,
-                Categorie: row[headers.indexOf('Catégorie')] || '',
-                Agence: row[headers.indexOf('Agence')] || ''
-            }));
-
-            uniqueAgences = [...new Set(allEntreesData.map(item => item.Agence).filter(Boolean))];
-            populateAgenceFilter();
-            setupAutoFilters();
-            displayFilteredEntrees(allEntreesData);
-
-        } catch (error) {
-            console.error('[Entrées] Erreur:', error);
-            showEntreesMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'danger');
-            entreesData.innerHTML = '<tr><td colspan="6" class="text-center">Erreur de chargement</td></tr>';
-        }
-    }
-
-    function populateAgenceFilter() {
-        const agenceSelect = document.getElementById('filterAgence');
-        agenceSelect.innerHTML = '<option value="">Toutes les agences</option>';
-        uniqueAgences.forEach(agence => {
-            const option = document.createElement('option');
-            option.value = agence;
-            option.textContent = agence;
-            agenceSelect.appendChild(option);
-        });
-    }
-
-    // Ajout des events pour rendre les filtres automatiques
-    function setupAutoFilters() {
-        document.getElementById('filterDateStart').addEventListener('input', applyEntreesFilter);
-        document.getElementById('filterDateEnd').addEventListener('input', applyEntreesFilter);
-        document.getElementById('filterAgence').addEventListener('change', applyEntreesFilter);
-        document.getElementById('searchClient').addEventListener('input', applyEntreesFilter);
-    }
-
-    function displayFilteredEntrees(data) {
-        const entreesData = document.getElementById('entreesData');
-        if (!data?.length) {
-            entreesData.innerHTML = '<tr><td colspan="6" class="text-center">Aucune donnée disponible</td></tr>';
-            return;
-        }
-        const html = data.map(item => {
-            const dateFormatted = item.Date?.toLocaleDateString('fr-FR') || 'N/A';
-            const montantFormatted = item.Montant.toLocaleString('fr-FR', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-            return `
-                <tr>
-                    <td>${dateFormatted}</td>
-                    <td>${item.Client}</td>
-                    <td>${item.ClientID}</td>
-                    <td class="text-right">${montantFormatted}</td>
-                    <td><span class="badge bg-primary">${item.Categorie}</span></td>
-                    <td>${item.Agence}</td>
-                </tr>
-            `;
-        }).join('');
-        entreesData.innerHTML = html;
-    }
-
-    function applyEntreesFilter() {
-        const startDate = document.getElementById('filterDateStart').value;
-        const endDate = document.getElementById('filterDateEnd').value;
-        const selectedAgence = document.getElementById('filterAgence').value;
-        const searchClient = document.getElementById('searchClient').value.toLowerCase();
-
-        let filteredData = [...allEntreesData];
-
-        if (startDate || endDate) {
-            const start = startDate ? new Date(startDate) : null;
-            const end = endDate ? new Date(endDate) : null;
-            filteredData = filteredData.filter(item => {
-                if (!item.Date) return false;
-                const d = item.Date;
-                if (start && end) return d >= start && d <= end;
-                if (start) return d >= start;
-                if (end) return d <= end;
-                return true;
-            });
-        }
-
-        if (selectedAgence) {
-            filteredData = filteredData.filter(item => item.Agence === selectedAgence);
-        }
-
-        if (searchClient) {
-            filteredData = filteredData.filter(item =>
-                item.Client.toLowerCase().includes(searchClient)
-            );
-        }
-
-        displayFilteredEntrees(filteredData);
-        //showEntreesMessage(`${filteredData.length} entrées trouvées`, 'info');
-    }
-
-    function resetEntreesFilter() {
-        document.getElementById('filterDateStart').value = '';
-        document.getElementById('filterDateEnd').value = '';
-        document.getElementById('filterAgence').value = '';
-        document.getElementById('searchClient').value = '';
-        displayFilteredEntrees(allEntreesData);
-        showEntreesMessage(`↻ Affichage de toutes les ${allEntreesData.length} entrées`, 'info');
-    }
-
-    function showEntreesMessage(message, type) {
-        const messageDiv = document.getElementById('entrees-message');
-        messageDiv.textContent = message;
-        messageDiv.className = `alert alert-${type}`;
-        messageDiv.style.display = 'block';
-    }
-    // Impression (prend en compte les filtres actuels)
-    function printEntrees() {
-        try {
-            const printWindow = window.open('', '_blank');
-            const printContent = document.getElementById('entreesTable').cloneNode(true);
-
-            let total = 0;
-            const rows = printContent.querySelectorAll('tbody tr');
-            rows.forEach(row => {
-                const amountCell = row.cells[3]?.textContent;
-                if (amountCell) {
-                    const amount = parseFloat(amountCell.replace(/[^\d,.-]/g, '').replace(',', '.'));
-                    if (!isNaN(amount)) total += amount;
-                }
-            });
-
-            const totalRow = document.createElement('tr');
-            totalRow.className = 'total-row';
-            totalRow.innerHTML = `
-                <td colspan="3" class="text-right"><strong>Total</strong></td>
-                <td class="text-right"><strong>${total.toLocaleString('fr-FR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })}</strong></td>
-                <td colspan="2"></td>
-            `;
-            printContent.querySelector('tbody').appendChild(totalRow);
-
-            const styles = `
-                <style>
-                    body { font-family: Arial, sans-serif; margin: 15px; }
-                    h1 { color: #333; text-align: center; }
-                    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                    th { background-color: #f2f2f2; }
-                    .text-right { text-align: right; }
-                    .total-row { font-weight: bold; background-color: #f8f9fa; }
-                    .badge { padding: 3px 6px; border-radius: 3px; font-size: 12px; }
-                    @page { size: auto; margin: 10mm; }
-                </style>
-            `;
-
-            const dateStart = document.getElementById('filterDateStart').value;
-            const dateEnd = document.getElementById('filterDateEnd').value;
-            let periodInfo = '';
-            if (dateStart || dateEnd) {
-                periodInfo = `Période : ${dateStart ? new Date(dateStart).toLocaleDateString('fr-FR') : 'Début'} à ${dateEnd ? new Date(dateEnd).toLocaleDateString('fr-FR') : 'Aujourd\'hui'}`;
-            }
-
-            const agence = document.getElementById('filterAgence').value;
-            const client = document.getElementById('searchClient').value;
-            const filtersInfo = `
-                ${periodInfo ? `<p>${periodInfo}</p>` : ''}
-                ${agence ? `<p>Agence : ${agence}</p>` : ''}
-                ${client ? `<p>Client : ${client}</p>` : ''}
-            `;
-
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Journal des Entrées</title>
-                        ${styles}
-                    </head>
-                    <body>
-                        <h1>Journal des Entrées</h1>
-                        ${filtersInfo}
-                        <p>Imprimé le ${new Date().toLocaleDateString('fr-FR')}</p>
-                        ${printContent.outerHTML}
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-printWindow.onload = function () {
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close()
-};
-        
-        } catch (error) {
-            console.error('Erreur d\'impression:', error);
-            alert("Une erreur est survenue lors de l'impression");
-        }
-    }
 
 // =========================
 // 🔹 Fonction principale
@@ -9298,12 +9019,14 @@ window.openCaisse = function(action, title) {
     const totalsId = `caisseTotals-${action}`;
     const startId = `start-${action}`;
     const endId = `end-${action}`;
+    const userFilterId = `userFilter-${action}`;
+    const mouvementFilterId = `mouvementFilter-${action}`;
     const messageId = `message-${action}`;
-    const currentCaisseId = `currentCaisse-${action}`; // Nouvel ID pour la valeur En Caisse
+    const currentCaisseId = `currentCaisse-${action}`;
 
     modalContainer.innerHTML = `
         <div class="modal-overlay" id="modal-${action}">
-            <div class="modal-content" style="max-width: 1200px;">
+            <div class="modal-content" style="max-width: 1400px;">
                 <div class="modal-header">
                     <h3 class="modal-title"><i class="fas fa-cash-register"></i> Caisse ${title}</h3>
                 </div>
@@ -9317,6 +9040,21 @@ window.openCaisse = function(action, title) {
                                     <span>à</span>
                                     <input type="date" id="${endId}" class="form-control">
                                 </div>
+                              <div class="filter-item">
+                                <label><i class="fas fa-user"></i> Utilisateur</label>
+                                <select id="${userFilterId}" class="form-control select-control">
+                                    <option value="">Tous les utilisateurs</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-item">
+                                <label><i class="fas fa-exchange-alt"></i> Mouvement</label>
+                                <select id="${mouvementFilterId}" class="form-control select-control">
+                                    <option value="">Tous les mouvements</option>
+                                    <option value="Entrée">Entrée</option>
+                                    <option value="Sortie">Sortie</option>
+                                </select>
+                            </div>
                             </div>
                             <div class="filter-item">
                                 <button class="btn btn-outline-secondary" onclick="resetCaisse('${action}')">
@@ -9328,23 +9066,25 @@ window.openCaisse = function(action, title) {
                                 <label>En Caisse :</label>
                                 <strong id="${currentCaisseId}" class="caisse-value-display">--</strong>
                             </div>
-                            </div>
+                        </div>
                     </div>
-
                     <div class="table-card">
                         <div class="table-responsive">
                             <table class="caisse-table" id="${tableId}">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th class="text-right">Acompte</th>
-                                        <th class="text-right">Compléments</th>
-                                        <th class="text-right">Dépense</th>
+                                        <th>Désignation</th>
+                                        <th class="text-right">Montant</th>
+                                        <th>Mouvement</th>
+                                        <th>Commercial</th>
                                         <th class="text-right">En Caisse</th>
+                                        <th>Catégorie</th>
+                                        <th>Note</th>
                                     </tr>
                                 </thead>
                                 <tbody id="${dataId}">
-                                    <tr><td colspan="6" class="text-center"><div class="spinner"></div></td></tr>
+                                    <tr><td colspan="8" class="text-center"><div class="spinner"></div></td></tr>
                                 </tbody>
                                 <tfoot id="${totalsId}"></tfoot>
                             </table>
@@ -9366,7 +9106,6 @@ window.openCaisse = function(action, title) {
 
     setTimeout(() => {
         document.getElementById(`modal-${action}`).classList.add('active');
-
         loadCaisse(action); 
     }, 10);
 };
@@ -9382,16 +9121,20 @@ const caisseDataStore = {};
 async function loadCaisse(action) {
     const dataId = `caisseData-${action}`;
     const messageId = `message-${action}`;
-    const currentCaisseId = `currentCaisse-${action}`; // Utiliser le bon ID
+    const currentCaisseId = `currentCaisse-${action}`;
+    const userFilterId = `userFilter-${action}`;
+    const mouvementFilterId = `mouvementFilter-${action}`;
     
     const tableBody = document.getElementById(dataId);
     const messageDiv = document.getElementById(messageId);
-    const currentCaisseDiv = document.getElementById(currentCaisseId); // Récupérer l'élément correct
+    const currentCaisseDiv = document.getElementById(currentCaisseId);
+    const userFilter = document.getElementById(userFilterId);
+    const mouvementFilter = document.getElementById(mouvementFilterId);
 
-    tableBody.innerHTML = `<tr><td colspan="5" class="text-center"><div class="spinner"></div></td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="8" class="text-center"><div class="spinner"></div></td></tr>`;
     messageDiv.style.display = 'none';
     if (currentCaisseDiv) {
-        currentCaisseDiv.textContent = '--'; // Réinitialiser l'affichage pendant le chargement
+        currentCaisseDiv.textContent = '--';
     }
 
     try {
@@ -9405,22 +9148,31 @@ async function loadCaisse(action) {
         const headers = responseData.data.headers;
         caisseDataStore[action] = responseData.data.rows.map(row => {
             const dateIndex = headers.findIndex(h => h.toLowerCase().includes('date'));
-            const acompteIndex = headers.findIndex(h => h.toLowerCase().includes('acompte'));
-            const comp1Index = headers.findIndex(h => h.toLowerCase().includes('compléments') || h.toLowerCase().includes('complements'));
-            const depenseIndex = headers.findIndex(h => h.toLowerCase().includes('dépense') || h.toLowerCase().includes('depense'));
+            const designationIndex = headers.findIndex(h => h.toLowerCase().includes('designation') || h.toLowerCase().includes('désignation'));
+            const montantIndex = headers.findIndex(h => h.toLowerCase().includes('montant'));
+            const mouvementIndex = headers.findIndex(h => h.toLowerCase().includes('mouvement'));
+            const userIndex = headers.findIndex(h => h.toLowerCase().includes('user') || h.toLowerCase().includes('utilisateur'));
             const encaisseIndex = headers.findIndex(h => h.toLowerCase().includes('en caisse') || h.toLowerCase().includes('encaisse'));
+            const categorieIndex = headers.findIndex(h => h.toLowerCase().includes('categorie') || h.toLowerCase().includes('catégorie'));
+            const noteIndex = headers.findIndex(h => h.toLowerCase().includes('note'));
 
             return {
                 Date: row[dateIndex] ? new Date(row[dateIndex]) : null,
-                Acompte: parseFloat(row[acompteIndex]) || 0,
-                Complements: parseFloat(row[comp1Index]) || 0,
-                Depense: parseFloat(row[depenseIndex]) || 0,
-                EnCaisse: parseFloat(row[encaisseIndex]) || 0
+                Designation: row[designationIndex] || '',
+                Montant: parseFloat(row[montantIndex]) || 0,
+                Mouvement: row[mouvementIndex] || '',
+                User: row[userIndex] || '',
+                EnCaisse: parseFloat(row[encaisseIndex]) || 0,
+                Categorie: row[categorieIndex] || '',
+                Note: row[noteIndex] || ''
             };
         });
 
         // Trier les données par date en ordre décroissant pour obtenir la dernière valeur "En Caisse"
         caisseDataStore[action].sort((a, b) => b.Date - a.Date);
+
+        // Mettre à jour les filtres utilisateur
+        updateUserFilter(action);
 
         setupFilters(action);
         displayCaisse(action, caisseDataStore[action]);
@@ -9428,17 +9180,37 @@ async function loadCaisse(action) {
         // Trouver et afficher la dernière valeur "En Caisse"
         const latestCaisseEntry = caisseDataStore[action][0];
         if (latestCaisseEntry && currentCaisseDiv) {
-            currentCaisseDiv.textContent = `${latestCaisseEntry.EnCaisse.toFixed(2)} FCFA`;
+            currentCaisseDiv.textContent = `${latestCaisseEntry.EnCaisse.toFixed(2)} `;
         }
 
     } catch (error) {
         console.error(`[${action}] Erreur:`, error);
         showCaisseMessage(action, `❌ Erreur: ${error.message || 'Chargement échoué'}`, 'danger');
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Erreur de chargement</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8" class="text-center">Erreur de chargement</td></tr>';
         if (currentCaisseDiv) {
             currentCaisseDiv.textContent = 'Erreur';
         }
     }
+}
+
+// =========================
+// 🔹 Mise à jour du filtre utilisateur
+// =========================
+function updateUserFilter(action) {
+    const userFilterId = `userFilter-${action}`;
+    const userFilter = document.getElementById(userFilterId);
+    
+    if (!userFilter || !caisseDataStore[action]) return;
+
+    // Récupérer tous les utilisateurs uniques
+    const users = [...new Set(caisseDataStore[action]
+        .map(item => item.User)
+        .filter(user => user && user.trim() !== '')
+    )].sort();
+
+    // Mettre à jour les options du filtre
+    userFilter.innerHTML = '<option value="">Tous les utilisateurs</option>' +
+        users.map(user => `<option value="${user}">${user}</option>`).join('');
 }
 
 // =========================
@@ -9447,13 +9219,21 @@ async function loadCaisse(action) {
 function setupFilters(action) {
     const startInput = document.getElementById(`start-${action}`);
     const endInput = document.getElementById(`end-${action}`);
+    const userFilter = document.getElementById(`userFilter-${action}`);
+    const mouvementFilter = document.getElementById(`mouvementFilter-${action}`);
+
     startInput.addEventListener('input', () => applyCaisseFilter(action));
     endInput.addEventListener('input', () => applyCaisseFilter(action));
+    userFilter.addEventListener('change', () => applyCaisseFilter(action));
+    mouvementFilter.addEventListener('change', () => applyCaisseFilter(action));
 }
 
 function applyCaisseFilter(action) {
     const startDate = document.getElementById(`start-${action}`).value;
     const endDate = document.getElementById(`end-${action}`).value;
+    const selectedUser = document.getElementById(`userFilter-${action}`).value;
+    const selectedMouvement = document.getElementById(`mouvementFilter-${action}`).value;
+    
     const allData = caisseDataStore[action] || [];
 
     const start = startDate ? new Date(startDate) : null;
@@ -9461,16 +9241,34 @@ function applyCaisseFilter(action) {
 
     const filteredData = allData.filter(item => {
         if (!item.Date) return false;
-        return (!start || item.Date >= start) && (!end || item.Date <= end);
+
+        // Filtre par date
+        const dateMatch = (!start || item.Date >= start) && (!end || item.Date <= end);
+        
+        // Filtre par utilisateur
+        const userMatch = !selectedUser || item.User === selectedUser;
+        
+        // Filtre par mouvement
+        const mouvementMatch = !selectedMouvement || item.Mouvement === selectedMouvement;
+
+        return dateMatch && userMatch && mouvementMatch;
     });
 
     displayCaisse(action, filteredData);
-    showCaisseMessage(action, `${filteredData.length} enregistrements trouvés`, 'info');
+    
+    // Afficher le message avec les détails des filtres
+    if (selectedUser || selectedMouvement || startDate || endDate) {
+        message += ' (filtres appliqués)';
+    }
+    showCaisseMessage(action, message, 'info');
 }
 
 function resetCaisse(action) {
     document.getElementById(`start-${action}`).value = '';
     document.getElementById(`end-${action}`).value = '';
+    document.getElementById(`userFilter-${action}`).value = '';
+    document.getElementById(`mouvementFilter-${action}`).value = '';
+    
     displayCaisse(action, caisseDataStore[action]);
     showCaisseMessage(action, `↻ Affichage de tous les ${caisseDataStore[action].length} enregistrements`, 'info');
 }
@@ -9485,7 +9283,7 @@ function displayCaisse(action, data) {
     const tableTotals = document.getElementById(totalsId);
 
     if (!data?.length) {
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Aucune donnée disponible</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="8" class="text-center">Aucune donnée disponible pour les filtres sélectionnés</td></tr>';
         tableTotals.innerHTML = '';
         return;
     }
@@ -9495,30 +9293,36 @@ function displayCaisse(action, data) {
     const rows = data.map(item => `
         <tr>
             <td>${item.Date?.toLocaleDateString('fr-FR')}</td>
-            <td class="text-right">${formatCurrency(item.Acompte)}</td>
-            <td class="text-right">${formatCurrency(item.Complements)}</td>
-            <td class="text-right">${formatCurrency(item.Depense)}</td>
+            <td>${item.Designation}</td>
+            <td class="text-right">${formatCurrency(item.Montant)}</td>
+            <td>
+                <span class="badge ${item.Mouvement === 'Entrée' ? 'badge-success' : 'badge-danger'}">
+                    ${item.Mouvement}
+                </span>
+            </td>
+            <td>${item.User}</td>
             <td class="text-right"><strong>${formatCurrency(item.EnCaisse)}</strong></td>
+            <td>${item.Categorie}</td>
+            <td>${item.Note}</td>
         </tr>
     `).join('');
 
     tableBody.innerHTML = rows;
 
+    // Calcul des totaux
     const totals = data.reduce((acc, i) => {
-        acc.Acompte += i.Acompte;
-        acc.Comp1 += i.Complements;
-        acc.Depense += i.Depense;
+        acc.Montant += i.Montant;
         acc.EnCaisse += i.EnCaisse;
         return acc;
-    }, { Acompte:0, Comp1:0,  Depense:0, EnCaisse:0 });
+    }, { Montant: 0, EnCaisse: 0 });
 
     tableTotals.innerHTML = `
         <tr class="total-row">
-            <td><strong>Total</strong></td>
-            <td class="text-right"><strong>${formatCurrency(totals.Acompte)}</strong></td>
-            <td class="text-right"><strong>${formatCurrency(totals.Comp1)}</strong></td>
-            <td class="text-right"><strong>${formatCurrency(totals.Depense)}</strong></td>
+            <td colspan="2"><strong>Total</strong></td>
+            <td class="text-right"><strong>${formatCurrency(totals.Montant)}</strong></td>
+            <td colspan="3"></td>
             <td class="text-right"><strong>${formatCurrency(totals.EnCaisse)}</strong></td>
+            <td></td>
         </tr>
     `;
 }
@@ -9547,8 +9351,8 @@ function printCaisse(action, title) {
             <style>
                 body { font-family: Arial, sans-serif; margin: 15px; }
                 h1 { text-align: center; }
-                table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-                th, td { border: 1px solid #ddd; padding: 8px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+                th, td { border: 1px solid #ddd; padding: 6px; }
                 th { background-color: #f2f2f2; }
                 .text-right { text-align: right; }
                 .total-row { font-weight: bold; background-color: #f8f9fa; }
@@ -9558,9 +9362,18 @@ function printCaisse(action, title) {
 
         const dateStart = document.getElementById(`start-${action}`).value;
         const dateEnd = document.getElementById(`end-${action}`).value;
-        let period = '';
+        const selectedUser = document.getElementById(`userFilter-${action}`).value;
+        const selectedMouvement = document.getElementById(`mouvementFilter-${action}`).value;
+        
+        let filters = [];
         if (dateStart || dateEnd) {
-            period = `Période : ${dateStart ? new Date(dateStart).toLocaleDateString('fr-FR') : 'Début'} à ${dateEnd ? new Date(dateEnd).toLocaleDateString('fr-FR') : "Aujourd'hui"}`;
+            filters.push(`Période : ${dateStart ? new Date(dateStart).toLocaleDateString('fr-FR') : 'Début'} à ${dateEnd ? new Date(dateEnd).toLocaleDateString('fr-FR') : "Aujourd'hui"}`);
+        }
+        if (selectedUser) {
+            filters.push(`Utilisateur : ${selectedUser}`);
+        }
+        if (selectedMouvement) {
+            filters.push(`Mouvement : ${selectedMouvement}`);
         }
 
         const printWindow = window.open('', '_blank');
@@ -9569,885 +9382,23 @@ function printCaisse(action, title) {
                 <head><title>Caisse ${title}</title>${styles}</head>
                 <body>
                     <h1>Caisse ${title}</h1>
-                    ${period ? `<p>${period}</p>` : ''}
+                    ${filters.length ? `<p>${filters.join(' | ')}</p>` : ''}
                     <p>Imprimé le ${new Date().toLocaleDateString('fr-FR')}</p>
                     ${table.outerHTML}
                 </body>
             </html>
         `);
         printWindow.document.close();
-    printWindow.onload = function () {
-    printWindow.focus();   // Met la fenêtre au premier plan
-    printWindow.print();   // Lance l'impression
-    printWindow.close();   // Ferme la fenêtre après impression
-};
+        
+        printWindow.onload = function () {
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        };
 
     } catch (e) {
         alert("Erreur lors de l'impression");
     }
-}
-
-// 🔹 Variable globale pour stocker les données
-let allDepensesData = [];
-
-// 🔹 Ouvrir le journal des dépenses
-window.openDepensesJournal = function() {
-  const modalContainer = document.getElementById('modal-container');
-  modalContainer.innerHTML = `
-    <div class="modal-overlay" id="journalModal">
-      <div class="modal-content" style="max-width: 900px;">
-        <div class="modal-header">
-          <h3 class="modal-title">Journal des Dépenses</h3>
-        </div>
-        <div class="modal-body">
-          <div class="filters mb-4">
-            <div class="filter-group">
-              <div class="date-filters">
-                <div class="date-input-group">
-                  <span class="date-icon"><i class="fas fa-calendar-alt"></i></span>
-                  <input type="date" id="filterDateStart" class="form-control date-input">
-                  <span class="date-separator">au</span>
-                  <input type="date" id="filterDateEnd" class="form-control date-input">
-                </div>
-                <div class="agency-filter">
-                  <select id="filterAgency" class="form-control">
-                    <option value="">Toutes les agences</option>
-                  </select>
-                </div>
-                <button class="btn btn-reset" onclick="resetFilters()">
-                  <i class="fas fa-times"></i> Réinitialiser
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-hover" id="depensesTable">
-              <thead class="table-header">
-                <tr>
-                  <th>Date</th>
-                  <th>Agence</th>
-                  <th>Désignation</th>
-                  <th>Catégorie</th>
-                  <th class="text-right">Montant</th>
-                </tr>
-              </thead>
-              <tbody id="depensesData">
-                <tr>
-                  <td colspan="5" class="text-center">
-                    <div class="spinner-border text-primary" role="status">
-                      <span class="sr-only">Chargement...</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div id="depenses-message" class="form-message"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="printDepenses()">
-            <i class="fas fa-print"></i> Imprimer
-          </button>
-          <button type="button" class="btn btn-close-modal" onclick="closeModal()">
-            <i class="fas fa-times"></i> Fermer
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  setTimeout(() => {
-    document.getElementById('journalModal').classList.add('active');
-    loadDepensesData();
-  }, 10);
-};
-
-// 🔹 Charger les données
-async function loadDepensesData() {
-  const depensesData = document.getElementById('depensesData');
-  const messageDiv = document.getElementById('depenses-message');
-
-  depensesData.innerHTML = '<tr><td colspan="5" class="text-center">Chargement...</td></tr>';
-  messageDiv.textContent = '';
-  messageDiv.classList.remove('error', 'success');
-
-  try {
-    const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=depense`;
-    const response = await fetch(apiUrl);
-    if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
-
-    const responseData = await response.json();
-    allDepensesData = responseData.data || [];
-
-    populateAgencyFilter(allDepensesData);
-    applyFilters(); // 🔥 Affiche directement avec filtre appliqué
-
-  } catch (error) {
-    console.error("Erreur :", error);
-    messageDiv.innerHTML = `❌ Erreur de chargement : ${error.message}`;
-    messageDiv.classList.add('error');
-    depensesData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
-  }
-}
-
-// 🔹 Remplir le filtre Agence
-function populateAgencyFilter(data) {
-  const agencySelect = document.getElementById('filterAgency');
-  const agencies = [...new Set(data.map(item => item.Agence).filter(Boolean))].sort();
-  agencySelect.innerHTML = `<option value="">Toutes les agences</option>` +
-    agencies.map(ag => `<option value="${ag}">${ag}</option>`).join('');
-}
-
-// 🔹 Appliquer les filtres (date + agence)
-function applyFilters() {
-  const dateStart = document.getElementById('filterDateStart').value;
-  const dateEnd = document.getElementById('filterDateEnd').value;
-  const selectedAgency = document.getElementById('filterAgency').value;
-
-  const filtered = allDepensesData.filter(item => {
-    const itemDate = new Date(item.Date);
-    const start = dateStart ? new Date(dateStart) : null;
-    const end = dateEnd ? new Date(dateEnd) : null;
-
-    let isDateValid = true;
-    if (start && itemDate < start) isDateValid = false;
-    if (end && itemDate > end) isDateValid = false;
-
-    const isAgencyValid = selectedAgency ? item.Agence === selectedAgency : true;
-    return isDateValid && isAgencyValid;
-  });
-
-  displayFilteredData(filtered);
-}
-
-// 🔹 Réinitialiser filtres
-function resetFilters() {
-  document.getElementById('filterDateStart').value = '';
-  document.getElementById('filterDateEnd').value = '';
-  document.getElementById('filterAgency').value = '';
-  displayFilteredData(allDepensesData);
-}
-
-// 🔹 Afficher les données filtrées
-function displayFilteredData(data) {
-  const depensesData = document.getElementById('depensesData');
-  if (!data || data.length === 0) {
-    depensesData.innerHTML = '<tr><td colspan="5" class="text-center">Aucune donnée</td></tr>';
-    return;
-  }
-
-  depensesData.innerHTML = data.map(row => {
-    const date = row.Date ? new Date(row.Date).toLocaleDateString('fr-FR') : '';
-    const montant = row.Montant
-      ? parseFloat(row.Montant).toLocaleString('fr-FR', { minimumFractionDigits: 2 })
-      : '';
-    return `
-      <tr>
-        <td>${date}</td>
-        <td>${row.Agence || ''}</td>
-        <td>${row.Designation || ''}</td>
-        <td>${row.Categorie || ''}</td>
-        <td class="text-right">${montant}</td>
-      </tr>`;
-  }).join('');
-}
-
-// 🔹 Écouteurs pour filtrage automatique
-document.addEventListener('change', e => {
-  if (['filterDateStart', 'filterDateEnd', 'filterAgency'].includes(e.target.id)) {
-    applyFilters();
-  }
-});
-
-function printDepenses() {
-    try {
-        const originalTable = document.getElementById('depensesTable');
-        if (!originalTable) {
-            alert("Impossible de trouver le tableau des dépenses à imprimer");
-            return;
-        }
-
-        // Vérifier s'il y a des données à imprimer
-        const dataRows = originalTable.querySelectorAll('tbody tr');
-        if (dataRows.length === 0 || (dataRows.length === 1 && dataRows[0].querySelector('td[colspan="5"]'))) {
-            alert("Aucune donnée disponible pour l'impression");
-            return;
-        }
-
-        // Clone le tableau pour l'impression
-        const printContent = originalTable.cloneNode(true);
-        
-        // Crée une fenêtre d'impression
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) {
-            alert("Veuillez autoriser les fenêtres pop-up pour cette fonctionnalité");
-            return;
-        }
-
-        // Style amélioré pour l'impression
-        const styles = `
-            <style>
-                body { 
-                    font-family: Arial, sans-serif; 
-                    margin: 0; 
-                    padding: 15px; 
-                    color: #333;
-                    font-size: 12px;
-                }
-                .print-header {
-                    text-align: center;
-                    margin-bottom: 20px;
-                    border-bottom: 1px solid #eee;
-                    padding-bottom: 10px;
-                }
-                .print-title {
-                    font-size: 18px;
-                    font-weight: bold;
-                    margin: 10px 0;
-                }
-                .print-info {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 15px;
-                }
-                table { 
-                    width: 100%; 
-                    border-collapse: collapse; 
-                    margin-top: 10px;
-                    font-size: 11px;
-                }
-                th, td { 
-                    border: 1px solid #ddd; 
-                    padding: 6px; 
-                    text-align: left; 
-                }
-                th { 
-                    background-color: #f2f2f2; 
-                    font-weight: bold;
-                }
-                .text-right { 
-                    text-align: right; 
-                }
-                .total-row { 
-                    font-weight: bold; 
-                    background-color: #f9f9f9;
-                }
-                tr:nth-child(even) {
-                    background-color: #f9f9f9;
-                }
-                @page { 
-                    size: auto;  
-                    margin: 10mm;
-                }
-                @media print {
-                    body { 
-                        margin: 0; 
-                        padding: 0; 
-                    }
-                    .no-print { 
-                        display: none !important; 
-                    }
-                    table {
-                        page-break-inside: auto;
-                    }
-                    tr {
-                        page-break-inside: avoid;
-                        page-break-after: auto;
-                    }
-                }
-            </style>
-        `;
-        
-        // Calcul du total
-        let total = 0;
-        const rows = printContent.getElementsByTagName('tbody')[0].rows;
-        for (let i = 0; i < rows.length; i++) {
-            const amountCell = rows[i].cells[4];
-            if (amountCell && !rows[i].querySelector('td[colspan]')) {
-                const amountText = amountCell.textContent
-                    .replace('', '')
-                    .replace(/\s/g, '')
-                    .replace(',', '.');
-                const amount = parseFloat(amountText);
-                if (!isNaN(amount)) {
-                    total += amount;
-                }
-            }
-        }
-        
-        // Formatage du total
-        const formattedTotal = total.toLocaleString('fr-FR', { 
-            minimumFractionDigits: 2, 
-            maximumFractionDigits: 2 
-        }) + '';
-        
-        // Ajout de la ligne de total
-        const tbody = printContent.getElementsByTagName('tbody')[0];
-        const totalRow = document.createElement('tr');
-        totalRow.className = 'total-row';
-        totalRow.innerHTML = `
-            <td colspan="4" class="text-right"><strong>Total</strong></td>
-            <td class="text-right"><strong>${formattedTotal}</strong></td>
-        `;
-        tbody.appendChild(totalRow);
-        
-        // Informations d'en-tête
-        const dateStart = document.getElementById('filterDateStart').value;
-        const dateEnd = document.getElementById('filterDateEnd').value;
-        let periodInfo = '';
-        
-        if (dateStart || dateEnd) {
-            const startText = dateStart ? new Date(dateStart).toLocaleDateString('fr-FR') : 'début';
-            const endText = dateEnd ? new Date(dateEnd).toLocaleDateString('fr-FR') : 'aujourd\'hui';
-            periodInfo = `Période : du ${startText} au ${endText}`;
-        } else {
-            periodInfo = 'Toutes les dépenses';
-        }
-        
-        // Construction du contenu HTML complet
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>Journal des Dépenses</title>
-                    ${styles}
-                </head>
-                <body>
-                    <div class="print-header">
-                        <div class="print-title">Journal des Dépenses</div>
-                        <div class="print-info">
-                            <span>${periodInfo}</span>
-                            <span>Imprimé le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
-                        </div>
-                    </div>
-                    ${printContent.outerHTML}
-
-                </body>
-            </html>
-        `);
-        
-        printWindow.document.close();
-    printWindow.onload = function () {
-    printWindow.focus();   // Met la fenêtre au premier plan
-    printWindow.print();   // Lance l'impression
-    printWindow.close();   // Ferme la fenêtre après impression
-};
-        
-    } catch (error) {
-        console.error("Erreur lors de l'impression:", error);
-        alert("Une erreur est survenue lors de la préparation de l'impression");
-    }
-}
-
-// Fonction pour ouvrir la liste des verres avec filtrage instantané
-function openListeVerre() {
-    const modalContainer = document.getElementById('modal-container');
-    const modalHTML = `
-        <div class="modal-overlay" id="verreModal">
-            <div class="modal-content large-modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        <i class="fas fa-glasses modal-icon"></i> Catalogue des Verres
-                    </h3>
-                </div>
-                <div class="modal-body">
-                    <div class="filters-panel">
-                        <div class="filter-group">
-                            <label for="filterGamme">Gamme</label>
-                            <select id="filterGamme" class="form-select" onchange="applyVerreFilter()">
-                                <option value="">Toutes les gammes</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="filterType">Type de Verre</label>
-                            <select id="filterType" class="form-select" onchange="applyVerreFilter()">
-                                <option value="">Tous les types</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="filterIndice">Indice</label>
-                            <select id="filterIndice" class="form-select" onchange="applyVerreFilter()">
-                                <option value="">Tous les indices</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="filterTraitement">Traitement</label>
-                            <select id="filterTraitement" class="form-select" onchange="applyVerreFilter()">
-                                <option value="">Tous les traitements</option>
-                            </select>
-                        </div>
-                        <div class="filter-actions">
-                            <button class="btn btn-outline-secondary btn-icon" onclick="resetVerreFilter()">
-                                <i class="fas fa-undo"></i> Réinitialiser
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="table-container">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover verre-catalogue-table" id="verreTable">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Gamme</th>
-                                        <th>Type de Verre</th>
-                                        <th>Indice</th>
-                                        <th>Traitement</th>
-                                        <th class="text-right">Prix (FCFA)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="verreData">
-                                    <tr>
-                                        <td colspan="5" class="text-center">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="sr-only">Chargement...</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="verre-message" class="alert alert-info mt-3" style="display: none;"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-icon" onclick="printVerreList()">
-                        <i class="fas fa-print"></i> Imprimer la liste
-                    </button>
-                    <button type="button" class="btn btn-primary btn-icon" onclick="closeModal()">
-                        <i class="fas fa-times"></i> Fermer
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    modalContainer.innerHTML = modalHTML;
-    document.getElementById('verreModal').classList.add('active');
-    loadVerreData();
-}
-
-// Variables globales
-let allVerreData = [];
-let uniqueGammes = [];
-let uniqueTypes = [];
-let uniqueIndices = [];
-let uniqueTraitements = [];
-
-// Chargement des données
-async function loadVerreData() {
-    const verreData = document.getElementById('verreData');
-    const messageDiv = document.getElementById('verre-message');
-    
-    verreData.innerHTML = '<tr><td colspan="5" class="text-center">Chargement en cours...</td></tr>';
-    messageDiv.style.display = 'none';
-
-    try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=importverre`;
-        
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-        
-        const responseData = await response.json();
-        
-        if (!responseData?.data?.rows) {
-            throw new Error('Structure de données invalide');
-        }
-        
-        // Transformation des données
-        allVerreData = responseData.data.rows.map(row => {
-            const headers = responseData.data.headers;
-            return {
-                Gamme: row[headers.indexOf('Gamme')] || '',
-                Type: row[headers.indexOf('Type de Verre')] || '',
-                Indice: row[headers.indexOf('Indice')] || '',
-                Traitement: row[headers.indexOf('TRAITEMENT')] || '',
-                Prix: parseFloat(row[headers.indexOf('PRIX')]) || 0
-            };
-        });
-
-        // Récupération des valeurs uniques pour les filtres
-        uniqueGammes = [...new Set(allVerreData.map(item => item.Gamme).filter(Boolean))];
-        uniqueTypes = [...new Set(allVerreData.map(item => item.Type).filter(Boolean))];
-        uniqueIndices = [...new Set(allVerreData.map(item => item.Indice).filter(Boolean))];
-        uniqueTraitements = [...new Set(allVerreData.map(item => item.Traitement).filter(Boolean))];
-
-        // Peuplement des filtres
-        populateSelect('filterGamme', uniqueGammes);
-        populateSelect('filterType', uniqueTypes);
-        populateSelect('filterIndice', uniqueIndices);
-        populateSelect('filterTraitement', uniqueTraitements);
-
-        displayFilteredVerre(allVerreData);
-        
-    } catch (error) {
-        console.error('Erreur:', error);
-        showVerreMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
-        verreData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
-    }
-}
-
-// Peuplement des select filters
-function populateSelect(selectId, values) {
-    const select = document.getElementById(selectId);
-    select.innerHTML = `<option value="">Tous</option>`;
-    
-    values.forEach(value => {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = value;
-        select.appendChild(option);
-    });
-}
-
-// Affichage des données filtrées
-function displayFilteredVerre(data) {
-    const verreData = document.getElementById('verreData');
-    
-    if (!data?.length) {
-        verreData.innerHTML = '<tr><td colspan="5" class="text-center">Aucun verre trouvé</td></tr>';
-        return;
-    }
-    
-    let html = '';
-    data.forEach(item => {
-        html += `
-            <tr>
-                <td>${item.Gamme}</td>
-                <td>${item.Type}</td>
-                <td>${item.Indice}</td>
-                <td>${item.Traitement}</td>
-                <td class="text-right">${item.Prix.toLocaleString('fr-FR', { 
-                    minimumFractionDigits: 2, 
-                    maximumFractionDigits: 2 })}
-                </td>
-
-            </tr>
-        `;
-    });
-    
-    verreData.innerHTML = html;
-}
-
-// Application des filtres
-function applyVerreFilter() {
-    const gamme = document.getElementById('filterGamme').value;
-    const type = document.getElementById('filterType').value;
-    const indice = document.getElementById('filterIndice').value;
-    const traitement = document.getElementById('filterTraitement').value;
-    
-    let filteredData = allVerreData.filter(item => {
-        return (!gamme || item.Gamme === gamme) &&
-               (!type || item.Type === type) &&
-               (!indice || item.Indice === indice) &&
-               (!traitement || item.Traitement === traitement);
-    });
-    
-    displayFilteredVerre(filteredData);
-    //showVerreMessage(`🔎 ${filteredData.length} verres trouvés`, 'info');
-}
-
-// Réinitialisation des filtres
-function resetVerreFilter() {
-    document.getElementById('filterGamme').value = '';
-    document.getElementById('filterType').value = '';
-    document.getElementById('filterIndice').value = '';
-    document.getElementById('filterTraitement').value = '';
-    
-    displayFilteredVerre(allVerreData);
-    showVerreMessage(`↻ Affichage de tous les ${allVerreData.length} verres`, 'info');
-}
-
-// Affichage des messages
-function showVerreMessage(message, type) {
-    const messageDiv = document.getElementById('verre-message');
-    messageDiv.textContent = message;
-    messageDiv.className = `alert alert-${type}`;
-    messageDiv.style.display = 'block';
-}
-
-// Fonction d'impression
-function printVerreList() {
-    const printWindow = window.open('', '_blank');
-    const printContent = document.getElementById('verreTable').cloneNode(true);
-    
-    // Styles d'impression
-    const styles = `
-        <style>
-            body { font-family: Arial, sans-serif; margin: 15px; }
-            h1 { color: #333; text-align: center; margin-bottom: 10px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            .text-right { text-align: right; }
-            @page { size: auto; margin: 10mm; }
-        </style>
-    `;
-
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Catalogue des Verres</title>
-                ${styles}
-            </head>
-            <body>
-                <h1>Catalogue des Verres</h1>
-                <p>Imprimé le ${new Date().toLocaleDateString('fr-FR')}</p>
-                ${printContent.outerHTML}
-            </body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.onload = function () {
-    printWindow.focus();   // Met la fenêtre au premier plan
-    printWindow.print();   // Lance l'impression
-    printWindow.close();   // Ferme la fenêtre après impression
-};
-
-}
-
-// Fonction pour ouvrir la liste des montures
-
-function openListeMonture() {
-    const modalContainer = document.getElementById('modal-container');
-    const modalHTML = `
-        <div class="modal-overlay" id="montureModal">
-            <div class="modal-content extra-large-modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        <i class="fas fa-glasses modal-icon"></i> Catalogue des Montures
-                    </h3>
-                </div>
-                <div class="modal-body">
-                    <div class="filters-panel compact-filters">
-                        <div class="filter-row">
-                            <!-- Filtre Référence -->
-                            <div class="filter-group">
-                                <label for="filterReference">Référence</label>
-                                <select id="filterReference" class="form-select" onchange="applyMontureFilter()">
-                                    <option value="">Toutes</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Filtre Fournisseur -->
-                            <div class="filter-group">
-                                <label for="filterFournisseur">Fournisseur</label>
-                                <select id="filterFournisseur" class="form-select" onchange="applyMontureFilter()">
-                                    <option value="">Tous</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Filtre Couleur -->
-                            <div class="filter-group">
-                                <label for="filterCouleur">Couleur</label>
-                                <select id="filterCouleur" class="form-select" onchange="applyMontureFilter()">
-                                    <option value="">Toutes</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Bouton Réinitialiser -->
-                            <div class="filter-action">
-                                <button class="btn btn-outline-secondary btn-icon" onclick="resetMontureFilter()">
-                                    <i class="fas fa-undo"></i> Réinitialiser
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="table-container">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover monture-catalogue-table" id="montureTable">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Référence</th>
-                                        <th>Fournisseur</th>
-                                        <th>Couleur</th>
-                                        <th class="text-right">Quantité</th>
-                                        <th>Code Unique</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="montureData">
-                                    <tr>
-                                        <td colspan="5" class="text-center">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="sr-only">Chargement...</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="monture-message" class="alert alert-info mt-3" style="display: none;"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-icon" onclick="printMontureList()">
-                        <i class="fas fa-print"></i> Imprimer
-                    </button>
-                    <button type="button" class="btn btn-primary btn-icon" onclick="closeModal()">
-                        <i class="fas fa-times"></i> Fermer
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    modalContainer.innerHTML = modalHTML;
-    document.getElementById('montureModal').classList.add('active');
-    loadMontureData();
-}
-// Variables globales pour les montures
-let allMontureData = [];
-let uniqueReferences = [];
-let uniqueFournisseurs = [];
-let uniqueCouleurs = [];
-
-// Chargement des données des montures
-async function loadMontureData() {
-    const montureData = document.getElementById('montureData');
-    const messageDiv = document.getElementById('monture-message');
-    
-    montureData.innerHTML = '<tr><td colspan="5" class="text-center">Chargement en cours...</td></tr>';
-    messageDiv.style.display = 'none';
-
-    try {
-        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=importmonture`;
-        
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
-        
-        const responseData = await response.json();
-        
-        if (!responseData?.data?.rows) {
-            throw new Error('Structure de données invalide');
-        }
-        
-        // Transformation des données
-        allMontureData = responseData.data.rows.map(row => {
-            const headers = responseData.data.headers;
-            return {
-                Reference: row[headers.indexOf('Référence')] || '',
-                Fournisseur: row[headers.indexOf('Fournisseur')] || '',
-                Couleur: row[headers.indexOf('Couleur')] || '',
-                Quantite: parseInt(row[headers.indexOf('Quantité')]) || 0,
-                CodeUnique: row[headers.indexOf('Code Unique')] || ''
-            };
-        });
-
-        // Récupération des valeurs uniques pour les filtres
-        uniqueReferences = [...new Set(allMontureData.map(item => item.Reference).filter(Boolean))];
-        uniqueFournisseurs = [...new Set(allMontureData.map(item => item.Fournisseur).filter(Boolean))];
-        uniqueCouleurs = [...new Set(allMontureData.map(item => item.Couleur).filter(Boolean))];
-
-        // Peuplement des filtres
-        populateSelect('filterReference', uniqueReferences);
-        populateSelect('filterFournisseur', uniqueFournisseurs);
-        populateSelect('filterCouleur', uniqueCouleurs);
-
-        displayFilteredMonture(allMontureData);
-        
-    } catch (error) {
-        console.error('Erreur:', error);
-        showMontureMessage(`❌ Erreur: ${error.message || 'Chargement échoué'}`, 'error');
-        montureData.innerHTML = '<tr><td colspan="5" class="text-center">Erreur de chargement</td></tr>';
-    }
-}
-
-// Affichage des données filtrées pour montures
-function displayFilteredMonture(data) {
-    const montureData = document.getElementById('montureData');
-    
-    if (!data?.length) {
-        montureData.innerHTML = '<tr><td colspan="5" class="text-center">Aucune monture trouvée</td></tr>';
-        return;
-    }
-    
-    let html = '';
-    data.forEach(item => {
-        html += `
-            <tr>
-                <td>${item.Reference}</td>
-                <td>${item.Fournisseur}</td>
-                <td>${item.Couleur}</td>
-                <td class="text-right">${item.Quantite}</td>
-                <td>${item.CodeUnique}</td>
-            </tr>
-        `;
-    });
-    
-    montureData.innerHTML = html;
-}
-
-// Application des filtres pour montures
-function applyMontureFilter() {
-    const reference = document.getElementById('filterReference').value;
-    const fournisseur = document.getElementById('filterFournisseur').value;
-    const couleur = document.getElementById('filterCouleur').value;
-    
-    let filteredData = allMontureData.filter(item => {
-        return (!reference || item.Reference === reference) &&
-               (!fournisseur || item.Fournisseur === fournisseur) &&
-               (!couleur || item.Couleur === couleur);
-    });
-    
-    displayFilteredMonture(filteredData);
-    //showMontureMessage(`🔎 ${filteredData.length} montures trouvées`, 'info');
-}
-
-// Réinitialisation des filtres pour montures
-function resetMontureFilter() {
-    document.getElementById('filterReference').value = '';
-    document.getElementById('filterFournisseur').value = '';
-    document.getElementById('filterCouleur').value = '';
-    
-    displayFilteredMonture(allMontureData);
-    showMontureMessage(`↻ Affichage de toutes les ${allMontureData.length} montures`, 'info');
-}
-
-// Affichage des messages pour montures
-function showMontureMessage(message, type) {
-    const messageDiv = document.getElementById('monture-message');
-    messageDiv.textContent = message;
-    messageDiv.className = `alert alert-${type}`;
-    messageDiv.style.display = 'block';
-}
-
-// Fonction d'impression pour montures
-function printMontureList() {
-    const printWindow = window.open('', '_blank');
-    const printContent = document.getElementById('montureTable').cloneNode(true);
-    
-    // Styles d'impression
-    const styles = `
-        <style>
-            body { font-family: Arial, sans-serif; margin: 15px; }
-            h1 { color: #333; text-align: center; margin-bottom: 10px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            .text-right { text-align: right; }
-            @page { size: auto; margin: 10mm; }
-        </style>
-    `;
-
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Catalogue des Montures</title>
-                ${styles}
-            </head>
-            <body>
-                <h1>Catalogue des Montures</h1>
-                <p>Imprimé le ${new Date().toLocaleDateString('fr-FR')}</p>
-                ${printContent.outerHTML}
-            </body>
-        </html>
-    `);
-    printWindow.document.close();
-    printWindow.onload = function () {
-    printWindow.focus();   // Met la fenêtre au premier plan
-    printWindow.print();   // Lance l'impression
-    printWindow.close();   // Ferme la fenêtre après impression
-};
-
 }
 
 // Variables globales pour les factures
@@ -13319,9 +12270,9 @@ function createClientTooltip(clientData) {
         
         // Formater les montants
         const formatMontant = (montant) => {
-            if (!montant) return "0 FCFA";
+            if (!montant) return "0 ";
             const num = parseFloat(montant);
-            return isNaN(num) ? "0 FCFA" : `${num.toLocaleString('fr-FR')} FCFA`;
+            return isNaN(num) ? "0 " : `${num.toLocaleString('fr-FR')} `;
         };
         
         return `
@@ -13430,6 +12381,7 @@ function initializeTooltips() {
         });
     });
 }
+        
     // Sélection d'un client
     function selectClient(clientData) {
         localStorage.setItem("selectedClient", JSON.stringify(clientData));
@@ -13627,7 +12579,7 @@ window.openDepense = async function() {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="depenseMontant">Montant (FCFA) <span class="required">*</span></label>
+                                <label for="depenseMontant">Montant () <span class="required">*</span></label>
                                 <input type="number" id="depenseMontant" class="form-control" placeholder="0" required>
                             </div>
                             
@@ -13691,12 +12643,13 @@ async function submitDepense() {
         
         return;
     }
-
+    const username = sessionStorage.getItem("utilisateur") || localStorage.getItem("utilisateur") || 'Utilisateur Inconnu';
     const depenseData = {
         date: document.getElementById('depenseDate').value,
         agence: document.getElementById('depenseAgence').value,
         designation: document.getElementById('depenseDesignation').value.trim(),
         categorie: document.getElementById('depenseCategorie').value,
+        utilisateur: username, // CORRECTION : Ici on définit bien utilisateur
         montant: parseFloat(document.getElementById('depenseMontant').value)
     };
 
@@ -13915,10 +12868,10 @@ function openNewSale() {
                     </select>
                 </td>
                 <td>
-                    <input type="number" name="od_dp" value="0" min="0" class="small-input">
+                    <input type="text" name="od_dp" value="0" class="small-input">
                 </td>
                 <td>
-                    <input type="number" name="od_hauteur" value="0" min="0" class="small-input">
+                    <input type="text"name="od_hauteur" value="0" class="small-input">
                 </td>
             </tr>
 
@@ -13946,10 +12899,10 @@ function openNewSale() {
                     </select>
                 </td>
                 <td>
-                    <input type="number" name="og_dp" value="0" min="0" class="small-input">
+                    <input type="text" name="og_dp" value="0"  class="small-input">
                 </td>
                 <td>
-                    <input type="number" name="og_hauteur" value="0" min="0" class="small-input">
+                    <input type="text" name="og_hauteur" value="0" class="small-input">
                 </td>
             </tr>
         </tbody>
@@ -14032,19 +12985,19 @@ function openNewSale() {
                 <div class="measures-grid">
                     <div class="measure-group">
                         <label>DP OD</label>
-                        <input type="number" name="od_dp" value="0" min="0">
+                        <input type="text" name="od_dp" value="0" >
                     </div>
                     <div class="measure-group">
                         <label>DP OG</label>
-                        <input type="number" name="og_dp" value="0" min="0">
+                        <input type="text" name="og_dp" value="0" >
                     </div>
                     <div class="measure-group">
                         <label>Hauteur OD</label>
-                        <input type="number" name="od_hauteur" value="0" min="0">
+                        <input type="text" name="od_hauteur" value="0">
                     </div>
                     <div class="measure-group">
                         <label>Hauteur OG</label>
-                        <input type="number" name="og_hauteur" value="0" min="0">
+                        <input type="text" name="og_hauteur" value="0">
                     </div>
                 </div>
             </div>
@@ -14123,17 +13076,17 @@ function openNewSale() {
                             <div class="payment-card">
                                 <div class="payment-row">
                                     <div class="payment-group">
-                                        <label class="payment-label required-field">Montant Monture (FCFA)</label>
+                                        <label class="payment-label required-field">Montant Monture ()</label>
                                         <input type="number" class="form-control" name="montant_monture" id="montant_monture" required value="0" oninput="calculerTotal()" />
                                     </div>
                                     
                                     <div class="payment-group">
-                                        <label class="payment-label required-field">Montant Verres (FCFA)</label>
+                                        <label class="payment-label required-field">Montant Verres ()</label>
                                         <input type="number" class="form-control" name="montant_verres" id="montant_verres" required value="0" oninput="calculerTotal()" />
                                     </div>
                                     
                                     <div class="payment-group">
-                                        <label class="payment-label">Frais de livraison (FCFA)</label>
+                                        <label class="payment-label">Frais de livraison ()</label>
                                         <input type="number" class="form-control" name="frais_livraison" id="frais_livraison" value="0" oninput="calculerTotal()" />
                                     </div>
                                 </div>
@@ -14142,7 +13095,7 @@ function openNewSale() {
                             <div class="payment-card">
                                 <div class="payment-row">
                                     <div class="payment-group">
-                                        <label class="payment-label">Total Brut (FCFA)</label>
+                                        <label class="payment-label">Total Brut ()</label>
                                         <div class="payment-value" id="total_brut_display">0</div>
                                         <input type="hidden" name="total_brut" id="total_brut" />
                                     </div>
@@ -14152,14 +13105,14 @@ function openNewSale() {
                                         <div class="discount-selector">
                                             <input type="number" class="form-control discount-amount" name="remise" id="remise" value="0" oninput="calculerTotal()" />
                                             <select class="form-control discount-type" name="remise_type" id="remise_type" onchange="calculerTotal()">
-                                                <option value="FCFA">FCFA</option>
+                                                <option value=""></option>
                                                 <option value="%">%</option>
                                             </select>
                                         </div>
                                     </div>
                                     
                                     <div class="payment-group">
-                                        <label class="payment-label">Part Assurance (FCFA)</label>
+                                        <label class="payment-label">Part Assurance ()</label>
                                         <input type="number" class="form-control" name="part_assurance" id="part_assurance" value="0" oninput="calculerTotal()" />
                                     </div>
                                 </div>
@@ -14168,18 +13121,18 @@ function openNewSale() {
                             <div class="payment-card">
                                 <div class="payment-row">
                                     <div class="payment-group">
-                                        <label class="payment-label">Net à payer (FCFA)</label>
+                                        <label class="payment-label">Net à payer ()</label>
                                         <div class="payment-value" id="net_a_payer_display">0</div>
                                         <input type="hidden" name="net_a_payer" id="net_a_payer" />
                                     </div>
                                     
                                     <div class="payment-group">
-                                        <label class="payment-label">Acompte (FCFA)</label>
+                                        <label class="payment-label">Acompte ()</label>
                                         <input type="number" class="form-control" name="acompte" id="acompte" value="0" oninput="calculerTotal()" />
                                     </div>
                                     
                                     <div class="payment-group">
-                                        <label class="payment-label">Reste à payer (FCFA)</label>
+                                        <label class="payment-label">Reste à payer ()</label>
                                         <div class="payment-value" id="reste_a_payer_display">0</div>
                                         <input type="hidden" name="reste_a_payer" id="reste_a_payer" />
                                     </div>
@@ -14226,10 +13179,11 @@ function openNewSale() {
                                 <input type="text" name="numero_police" id="numero_police" class="form-control" placeholder="Numéro de police d'assurance" />
                             </div>
                             
-                                <div class="form-group">
-                                    <label for="taux_couverture">Taux de couverture (%)</label>
-                                    <input type="number" name="taux_couverture" id="taux_couverture" class="form-control" placeholder="Ex: 80" min="0" max="100" />
-                                </div>
+                            <div class="form-group">
+    <label for="tva">TVA sur la monture (18%)</label>
+    <input type="number" name="tva" id="tva" class="form-control" readonly 
+           style="background-color: #f8f9fa;" />
+</div>
                                 
                                 <div class="form-group">
                                     <label for="assure_principal">Assuré Principal</label>
@@ -14265,19 +13219,19 @@ function openNewSale() {
                                     <h4 style="margin-bottom: 1rem; color: #333;">Répartition des montants assurance</h4>
                                     <div class="payment-row">
                                         <div class="payment-group">
-                                            <label class="payment-label required-field">Part du client (FCFA)</label>
+                                            <label class="payment-label required-field">Part du client ()</label>
                                             <input type="number" class="form-control" name="part_client_assurance" id="part_client_assurance" 
                                                   value="0" oninput="calculerTotalAssurance()" />
                                         </div>
                                         
                                         <div class="payment-group">
-                                            <label class="payment-label required-field">Part assureur (FCFA)</label>
+                                            <label class="payment-label required-field">Part assureur ()</label>
                                             <input type="number" class="form-control" name="part_assureur" id="part_assureur" 
                                                   value="0" oninput="calculerTotalAssurance()" />
                                         </div>
                                         
                                         <div class="payment-group">
-                                            <label class="payment-label">Montant total assurance (FCFA)</label>
+                                            <label class="payment-label">Montant total assurance ()</label>
                                             <div class="payment-value" id="montant_total_assurance_display">0</div>
                                             <input type="hidden" name="montant_total_assurance" id="montant_total_assurance" />
                                         </div>
@@ -14313,12 +13267,6 @@ function openNewSale() {
                                 <textarea class="form-control" name="adresse_livraison" id="adresse_livraison" rows="3" required></textarea>
                             </div>
                             
-<div class="form-group" style="grid-column: span 2">
-    <label>Id de la proforma</label>
-    <select class="form-control" name="infos_complementaires" id="infos_complementaires">
-        <option value="">-- Choisir --</option>
-    </select>
-</div>
                         </div>
                         </div>
                         <!-- Navigation entre les étapes -->
@@ -15038,8 +13986,7 @@ function validateStep(step) {
     // Validation pour l'étape 6 (Livraison)
     if (step === 4) {
         const requiredFields = [
-            'date_livraison', 'contact_livraison_type', 
-            'telephone_contact', 'adresse_livraison'
+            'date_livraison'
         ];
         
         for (const fieldId of requiredFields) {
@@ -15187,7 +14134,7 @@ function setupEventListeners() {
         if (field) field.addEventListener('input', calculerTotal);
     });
     
-    // Écouteur pour le type de remise (FCFA ou %)
+    // Écouteur pour le type de remise ( ou %)
     const remiseType = modal.querySelector('#remise_type');
     if (remiseType) remiseType.addEventListener('change', calculerTotal);
     
@@ -15320,7 +14267,9 @@ if (form) {
         prescriptionFields.forEach(field => {
             console.log(`${field}: ${data[field]}`);
         });
-
+    const submitBtn = document.getElementById('newSaleModal');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
         try {
             // Simuler un délai d'envoi pour voir les animations
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -15349,6 +14298,7 @@ if (form) {
     });
     }
 }
+
 
 // Fonction pour afficher la barre de chargement
 function showLoadingBar() {
@@ -15472,12 +14422,22 @@ function calculerTotal() {
     const montantVerres = getValue('montant_verres');
     const fraisLivraison = getValue('frais_livraison');
     const remise = getValue('remise');
-    const remiseType = modal.querySelector('#remise_type')?.value || 'FCFA';
+    const remiseType = modal.querySelector('#remise_type')?.value || '';
     const partAssurance = getValue('part_assurance');
     const acompte = getValue('acompte');
     
-    // Calculs
-    const totalBrut = montantMonture + montantVerres;
+    // NOUVEAU : Calcul automatique de la TVA (18% du montant monture)
+    const tvaMonture = montantMonture * 0.18;
+    
+    // Mettre à jour le champ TVA (lecture seule)
+    const tvaInput = modal.querySelector('#tva');
+    if (tvaInput) {
+        tvaInput.value = Math.round(tvaMonture);
+    }
+    
+    // NOUVEAU : Calculs avec TVA incluse
+    const totalBrut = montantMonture + montantVerres + fraisLivraison + tvaMonture;
+    
     let montantRemise = 0;
     if (remiseType === '%') {
         montantRemise = totalBrut * (remise / 100);
@@ -15510,7 +14470,6 @@ function calculerTotal() {
         resteAPayerDisplay.textContent = Math.round(resteAPayer).toLocaleString();
     }
 }
-
 // Fonction pour remplir une liste déroulante
 function populateSelect(id, options) {
     const modal = document.getElementById('newSaleModal');
@@ -16283,7 +15242,7 @@ window.openAjoutGrandCaisse = async function() {
                             </div>
 
                             <div class="form-group">
-                                <label>Montant (FCFA) <span class="required">*</span></label>
+                                <label>Montant () <span class="required">*</span></label>
                                 <input type="number" id="gcMontant" class="form-control" placeholder="0" required>
                             </div>
 
@@ -17472,24 +16431,11 @@ function calculateKeyMetrics(clients) {
     
     const tauxConversion = totalVentes > 0 ? (clientsAvecAchat / totalVentes) * 100 : 0;
     
-    // Nouveaux clients (inscrits dans les 30 derniers jours)
-    const nouveauxClients = clients.filter(client => {
-        const dateStr = client['Date Enregistrement'] || client['Date'] || '';
-        if (!dateStr) return false;
-        
-        const clientDate = parseDate(dateStr);
-        const now = new Date();
-        const diffTime = Math.abs(now - clientDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        return diffDays <= 30;
-    }).length;
     
     return {
         totalVentes,
         moyennePanier,
-        tauxConversion,
-        nouveauxClients
+        tauxConversion
     };
 }
 
@@ -17723,7 +16669,7 @@ function renderSalesChart(data) {
                     intersect: false,
                     callbacks: {
                         label: function(context) {
-                            return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} FCFA`;
+                            return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} `;
                         }
                     }
                 }
@@ -17733,7 +16679,7 @@ function renderSalesChart(data) {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return value.toLocaleString() + ' FCFA';
+                            return value.toLocaleString() + ' ';
                         }
                     },
                     grid: {
@@ -17756,7 +16702,7 @@ function renderSalesChart(data) {
     // Mettre à jour le total CA
     const totalCAElement = document.getElementById('totalCA');
     if (totalCAElement) {
-        totalCAElement.textContent = `${data.totalCA.toLocaleString()} FCFA`;
+        totalCAElement.textContent = `${data.totalCA.toLocaleString()} `;
     }
 }
 
@@ -17785,8 +16731,8 @@ function renderAgencyStats(data) {
         const row = `
             <tr>
                 <td><strong>${agency}</strong></td>
-                <td>${agencyData.currentCA.toLocaleString()} FCFA</td>
-                <td>${agencyData.previousCA.toLocaleString()} FCFA</td>
+                <td>${agencyData.currentCA.toLocaleString()} </td>
+                <td>${agencyData.previousCA.toLocaleString()} </td>
                 <td>
                     <span class="evolution-indicator ${evolutionClass}">
                         <i class="fas fa-arrow-${evolution > 0 ? 'up' : 'down'}"></i>
@@ -17818,15 +16764,9 @@ function renderKeyMetrics(data) {
         },
         {
             label: 'Panier Moyen',
-            value: `${Math.round(metrics.moyennePanier).toLocaleString()} FCFA`,
+            value: `${Math.round(metrics.moyennePanier).toLocaleString()} `,
             evolution: metrics.moyennePanierEvolution,
             icon: 'receipt'
-        },
-        {
-            label: 'Nouveaux Clients',
-            value: metrics.nouveauxClients,
-            evolution: metrics.nouveauxClientsEvolution,
-            icon: 'user-plus'
         }
     ];
     
@@ -17948,7 +16888,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const modalHTML = `
                     <div class="download-modal" id="downloadModal">
                         <div class="download-modal-content">
-                            <h2>📱 Télécharger Optic'App</h2>
+                            <h2>📱 Télécharger VisioPro</h2>
                             <p>Installez l'application mobile pour une meilleure expérience</p>
                             
                             <div class="download-steps">
