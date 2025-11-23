@@ -38,10 +38,14 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-body {
-    background-color: #f1f5f9;
-    color: #334155;
-}
+        body {
+            background: url("fond.png") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
 
 .dashboard {
     display: flex;
@@ -6863,7 +6867,7 @@ body.modal-open {
                         </div>
                         <span>Réception Stock</span>
                     </a>
-                    <a href="#" onclick="openListeProduit()">
+                    <a href="#" onclick="openDataProduit()">
                         <div class="submenu-icon">
                             <i class="fas fa-clipboard-list"></i>
                         </div>
@@ -6882,7 +6886,7 @@ body.modal-open {
                     <i class="fas fa-chevron-down chevron"></i>
                 </a>
                 <div class="submenu">
-                    <a href="#" onclick="openFacturation()">
+                    <a href="#" onclick="openDatafacture()">
                         <div class="submenu-icon">
                             <i class="fas fa-file-medical"></i>
                         </div>
@@ -8060,7 +8064,7 @@ body.modal-open {
                                 <div style="display: flex; gap: 0.5rem;">
                                     <input type="number" name="remise" id="remise" value="0" oninput="calculerTotalPro()" style="flex: 2;" />
                                     <select name="remise_type" id="remise_type" onchange="calculerTotalPro()" style="flex: 1;">
-                                        <option value=""></option>
+                                        <option value="">FCFA</option>
                                         <option value="%">%</option>
                                     </select>
                                 </div>
@@ -8388,6 +8392,14 @@ function openDataCleint() {
 window.location.href = 'Data.html';
 }
 
+function openDataProduit() {
+window.location.href = 'Stock.html';
+}
+
+function openDatafacture() {
+window.location.href = 'Facturation.html';
+}
+
 function openLooker() {
     if (!hasAdminRights()) {
         alert("⛔ Accès refusé");
@@ -8511,7 +8523,7 @@ async function loadFournisseurs(selectId) {
         const data = await response.json();
         
         if (data.success && data.data.fournisseur) {
-            supplierSelect.innerHTML = '<option value="">-- Sélectionnez un fournisseur --</option>';
+            supplierSelect.innerHTML = '<option value="">-- Sélectionnez une Agence --</option>';
             
             data.data.fournisseur.sort().forEach(fournisseur => {
                 const option = document.createElement('option');
@@ -8523,7 +8535,7 @@ async function loadFournisseurs(selectId) {
             // Ajouter l'option pour nouveau fournisseur
             const newOption = document.createElement('option');
             newOption.value = 'new';
-            newOption.textContent = '+ Ajouter un nouveau fournisseur';
+            newOption.textContent = '+ Ajouter';
             supplierSelect.appendChild(newOption);
         }
     } catch (error) {
@@ -8557,7 +8569,7 @@ function addNewSupplier(selectId) {
     const newSupplierName = newSupplierInput.value.trim();
     
     if (!newSupplierName) {
-        alert('Veuillez saisir un nom de fournisseur');
+        alert('Veuillez saisir un nom ');
         return;
     }
     
@@ -8599,10 +8611,10 @@ function updateProductFields() {
                     <input type="text" id="monturePrix" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="montureSupplier">Fournisseur <span class="required">*</span></label>
+                    <label for="montureSupplier">Agence <span class="required">*</span></label>
                     <div style="position: relative;">
                         <select id="montureSupplier" class="form-control" required onchange="toggleNewSupplierField('montureSupplier')">
-                            <option value="">-- Chargement des fournisseurs --</option>
+                            <option value="">-- Chargement des Agence --</option>
                         </select>
                         <span id="loading-montureSupplier" class="loading-indicator" style="display: none;">
                             <i class="fas fa-spinner fa-spin"></i>
@@ -8610,7 +8622,7 @@ function updateProductFields() {
                     </div>
                     <div id="newField-montureSupplier" style="display: none; margin-top: 5px;">
                         <div style="display: flex; gap: 5px;">
-                            <input type="text" id="newName-montureSupplier" class="form-control" placeholder="Nom du nouveau fournisseur">
+                            <input type="text" id="newName-montureSupplier" class="form-control" placeholder="agence">
                             <button type="button" class="btn btn-success" onclick="addNewSupplier('montureSupplier')" style="white-space: nowrap;">
                                 <i class="fas fa-check"></i>
                             </button>
@@ -8618,7 +8630,7 @@ function updateProductFields() {
                     </div>
                     <button type="button" id="addBtn-montureSupplier" class="btn btn-small" onclick="document.getElementById('montureSupplier').value = 'new'; toggleNewSupplierField('montureSupplier');" 
                             style="margin-top: 5px; padding: 0.25rem 0.5rem; display: none;">
-                        <i class="fas fa-plus"></i> Nouveau fournisseur
+                        <i class="fas fa-plus"></i> Nouveau
                     </button>
                 </div>
             `;
@@ -8631,10 +8643,10 @@ function updateProductFields() {
                     <input type="text" id="etuiReference" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="etuiSupplier">Fournisseur <span class="required">*</span></label>
+                    <label for="etuiSupplier">Agence <span class="required">*</span></label>
                     <div style="position: relative;">
                         <select id="etuiSupplier" class="form-control" required onchange="toggleNewSupplierField('etuiSupplier')">
-                            <option value="">-- Chargement des fournisseurs --</option>
+                            <option value="">-- Chargement des Agence --</option>
                         </select>
                         <span id="loading-etuiSupplier" class="loading-indicator" style="display: none;">
                             <i class="fas fa-spinner fa-spin"></i>
@@ -8642,7 +8654,7 @@ function updateProductFields() {
                     </div>
                     <div id="newField-etuiSupplier" style="display: none; margin-top: 5px;">
                         <div style="display: flex; gap: 5px;">
-                            <input type="text" id="newName-etuiSupplier" class="form-control" placeholder="Nom du nouveau fournisseur">
+                            <input type="text" id="newName-etuiSupplier" class="form-control" placeholder="">
                             <button type="button" class="btn btn-success" onclick="addNewSupplier('etuiSupplier')" style="white-space: nowrap;">
                                 <i class="fas fa-check"></i>
                             </button>
@@ -8650,7 +8662,7 @@ function updateProductFields() {
                     </div>
                     <button type="button" id="addBtn-etuiSupplier" class="btn btn-small" onclick="document.getElementById('etuiSupplier').value = 'new'; toggleNewSupplierField('etuiSupplier');" 
                             style="margin-top: 5px; padding: 0.25rem 0.5rem; display: none;">
-                        <i class="fas fa-plus"></i> Nouveau fournisseur
+                        <i class="fas fa-plus"></i> Nouveau Agence
                     </button>
                 </div>
             `;
@@ -8659,10 +8671,10 @@ function updateProductFields() {
         case 'nettoyant':
             fieldsHTML = `
                 <div class="form-group">
-                    <label for="nettoyantSupplier">Fournisseur <span class="required">*</span></label>
+                    <label for="nettoyantSupplier">Agence <span class="required">*</span></label>
                     <div style="position: relative;">
                         <select id="nettoyantSupplier" class="form-control" required onchange="toggleNewSupplierField('nettoyantSupplier')">
-                            <option value="">-- Chargement des fournisseurs --</option>
+                            <option value="">-- Chargement  --</option>
                         </select>
                         <span id="loading-nettoyantSupplier" class="loading-indicator" style="display: none;">
                             <i class="fas fa-spinner fa-spin"></i>
@@ -8670,7 +8682,7 @@ function updateProductFields() {
                     </div>
                     <div id="newField-nettoyantSupplier" style="display: none; margin-top: 5px;">
                         <div style="display: flex; gap: 5px;">
-                            <input type="text" id="newName-nettoyantSupplier" class="form-control" placeholder="Nom du nouveau fournisseur">
+                            <input type="text" id="newName-nettoyantSupplier" class="form-control" placeholder="Nom du nouveau">
                             <button type="button" class="btn btn-success" onclick="addNewSupplier('nettoyantSupplier')" style="white-space: nowrap;">
                                 <i class="fas fa-check"></i>
                             </button>
@@ -8678,7 +8690,7 @@ function updateProductFields() {
                     </div>
                     <button type="button" id="addBtn-nettoyantSupplier" class="btn btn-small" onclick="document.getElementById('nettoyantSupplier').value = 'new'; toggleNewSupplierField('nettoyantSupplier');" 
                             style="margin-top: 5px; padding: 0.25rem 0.5rem; display: none;">
-                        <i class="fas fa-plus"></i> Nouveau fournisseur
+                        <i class="fas fa-plus"></i> Nouveau 
                     </button>
                 </div>
             `;
@@ -8691,10 +8703,10 @@ function updateProductFields() {
                     <input type="text" id="autreReference" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="autreSupplier">Fournisseur</label>
+                    <label for="autreSupplier">Agence</label>
                     <div style="position: relative;">
                         <select id="autreSupplier" class="form-control" onchange="toggleNewSupplierField('autreSupplier')">
-                            <option value="">-- Chargement des fournisseurs --</option>
+                            <option value="">-- Chargement --</option>
                         </select>
                         <span id="loading-autreSupplier" class="loading-indicator" style="display: none;">
                             <i class="fas fa-spinner fa-spin"></i>
@@ -8702,7 +8714,7 @@ function updateProductFields() {
                     </div>
                     <div id="newField-autreSupplier" style="display: none; margin-top: 5px;">
                         <div style="display: flex; gap: 5px;">
-                            <input type="text" id="newName-autreSupplier" class="form-control" placeholder="Nom du nouveau fournisseur">
+                            <input type="text" id="newName-autreSupplier" class="form-control" placeholder="Nom du nouveau ">
                             <button type="button" class="btn btn-success" onclick="addNewSupplier('autreSupplier')" style="white-space: nowrap;">
                                 <i class="fas fa-check"></i>
                             </button>
@@ -8710,7 +8722,7 @@ function updateProductFields() {
                     </div>
                     <button type="button" id="addBtn-autreSupplier" class="btn btn-small" onclick="document.getElementById('autreSupplier').value = 'new'; toggleNewSupplierField('autreSupplier');" 
                             style="margin-top: 5px; padding: 0.25rem 0.5rem; display: none;">
-                        <i class="fas fa-plus"></i> Nouveau fournisseur
+                        <i class="fas fa-plus"></i> Nouveau 
                     </button>
                 </div>
                 <div class="form-group">
@@ -8814,7 +8826,7 @@ async function submitProductForm() {
             const newNameInput = document.getElementById('newName-' + selectId);
             const newSupplierName = newNameInput.value.trim();
             if (!newSupplierName) {
-                throw new Error('Veuillez saisir le nom du nouveau fournisseur');
+                throw new Error('Veuillez saisir le nom du nouveau ');
             }
             return newSupplierName;
         } else {
@@ -10933,9 +10945,9 @@ function openListeProduit() {
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label for="filterFournisseur">Fournisseur</label>
-                            <select id="filterFournisseur" class="form-select" onchange="applyProduitFilter()">
-                                <option value="">Tous les fournisseurs</option>
+                            <label for="filterAgence">Agence</label>
+                            <select id="filterAgence" class="form-select" onchange="applyProduitFilter()">
+                                <option value="">Tous les Agences</option>
                             </select>
                         </div>
                         <div class="filter-group">
@@ -10963,7 +10975,7 @@ function openListeProduit() {
                                         <th>Catégorie</th>
                                         <th>Référence</th>
                                         <th>Qtés Ajouté</th>
-                                        <th>Fournisseur</th>
+                                        <th>Agence</th>
                                         <th>Price </th>
                                         <th>Disponible</th>
                                         <th>Info</th>
@@ -11007,7 +11019,7 @@ function openListeProduit() {
 // Variables globales
 let allProduitData = [];
 let uniqueCategorie = [];
-let uniqueFournisseur = [];
+let uniqueAgence = [];
 
 // Charger les données produits
 async function loadProduitData() {
@@ -11030,7 +11042,7 @@ async function loadProduitData() {
             Categorie: row[headers.indexOf('Catégorie')] || '',
             Reference: row[headers.indexOf('Référence')] || '',
             Quantite: row[headers.indexOf('Quantité')] || 0,
-            Fournisseur: row[headers.indexOf('Fournisseur')] || '',
+            Agence: row[headers.indexOf('Agence')] || '',
             Price: row[headers.indexOf('Prix de vente')] || '',
             Disponible: row[headers.indexOf('Disponible')] || '',
             Informations: row[headers.indexOf('Informations')] || '',
@@ -11038,10 +11050,10 @@ async function loadProduitData() {
         }));
 
         uniqueCategorie = [...new Set(allProduitData.map(i => i.Categorie).filter(Boolean))];
-        uniqueFournisseur = [...new Set(allProduitData.map(i => i.Fournisseur).filter(Boolean))];
+        uniqueAgence = [...new Set(allProduitData.map(i => i.Agence).filter(Boolean))];
 
         populateFiltreProduit('filterCategorie', uniqueCategorie);
-        populateFiltreProduit('filterFournisseur', uniqueFournisseur);
+        populateFiltreProduit('filterAgence', uniqueAgence);
 
         displayFilteredProduit(allProduitData);
     } catch (error) {
@@ -11076,7 +11088,7 @@ function displayFilteredProduit(data) {
             <td>${item.Categorie}</td>
             <td>${item.Reference}</td>
             <td>${item.Quantite}</td>
-            <td>${item.Fournisseur}</td>
+            <td>${item.Agence}</td>
             <td>${item.Price}</td>
             <td>${item.Disponible}</td>
             <td>${item.Informations}</td>
@@ -11088,7 +11100,7 @@ function displayFilteredProduit(data) {
 // Filtres
 function applyProduitFilter() {
     const categorie = document.getElementById('filterCategorie').value;
-    const fournisseur = document.getElementById('filterFournisseur').value;
+    const agence = document.getElementById('filterAgence').value;
     const disponibleInput = document.getElementById('filterDisponible').value;
     const searchReference = document.getElementById('searchReference').value.toLowerCase();
     
@@ -11100,7 +11112,7 @@ function applyProduitFilter() {
         const quantiteDisponible = parseInt(item.Disponible) || 0;
         
         return (!categorie || item.Categorie === categorie) &&
-               (!fournisseur || item.Fournisseur === fournisseur) &&
+               (!agence || item.Agence === agence) &&
                (!quantiteMin || quantiteDisponible >= quantiteMin) &&
                (!searchReference || 
                 (item.Reference && 
@@ -11112,7 +11124,7 @@ function applyProduitFilter() {
 
 function resetProduitFilter() {
     document.getElementById('filterCategorie').value = '';
-    document.getElementById('filterFournisseur').value = '';
+    document.getElementById('filterAgence').value = '';
     document.getElementById('filterDisponible').value = '';
     document.getElementById('searchReference').value = '';
     displayFilteredProduit(allProduitData);
@@ -11484,7 +11496,7 @@ function openInventaireUpdate() {
                                     <tr>
                                         <th>Catégorie</th>
                                         <th>Référence</th>
-                                        <th>Fournisseur</th>
+                                        <th>Agence</th>
                                         <th>Prix</th>
                                         <th>Stock Actuel</th>
                                         <th>Nouveau Stock</th>
@@ -11501,7 +11513,7 @@ function openInventaireUpdate() {
                                         <tr class="product-row" data-reference="${referenceLower}">
                                             <td class="text-muted">${item.Categorie || ''}</td>
                                             <td class="text-muted reference-cell">${referenceString}</td>
-                                            <td class="text-muted">${item.Fournisseur || ''}</td>
+                                            <td class="text-muted">${item.Agence || ''}</td>
                                             <td class="text-muted">${item.Price || ''}</td>
                                             <td class="text-muted">${item.Disponible || 0}</td>
                                             <td>
@@ -11621,7 +11633,7 @@ async function validerMiseAJourInventaire() {
             modifications.push({
                 reference: input.dataset.reference || '',
                 categorie: row.cells[0].textContent || '',
-                fournisseur: row.cells[2].textContent || '',
+                agence: row.cells[2].textContent || '',
                 prix: row.cells[3].textContent || '',
                 nouvelleQuantite: nouvelleQuantite
             });
@@ -12110,7 +12122,6 @@ if (!document.getElementById('inventaire-styles')) {
     styleElement.textContent = inventaireStyles;
     document.head.appendChild(styleElement);
 }
-
 
 // Variables globales
 let allClientsData = [];
@@ -13105,7 +13116,7 @@ function openNewSale() {
                                         <div class="discount-selector">
                                             <input type="number" class="form-control discount-amount" name="remise" id="remise" value="0" oninput="calculerTotal()" />
                                             <select class="form-control discount-type" name="remise_type" id="remise_type" onchange="calculerTotal()">
-                                                <option value=""></option>
+                                                <option value="">FCFA</option>
                                                 <option value="%">%</option>
                                             </select>
                                         </div>
