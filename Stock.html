@@ -1,0 +1,3046 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Gestion des Stocks - VisionPro</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --warning-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            
+            --primary-50: #f0f4ff;
+            --primary-100: #d9e4ff;
+            --primary-200: #b3c9ff;
+            --primary-300: #8daef8;
+            --primary-400: #6793f1;
+            --primary-500: #4f46e5;
+            --primary-600: #4338ca;
+            --primary-700: #3730a3;
+            --primary-800: #312e81;
+            --primary-900: #1e1b4b;
+            
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            
+            --border-radius-sm: 6px;
+            --border-radius-md: 10px;
+            --border-radius-lg: 14px;
+            --border-radius-xl: 18px;
+            --border-radius-full: 9999px;
+            
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 15px;
+            scroll-behavior: smooth;
+            font-smooth: always;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: #2d3748;
+            position: relative;
+            padding-bottom: 70px;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
+            border-radius: var(--border-radius-sm);
+            min-height: 1em;
+        }
+
+        .skeleton-text {
+            height: 1em;
+            margin-bottom: 0.3rem;
+            width: 100%;
+        }
+
+        .skeleton-text.short {
+            width: 60%;
+        }
+
+        .skeleton-text.medium {
+            width: 80%;
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem 1.5rem;
+            box-shadow: var(--glass-shadow);
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.6s ease 0.1s both;
+        }
+
+        .header-left h1 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.75rem;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray-600);
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-gradient);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-300);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+
+        .stock-sections {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.6s ease 0.2s both;
+        }
+
+        .stock-nav {
+            flex: 0 0 220px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem;
+        }
+
+        .nav-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-700);
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-md);
+            color: var(--gray-700);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            width: 100%;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: left 0.3s ease;
+            z-index: 0;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary-600);
+            transform: translateX(3px);
+        }
+
+        .nav-btn:hover::before {
+            left: 0;
+        }
+
+        .nav-btn:hover span,
+        .nav-btn:hover i {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            transform: translateX(3px);
+        }
+
+        .nav-btn i {
+            width: 18px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-btn:hover i {
+            transform: scale(1.1);
+        }
+
+        .content-area {
+            flex: 1;
+        }
+
+        .section-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s var(--transition-smooth);
+        }
+
+        .section-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 1.3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .controls-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.6rem 0.8rem 0.6rem 2.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-md);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s var(--transition-smooth);
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-400);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 0.9rem;
+        }
+
+        .filters-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-md);
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: white;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            min-width: 130px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-400);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .date-filter-group {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+
+        .date-filter {
+            min-width: 140px;
+        }
+
+        .items-per-page {
+            min-width: 100px;
+        }
+
+        .btn {
+            position: relative;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(40, 40);
+                opacity: 0;
+            }
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--primary-600);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ==================== CARTES DE SYNTHÈSE ==================== */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease 0.2s both;
+        }
+
+        .summary-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .summary-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .table-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: 0;
+            overflow: hidden;
+            max-height: 450px;
+            animation: fadeIn 0.5s ease 0.3s both;
+        }
+
+        .table-wrapper {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        .stock-table th {
+            text-align: left;
+            padding: 0.8rem;
+            background: rgba(79, 70, 229, 0.95);
+            color: white;
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary-300);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            font-size: 0.85rem;
+        }
+
+        .stock-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--glass-border);
+            transition: background-color 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .stock-table tbody tr {
+            animation: fadeIn 0.3s ease;
+            animation-fill-mode: both;
+        }
+
+        .stock-table tbody tr:hover {
+            background: rgba(79, 70, 229, 0.05);
+            transform: translateX(3px);
+            transition: transform 0.2s ease;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .table-skeleton {
+            width: 100%;
+        }
+
+        .table-skeleton-row {
+            display: flex;
+            padding: 0.8rem;
+            gap: 0.8rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .table-skeleton-cell {
+            flex: 1;
+        }
+
+        .table-skeleton-cell.short {
+            flex: 0.5;
+        }
+
+        .table-skeleton-cell.medium {
+            flex: 0.8;
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+        }
+
+        .pagination-btn {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-md);
+            background: white;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--primary-50);
+            border-color: var(--primary-300);
+            color: var(--primary-600);
+            transform: translateY(-1px);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            margin: 0 0.8rem;
+            color: var(--gray-600);
+            font-size: 0.85rem;
+        }
+
+        .alert-message {
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius-md);
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border-left: 3px solid #10b981;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-left: 3px solid #ef4444;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .loading-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            gap: 0.8rem;
+        }
+
+        .spinner-border {
+            width: 1.8rem;
+            height: 1.8rem;
+            border: 3px solid var(--primary-400);
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--gray-500);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+    .back-btn {
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        z-index: 1001;
+        margin: 0;
+    }
+    
+    .back-btn .btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        border: none;
+        background: var(--primary-gradient);
+    }
+    
+    .back-btn .btn span {
+        display: none; /* Cache le texte "Retour" */
+    }
+    
+    .back-btn .btn i {
+        margin: 0;
+        font-size: 1.3rem;
+        color: white;
+    }
+    
+    .back-btn .btn:active {
+        transform: scale(0.9);
+    }
+
+        .fab {
+            position: fixed;
+            bottom: 5rem;
+            right: 1.5rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease 0.1s both;
+        }
+
+
+.xlarge-modal {
+    max-width: 1400px;  /* Augmenté de 1200px à 1400px */
+    width: 98%;  /* Augmenté de 95% à 98% */
+    height: 90vh;  /* Ajout d'une hauteur fixe */
+    max-height: 90vh;  /* Hauteur maximale */
+    display: flex;
+    flex-direction: column;
+}
+
+
+.modal-content.xlarge-modal .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    max-height: calc(90vh - 120px); /* Ajustement pour laisser de la place au header et footer */
+    padding: 1rem;
+}
+
+.modal-content.xlarge-modal .table-container {
+    max-height: none;  
+    height: auto;
+}
+
+.modal-content.xlarge-modal .table-wrapper {
+    max-height: calc(70vh - 150px);  
+    overflow-y: auto;
+}
+
+
+.modal-content.xlarge-modal .stock-table {
+    font-size: 0.9rem;
+}
+
+.modal-content.xlarge-modal .stock-table th,
+.modal-content.xlarge-modal .stock-table td {
+    padding: 0.5rem 0.8rem;
+    white-space: nowrap;  
+}
+
+
+.modal-content.xlarge-modal .table-wrapper {
+    overflow-x: auto;
+}
+
+
+.modal-content.xlarge-modal .search-box {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: white;
+    padding: 0.5rem 0;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+    .xlarge-modal {
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;  
+    }
+    
+    .modal-content.xlarge-modal .modal-body {
+        max-height: calc(100vh - 120px);
+    }
+    
+    .modal-content.xlarge-modal .table-wrapper {
+        max-height: calc(100vh - 200px);
+    }
+}
+
+        .modal-header {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary-700);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .modal-body {
+            padding: 1.2rem;
+            max-height: 55vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            font-size: 0.85rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-md);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-400);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .modal-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .nouvelle-quantite {
+            width: 100px;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius-md);
+            font-family: inherit;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .nouvelle-quantite:focus {
+            outline: none;
+            border-color: var(--primary-400);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .progress-overlay.active {
+            opacity: 1;
+        }
+
+        .progress-modal {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            min-width: 300px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(15px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .progress-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .progress-spinner {
+            font-size: 2.5rem;
+            color: #3b82f6;
+        }
+
+        .progress-spinner .fa-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        .progress-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .progress-content.success .progress-icon {
+            color: #10b981;
+        }
+
+        .progress-content.error .progress-icon {
+            color: #ef4444;
+        }
+
+        .progress-text h4 {
+            margin: 0 0 0.3rem 0;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .progress-text p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.8rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 0.8rem;
+            right: 0.8rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            max-width: 300px;
+        }
+
+        .toast {
+            padding: 0.8rem;
+            border-radius: var(--border-radius-md);
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
+            border-left: 3px solid;
+            font-size: 0.85rem;
+        }
+
+        .toast.success {
+            border-left-color: #10b981;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), white);
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), white);
+        }
+
+        .toast.warning {
+            border-left-color: #f59e0b;
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), white);
+        }
+
+        .toast.info {
+            border-left-color: #3b82f6;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), white);
+        }
+
+        .toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.2rem;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        .toast-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .sortable {
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            transition: color 0.2s ease;
+        }
+
+        .sortable:hover {
+            color: white !important;
+            opacity: 0.9;
+        }
+
+        .sortable::after {
+            content: '↕';
+            margin-left: 0.3rem;
+            font-size: 0.75em;
+            opacity: 0.5;
+        }
+
+        .sortable.asc::after {
+            content: '↑';
+            opacity: 1;
+        }
+
+        .sortable.desc::after {
+            content: '↓';
+            opacity: 1;
+        }
+
+        /* ==================== NAVIGATION MOBILE ==================== */
+        .mobile-stock-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 0.5rem 1rem;
+            justify-content: space-around;
+            align-items: center;
+            animation: slideInUp 0.3s ease;
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .mobile-stock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            border-radius: var(--border-radius-md);
+            transition: all 0.2s ease;
+            flex: 1;
+            max-width: 70px;
+        }
+
+        .mobile-stock-item i {
+            font-size: 1.3rem;
+            transition: transform 0.2s ease;
+        }
+
+        .mobile-stock-item.active {
+            color: var(--primary-600);
+            background: var(--primary-50);
+        }
+
+        .mobile-stock-item.active i {
+            transform: translateY(-2px);
+        }
+
+        .mobile-stock-item:active {
+            background: var(--gray-200);
+            transform: scale(0.95);
+        }
+
+        .text-danger {
+            color: #ef4444 !important;
+        }
+
+        .text-success {
+            color: #10b981 !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.6rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.6rem;
+        }
+
+        /* ==================== MEDIA QUERIES POUR MOBILE ==================== */
+        @media (max-width: 1024px) {
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 80px;
+            }
+
+            .dashboard-container {
+                padding: 0.8rem;
+            }
+            
+            .stock-sections {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stock-nav {
+                display: none;
+            }
+            
+            .mobile-stock-nav {
+                display: flex;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: stretch;
+            }
+            
+            .section-header div {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .section-header .btn {
+                flex: 1;
+                justify-content: center;
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+            
+            .controls-panel {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.8rem;
+            }
+
+            .search-box {
+                flex: 1 1 100%;
+                min-width: 100%;
+                margin-bottom: 0.25rem;
+            }
+
+            .filters-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                gap: 0.4rem;
+                width: 100%;
+            }
+
+            .filter-select {
+                min-width: calc(50% - 0.2rem);
+                flex: 1 1 auto;
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+
+            .items-per-page {
+                min-width: 100px;
+                flex: 0 1 auto;
+            }
+            
+            .summary-cards {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 0.3rem;
+                overflow-x: auto;
+                padding-bottom: 0.25rem;
+                margin-bottom: 0.8rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+
+            .summary-card {
+                flex: 0 0 auto;
+                min-width: 120px;
+                padding: 0.6rem;
+            }
+
+            .summary-card div:first-child {
+                gap: 0.4rem;
+            }
+
+            .card-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+
+            .summary-card div:first-child div div:first-child {
+                font-size: 0.7rem;
+            }
+
+            .summary-card div:first-child div div:last-child {
+                font-size: 1.2rem;
+            }
+            
+            .table-container {
+                max-height: 400px;
+            }
+            
+            .table-wrapper {
+                max-height: 300px;
+            }
+            
+            .stock-table {
+                min-width: 800px;
+                display: table;
+            }
+            
+            .header-left h1 {
+                font-size: 1.5rem;
+            }
+
+            .fab {
+                bottom: 90px;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-width: 450px;
+            }
+
+            .modal-footer {
+                flex-direction: column-reverse;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+
+            .pagination-controls {
+                flex-wrap: wrap;
+                padding: 0.5rem;
+            }
+
+            .pagination-info {
+                width: 100%;
+                text-align: center;
+                margin: 0.3rem 0 0 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 0.6rem 0.8rem;
+            }
+
+            .header-left h1 {
+                font-size: 1.2rem;
+            }
+
+            .profile-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .mobile-stock-item {
+                font-size: 0.6rem;
+            }
+
+            .mobile-stock-item i {
+                font-size: 1.2rem;
+            }
+
+            .summary-card {
+                min-width: 100px;
+                padding: 0.5rem;
+            }
+
+            .summary-card div:first-child div div:last-child {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toast-container"></div>
+
+    <button class="fab" onclick="scrollToTop()" id="fab" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="header-left">
+                <h1>Gestion des Stocks</h1>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Basculer le mode sombre">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-info">
+                    <span id="username-display">Admin</span>
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=6366f1&color=fff" alt="Photo de profil" class="profile-img">
+                </div>
+            </div>
+        </header>
+
+        <div class="back-btn">
+            <button class="btn btn-primary" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> 
+                <span>Retour</span> 
+            </button>
+        </div>
+
+        <div class="stock-sections">
+            <nav class="stock-nav">
+                <h3 class="nav-title">Agences</h3>
+                <button class="nav-btn active" onclick="showStockSection('cotonou')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Cotonou</span>
+                </button>
+                <button class="nav-btn" onclick="showStockSection('portonovo')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Porto-Novo</span>
+                </button>
+                <button class="nav-btn" onclick="showStockSection('bohicon')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Bohicon</span>
+                </button>
+            </nav>
+
+            <div class="content-area">
+                <div id="section-cotonou" class="section-content active">
+                    <div class="section-header">
+                        <h2 class="section-title">Agence Cotonou</h2>
+                        <div>
+                            <button class="btn btn-primary" onclick="demarrerInventaire('Cotonou')">
+                                <i class="fas fa-clipboard-list"></i> Faire l'inventaire
+                            </button>
+                            <button class="btn btn-primary" onclick="exportStockData('Cotonou')">
+                                <i class="fas fa-file-export"></i> Exporter
+                            </button>
+                            <button class="btn btn-secondary" onclick="refreshStockData('Cotonou')">
+                                <i class="fas fa-sync-alt"></i> Actualiser
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="controls-panel">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-cotonou" placeholder="Rechercher par référence, catégorie..." onkeyup="applyStockFilter('Cotonou')">
+                        </div>
+                        <div class="filters-group">
+                            <select class="filter-select" id="filter-category-cotonou" onchange="applyStockFilter('Cotonou')">
+                                <option value="">Toutes les catégories</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Total Produits</div>
+                                    <div id="total-products-cotonou" style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                                    <i class="fas fa-cubes"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Stock Total</div>
+                                    <div id="total-stock-cotonou" style="font-size: 1.5rem; font-weight: 700; color: #10b981;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Catégories</div>
+                                    <div id="total-categories-cotonou" style="font-size: 1.5rem; font-weight: 700; color: #f59e0b;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <div id="skeleton-cotonou" class="table-skeleton" style="display: none;">
+                                <div class="table-skeleton-row">
+                                    <div class="table-skeleton-cell skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                </div>
+                                <div class="table-skeleton-row">
+                                    <div class="table-skeleton-cell skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                </div>
+                            </div>
+                            <table class="stock-table" id="stock-table-cotonou">
+                                <thead id="stock-header-cotonou"></thead>
+                                <tbody id="stock-data-cotonou">
+                                    <tr>
+                                        <td colspan="12" class="text-center">
+                                            <div class="loading-indicator">
+                                                <div class="spinner-border"></div>
+                                                <div>Chargement des produits...</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="pagination-cotonou" class="pagination-controls" style="display: none;"></div>
+                    </div>
+
+                    <div id="message-cotonou" class="alert-message" style="display: none;"></div>
+                </div>
+                <div id="section-portonovo" class="section-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Agence Porto-Novo</h2>
+                        <div>
+                            <button class="btn btn-primary" onclick="demarrerInventaire('Porto-Novo')">
+                                <i class="fas fa-clipboard-list"></i> Faire l'inventaire
+                            </button>
+                            <button class="btn btn-primary" onclick="exportStockData('Porto-Novo')">
+                                <i class="fas fa-file-export"></i> Exporter
+                            </button>
+                            <button class="btn btn-secondary" onclick="refreshStockData('Porto-Novo')">
+                                <i class="fas fa-sync-alt"></i> Actualiser
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="controls-panel">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-portonovo" placeholder="Rechercher par référence, catégorie..." onkeyup="applyStockFilter('Porto-Novo')">
+                        </div>
+                        <div class="filters-group">
+                            <select class="filter-select" id="filter-category-portonovo" onchange="applyStockFilter('Porto-Novo')">
+                                <option value="">Toutes les catégories</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Total Produits</div>
+                                    <div id="total-products-portonovo" style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                                    <i class="fas fa-cubes"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Stock Total</div>
+                                    <div id="total-stock-portonovo" style="font-size: 1.5rem; font-weight: 700; color: #10b981;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Catégories</div>
+                                    <div id="total-categories-portonovo" style="font-size: 1.5rem; font-weight: 700; color: #f59e0b;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <div id="skeleton-portonovo" class="table-skeleton" style="display: none;">
+                                <div class="table-skeleton-row">
+                                    <div class="table-skeleton-cell skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                </div>
+                                <div class="table-skeleton-row">
+                                    <div class="table-skeleton-cell skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                </div>
+                            </div>
+                            <table class="stock-table" id="stock-table-portonovo">
+                                <thead id="stock-header-portonovo"></thead>
+                                <tbody id="stock-data-portonovo">
+                                    <tr>
+                                        <td colspan="12" class="text-center">
+                                            <div class="loading-indicator">
+                                                <div class="spinner-border"></div>
+                                                <div>Chargement des produits...</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="pagination-portonovo" class="pagination-controls" style="display: none;"></div>
+                    </div>
+
+                    <div id="message-portonovo" class="alert-message" style="display: none;"></div>
+                </div>
+                <div id="section-bohicon" class="section-content">
+                    <div class="section-header">
+                        <h2 class="section-title">Agence Bohicon</h2>
+                        <div>
+                            <button class="btn btn-primary" onclick="demarrerInventaire('Bohicon')">
+                                <i class="fas fa-clipboard-list"></i> Faire l'inventaire
+                            </button>
+                            <button class="btn btn-primary" onclick="exportStockData('Bohicon')">
+                                <i class="fas fa-file-export"></i> Exporter
+                            </button>
+                            <button class="btn btn-secondary" onclick="refreshStockData('Bohicon')">
+                                <i class="fas fa-sync-alt"></i> Actualiser
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="controls-panel">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-bohicon" placeholder="Rechercher par référence, catégorie..." onkeyup="applyStockFilter('Bohicon')">
+                        </div>
+                        <div class="filters-group">
+                            <select class="filter-select" id="filter-category-bohicon" onchange="applyStockFilter('Bohicon')">
+                                <option value="">Toutes les catégories</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Total Produits</div>
+                                    <div id="total-products-bohicon" style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                                    <i class="fas fa-cubes"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Stock Total</div>
+                                    <div id="total-stock-bohicon" style="font-size: 1.5rem; font-weight: 700; color: #10b981;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-500); font-weight: 500;">Catégories</div>
+                                    <div id="total-categories-bohicon" style="font-size: 1.5rem; font-weight: 700; color: #f59e0b;">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-wrapper">
+                            <div id="skeleton-bohicon" class="table-skeleton" style="display: none;">
+                                <div class="table-skeleton-row">
+                                    <div class="table-skeleton-cell skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                </div>
+                                <div class="table-skeleton-row">
+                                    <div class="table-skeleton-cell skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell short skeleton"></div>
+                                    <div class="table-skeleton-cell medium skeleton"></div>
+                                </div>
+                            </div>
+                            <table class="stock-table" id="stock-table-bohicon">
+                                <thead id="stock-header-bohicon"></thead>
+                                <tbody id="stock-data-bohicon">
+                                    <tr>
+                                        <td colspan="12" class="text-center">
+                                            <div class="loading-indicator">
+                                                <div class="spinner-border"></div>
+                                                <div>Chargement des produits...</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="pagination-bohicon" class="pagination-controls" style="display: none;"></div>
+                    </div>
+
+                    <div id="message-bohicon" class="alert-message" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="mobile-stock-nav" id="mobile-stock-nav">
+        <button class="mobile-stock-item" onclick="showStockSection('cotonou')" data-section="cotonou">
+            <i class="fas fa-warehouse"></i>
+            <span>Cotonou</span>
+        </button>
+        <button class="mobile-stock-item" onclick="showStockSection('portonovo')" data-section="portonovo">
+            <i class="fas fa-warehouse"></i>
+            <span>Porto-Novo</span>
+        </button>
+        <button class="mobile-stock-item" onclick="showStockSection('bohicon')" data-section="bohicon">
+            <i class="fas fa-warehouse"></i>
+            <span>Bohicon</span>
+        </button>
+    </nav>
+
+    <div id="modal-container"></div>
+
+    <script>
+        // ==================== CONFIGURATION ====================
+        const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec';
+
+        const AGENCE_CONFIG = {
+            'Cotonou': {
+                apiUrl: `${API_BASE_URL}?action=stockagence1`,
+                stockKey: 'cotonou',
+                tableId: 'stock-table-cotonou',
+                headerId: 'stock-header-cotonou',
+                dataId: 'stock-data-cotonou',
+                messageId: 'message-cotonou',
+                searchId: 'search-cotonou',
+                filterCategoryId: 'filter-category-cotonou',
+                paginationId: 'pagination-cotonou',
+                itemsPerPageId: 'items-per-page-cotonou',
+                skeletonId: 'skeleton-cotonou',
+                summaryTotalProductsId: 'total-products-cotonou',
+                summaryTotalStockId: 'total-stock-cotonou',
+                summaryCategoriesId: 'total-categories-cotonou'
+            },
+            'Porto-Novo': {
+                apiUrl: `${API_BASE_URL}?action=stockagence2`,
+                stockKey: 'portonovo',
+                tableId: 'stock-table-portonovo',
+                headerId: 'stock-header-portonovo',
+                dataId: 'stock-data-portonovo',
+                messageId: 'message-portonovo',
+                searchId: 'search-portonovo',
+                filterCategoryId: 'filter-category-portonovo',
+                paginationId: 'pagination-portonovo',
+                itemsPerPageId: 'items-per-page-portonovo',
+                skeletonId: 'skeleton-portonovo',
+                summaryTotalProductsId: 'total-products-portonovo',
+                summaryTotalStockId: 'total-stock-portonovo',
+                summaryCategoriesId: 'total-categories-portonovo'
+            },
+            'Bohicon': {
+                apiUrl: `${API_BASE_URL}?action=stockagence3`,
+                stockKey: 'bohicon',
+                tableId: 'stock-table-bohicon',
+                headerId: 'stock-header-bohicon',
+                dataId: 'stock-data-bohicon',
+                messageId: 'message-bohicon',
+                searchId: 'search-bohicon',
+                filterCategoryId: 'filter-category-bohicon',
+                paginationId: 'pagination-bohicon',
+                itemsPerPageId: 'items-per-page-bohicon',
+                skeletonId: 'skeleton-bohicon',
+                summaryTotalProductsId: 'total-products-bohicon',
+                summaryTotalStockId: 'total-stock-bohicon',
+                summaryCategoriesId: 'total-categories-bohicon'
+            }
+        };
+
+        // ==================== VARIABLES GLOBALES ====================
+        let stockData = {
+            cotonou: { allData: [], filteredData: [] },
+            portonovo: { allData: [], filteredData: [] },
+            bohicon: { allData: [], filteredData: [] }
+        };
+
+        let currentPage = {
+            'Cotonou': 1,
+            'Porto-Novo': 1,
+            'Bohicon': 1
+        };
+
+        let itemsPerPage = {
+            'Cotonou': 10,
+            'Porto-Novo': 10,
+            'Bohicon': 10
+        };
+
+        let searchTerm = {
+            'Cotonou': '',
+            'Porto-Novo': '',
+            'Bohicon': ''
+        };
+
+        let sortState = {
+            'Cotonou': { column: 'Date', direction: 'desc' },
+            'Porto-Novo': { column: 'Date', direction: 'desc' },
+            'Bohicon': { column: 'Date', direction: 'desc' }
+        };
+
+        let toastId = 0;
+
+        // ==================== INITIALISATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            loadAgenceStock('Cotonou');
+            
+            window.addEventListener('scroll', handleScroll);
+            
+            updateMobileStockNavActive('cotonou');
+        });
+
+        function updateMobileStockNavActive(sectionId) {
+            const mobileNavItems = document.querySelectorAll('.mobile-stock-item');
+            mobileNavItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            const activeMobileItem = document.querySelector(`.mobile-stock-item[onclick*="${sectionId}"]`);
+            if (activeMobileItem) {
+                activeMobileItem.classList.add('active');
+            }
+        }
+
+        function initTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
+        }
+
+        function handleScroll() {
+            const fab = document.getElementById('fab');
+            if (window.scrollY > 300) {
+                fab.style.display = 'flex';
+            } else {
+                fab.style.display = 'none';
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function showStockSection(agenceId) {
+            const sections = ['cotonou', 'portonovo', 'bohicon'];
+            
+            sections.forEach(id => {
+                const section = document.getElementById(`section-${id}`);
+                if (section) section.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const section = document.getElementById(`section-${agenceId}`);
+            if (section) section.classList.add('active');
+            
+            const btn = document.querySelector(`.nav-btn[onclick*="${agenceId}"]`);
+            if (btn) btn.classList.add('active');
+            
+            let agenceName = '';
+            if (agenceId === 'cotonou') agenceName = 'Cotonou';
+            else if (agenceId === 'portonovo') agenceName = 'Porto-Novo';
+            else if (agenceId === 'bohicon') agenceName = 'Bohicon';
+            
+            updateMobileStockNavActive(agenceId);
+            
+            if (agenceName && stockData[agenceId]?.allData.length === 0) {
+                loadAgenceStock(agenceName);
+            }
+            
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    const header = document.querySelector('.section-header');
+                    if (header) {
+                        header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            }
+        }
+
+        async function loadAgenceStock(agence) {
+            const config = AGENCE_CONFIG[agence];
+            if (!config) return;
+            
+            showTableSkeleton(agence);
+            
+            try {
+                const response = await fetch(config.apiUrl);
+                if (!response.ok) throw new Error(`Erreur HTTP: ${response.status}`);
+                
+                const responseData = await response.json();
+                
+                if (!responseData?.data?.rows || !responseData?.data?.headers) {
+                    throw new Error('Structure de données invalide');
+                }
+                
+                const stockKey = config.stockKey;
+                stockData[stockKey].allData = responseData.data.rows.map(row => {
+                    const item = {};
+                    responseData.data.headers.forEach((header, index) => {
+                        const cleanHeader = header.trim();
+                        let value = row[index] || '';
+                        
+                        if (cleanHeader.includes('Stock') || cleanHeader.includes('Prix') || 
+                            cleanHeader.includes('Conso') || cleanHeader === 'Stock de depart') {
+                            value = parseFloat(value) || 0;
+                        }
+                        
+                        item[cleanHeader] = value;
+                    });
+                    
+                    item['Agence'] = agence;
+                    return item;
+                });
+
+                stockData[stockKey].allData.sort((a, b) => {
+                    const dateA = a['Date'] ? new Date(a['Date']) : new Date(0);
+                    const dateB = b['Date'] ? new Date(b['Date']) : new Date(0);
+                    return dateB - dateA;
+                });
+
+                stockData[stockKey].filteredData = [...stockData[stockKey].allData];
+                
+                hideTableSkeleton(agence);
+                generateTableHeaders(agence);
+                populateFilters(agence);
+                updateSummaryCards(agence);
+                applySort(agence);
+                updateTableDisplay(agence);
+                
+                showToast(`${stockData[stockKey].allData.length} produits chargés pour ${agence}`, 'success');
+                
+            } catch (error) {
+                console.error(`Erreur chargement ${agence}:`, error);
+                hideTableSkeleton(agence);
+                
+                document.getElementById(config.dataId).innerHTML = `
+                    <tr>
+                        <td colspan="12">
+                            <div class="error-state" style="border: 2px dashed #ef4444; padding: 1.5rem; border-radius: var(--border-radius-md); text-align: center;">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                                <div style="margin-bottom: 1rem;">Erreur de chargement: ${error.message}</div>
+                                <button class="btn btn-primary" onclick="loadAgenceStock('${agence}')">Réessayer</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                showToast(`Erreur lors du chargement des données pour ${agence}`, 'error');
+            }
+        }
+
+        function generateTableHeaders(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            const data = stockData[stockKey].allData;
+            
+            const tableHeader = document.getElementById(config.headerId);
+            if (!data || !data[0]) return;
+            
+            const headers = Object.keys(data[0]);
+            const headersToShow = headers.filter(header => header !== 'User' && header !== 'Agence');
+            
+            let headerRow = '<tr>';
+            headersToShow.forEach(header => {
+                let className = '';
+                if (header.includes('Prix') || header.includes('Stock')) {
+                    className = 'text-end';
+                }
+                
+                headerRow += `<th class="sortable ${className}" onclick="sortTable('${agence}', '${header}')">${header}</th>`;
+            });
+            headerRow += '</tr>';
+            
+            tableHeader.innerHTML = headerRow;
+            
+            updateSortIndicators(agence, sortState[agence].column, sortState[agence].direction);
+        }
+
+        function populateFilters(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            const data = stockData[stockKey].allData;
+            
+            const uniqueCategories = [...new Set(data.map(item => item['Catégorie']).filter(Boolean))];
+            
+            const select = document.getElementById(config.filterCategoryId);
+            if (!select) return;
+            
+            select.innerHTML = '<option value="">Toutes les catégories</option>';
+            uniqueCategories.sort().forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                select.appendChild(option);
+            });
+        }
+
+        function updateSummaryCards(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            const data = stockData[stockKey].allData;
+            
+            const totalProducts = data.length;
+            
+            let totalStock = 0;
+            data.forEach(item => {
+                const stockPhysique = parseFloat(item['Stock Physique']) || 0;
+                totalStock += stockPhysique;
+            });
+            
+            const uniqueCategories = new Set(data.map(item => item['Catégorie']).filter(Boolean));
+            const totalCategories = uniqueCategories.size;
+            
+            animateValue(config.summaryTotalProductsId, 0, totalProducts, 500);
+            animateValue(config.summaryTotalStockId, 0, totalStock, 500);
+            animateValue(config.summaryCategoriesId, 0, totalCategories, 500);
+        }
+
+        function sortTable(agence, column) {
+            const currentSort = sortState[agence];
+            
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            
+            updateSortIndicators(agence, column, currentSort.direction);
+            applySort(agence);
+            currentPage[agence] = 1;
+            updateTableDisplay(agence);
+        }
+
+        function updateSortIndicators(agence, column, direction) {
+            const config = AGENCE_CONFIG[agence];
+            const table = document.getElementById(config.tableId);
+            if (!table) return;
+            
+            const headers = table.querySelectorAll('th.sortable');
+            headers.forEach(header => {
+                header.classList.remove('asc', 'desc');
+                if (header.textContent.includes(column)) {
+                    header.classList.add(direction);
+                }
+            });
+        }
+
+        function applySort(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            const sortConfig = sortState[agence];
+            
+            const dataToSort = getCurrentData(agence);
+            if (dataToSort.length === 0) return;
+            
+            dataToSort.sort((a, b) => {
+                let valueA = a[sortConfig.column];
+                let valueB = b[sortConfig.column];
+                
+                if (sortConfig.column.includes('Date')) {
+                    valueA = new Date(valueA);
+                    valueB = new Date(valueB);
+                }
+                
+                if (typeof valueA === 'string') valueA = valueA.toLowerCase();
+                if (typeof valueB === 'string') valueB = valueB.toLowerCase();
+                
+                if (valueA < valueB) return sortConfig.direction === 'asc' ? -1 : 1;
+                if (valueA > valueB) return sortConfig.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            stockData[stockKey].filteredData = dataToSort;
+        }
+
+        function applyStockFilter(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            
+            const searchInput = document.getElementById(config.searchId);
+            searchTerm[agence] = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            
+            const categoryFilter = document.getElementById(config.filterCategoryId);
+            const category = categoryFilter ? categoryFilter.value : '';
+            
+            let filteredData = stockData[stockKey].allData;
+            
+            if (searchTerm[agence]) {
+                filteredData = filteredData.filter(item => {
+                    const reference = item['Référence'] || '';
+                    const categorie = item['Catégorie'] || '';
+                    return reference.toString().toLowerCase().includes(searchTerm[agence]) || 
+                           categorie.toString().toLowerCase().includes(searchTerm[agence]);
+                });
+            }
+            
+            if (category) {
+                filteredData = filteredData.filter(item => item['Catégorie'] === category);
+            }
+            
+            stockData[stockKey].filteredData = filteredData;
+            applySort(agence);
+            currentPage[agence] = 1;
+            updateTableDisplay(agence);
+        }
+
+        function getCurrentData(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            return stockData[stockKey].filteredData.length > 0 ? 
+                   stockData[stockKey].filteredData : stockData[stockKey].allData;
+        }
+
+        function changeItemsPerPage(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const select = document.getElementById(config.itemsPerPageId);
+            itemsPerPage[agence] = parseInt(select.value);
+            currentPage[agence] = 1;
+            updateTableDisplay(agence);
+        }
+
+        function getPaginatedData(agence) {
+            const data = getCurrentData(agence);
+            const startIndex = (currentPage[agence] - 1) * itemsPerPage[agence];
+            const endIndex = startIndex + itemsPerPage[agence];
+            return data.slice(startIndex, endIndex);
+        }
+
+        function updatePagination(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const data = getCurrentData(agence);
+            const totalItems = data.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage[agence]);
+            
+            const paginationDiv = document.getElementById(config.paginationId);
+            if (!paginationDiv) return;
+            
+            if (totalPages <= 1) {
+                paginationDiv.style.display = 'none';
+                return;
+            }
+            
+            paginationDiv.style.display = 'flex';
+            
+            let html = '';
+            
+            html += `<button class="pagination-btn" onclick="changePage('${agence}', ${currentPage[agence] - 1})" ${currentPage[agence] === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                     </button>`;
+            
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage[agence] - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            if (startPage > 1) {
+                html += `<button class="pagination-btn" onclick="changePage('${agence}', 1)">1</button>`;
+                if (startPage > 2) {
+                    html += `<span style="margin: 0 0.3rem; color: var(--gray-500);">...</span>`;
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="pagination-btn ${i === currentPage[agence] ? 'active' : ''}" onclick="changePage('${agence}', ${i})">${i}</button>`;
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += `<span style="margin: 0 0.3rem; color: var(--gray-500);">...</span>`;
+                }
+                html += `<button class="pagination-btn" onclick="changePage('${agence}', ${totalPages})">${totalPages}</button>`;
+            }
+            
+            html += `<button class="pagination-btn" onclick="changePage('${agence}', ${currentPage[agence] + 1})" ${currentPage[agence] === totalPages ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                     </button>`;
+            
+            const startItem = (currentPage[agence] - 1) * itemsPerPage[agence] + 1;
+            const endItem = Math.min(currentPage[agence] * itemsPerPage[agence], totalItems);
+            html += `<span class="pagination-info">${startItem}-${endItem} sur ${totalItems}</span>`;
+            
+            paginationDiv.innerHTML = html;
+        }
+
+        function changePage(agence, page) {
+            const data = getCurrentData(agence);
+            const totalPages = Math.ceil(data.length / itemsPerPage[agence]);
+            
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage[agence] = page;
+            updateTableDisplay(agence);
+            
+            const tableContainer = document.querySelector(`#section-${agence.toLowerCase().replace('-', '')} .table-container`);
+            if (tableContainer) {
+                tableContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateTableDisplay(agence) {
+            const paginatedData = getPaginatedData(agence);
+            displayStockData(agence, paginatedData);
+            updatePagination(agence);
+        }
+
+        function displayStockData(agence, data) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            const stockDataDiv = document.getElementById(config.dataId);
+            
+            if (!data || !data.length) {
+                stockDataDiv.innerHTML = '<tr><td colspan="12" class="no-data">Aucun produit trouvé</td></tr>';
+                return;
+            }
+            
+            const headers = Object.keys(stockData[stockKey].allData[0] || {});
+            const headersToShow = headers.filter(header => header !== 'User' && header !== 'Agence');
+            
+            let html = '';
+            data.forEach((item, index) => {
+                html += `<tr style="animation-delay: ${index * 0.02}s">`;
+                
+                headersToShow.forEach(header => {
+                    const value = item[header] || '';
+                    
+                    if (header === 'Date') {
+                        html += `<td>${formatDate(value)}</td>`;
+                    } else if (header.includes('Prix')) {
+                        html += `<td class="text-end">${formatCurrency(value)}</td>`;
+                    } else if (header.includes('Stock')) {
+                        html += `<td class="text-end">${value}</td>`;
+                    } else {
+                        html += `<td>${value}</td>`;
+                    }
+                });
+                
+                html += '</tr>';
+            });
+            
+            stockDataDiv.innerHTML = html;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                const date = new Date(dateString);
+                return isNaN(date.getTime()) ? dateString : date.toLocaleDateString('fr-FR');
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function formatCurrency(amount) {
+            if (typeof amount !== 'number') amount = parseFloat(amount) || 0;
+            return amount.toLocaleString('fr-FR', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            }) + ' FCFA';
+        }
+
+        function animateValue(elementId, start, end, duration) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            const startTime = performance.now();
+            const step = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.round(start + (end - start) * easeOutQuart);
+                
+                element.textContent = currentValue.toLocaleString('fr-FR');
+                
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    element.textContent = end.toLocaleString('fr-FR');
+                }
+            };
+            
+            requestAnimationFrame(step);
+        }
+
+        function showTableSkeleton(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const skeleton = document.getElementById(config.skeletonId);
+            const table = document.getElementById(config.tableId);
+            
+            if (skeleton && table) {
+                skeleton.style.display = 'block';
+                table.style.display = 'none';
+            }
+        }
+
+        function hideTableSkeleton(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const skeleton = document.getElementById(config.skeletonId);
+            const table = document.getElementById(config.tableId);
+            
+            if (skeleton && table) {
+                skeleton.style.display = 'none';
+                table.style.display = 'table';
+            }
+        }
+
+        function showToast(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('toast-container');
+            const id = `toast-${toastId++}`;
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.id = id;
+            
+            let icon = 'info-circle';
+            switch(type) {
+                case 'success': icon = 'check-circle'; break;
+                case 'error': icon = 'exclamation-circle'; break;
+                case 'warning': icon = 'exclamation-triangle'; break;
+                case 'info': icon = 'info-circle'; break;
+            }
+            
+            toast.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+                <button class="toast-close" onclick="closeToast('${id}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                closeToast(id);
+            }, duration);
+            
+            return id;
+        }
+
+        function closeToast(id) {
+            const toast = document.getElementById(id);
+            if (toast) {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }
+        }
+
+        function showMessage(message, type, agence) {
+            const config = AGENCE_CONFIG[agence];
+            if (!config) return;
+            
+            const messageDiv = document.getElementById(config.messageId);
+            if (messageDiv) {
+                messageDiv.textContent = message;
+                messageDiv.className = `alert-message alert-${type}`;
+                messageDiv.style.display = 'flex';
+                
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function refreshStockData(agence) {
+            loadAgenceStock(agence);
+            showMessage(`Actualisation des données pour ${agence}...`, 'info', agence);
+        }
+
+        function exportStockData(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            const data = getCurrentData(agence);
+            
+            if (!data.length) {
+                showMessage('Aucune donnée à exporter', 'warning', agence);
+                return;
+            }
+            
+            const headers = Object.keys(stockData[stockKey].allData[0] || {});
+            const headersToExport = headers.filter(header => header !== 'User' && header !== 'Agence');
+            
+            const csvContent = [
+                headersToExport.join(','),
+                ...data.map(row => headersToExport.map(header => {
+                    let cell = row[header] || '';
+                    if (typeof cell === 'string') {
+                        cell = cell.replace(/"/g, '""');
+                        if (cell.includes(',') || cell.includes('\n') || cell.includes('"')) {
+                            cell = `"${cell}"`;
+                        }
+                    }
+                    return cell;
+                }).join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `stock_${agence}_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showMessage(`Export CSV généré pour ${agence}`, 'success', agence);
+        }
+
+        function demarrerInventaire(agence) {
+            openCodeVerificationDialog(agence);
+        }
+
+        function openCodeVerificationDialog(agence) {
+            const modalContainer = document.getElementById('modal-container');
+            const codeDialogHTML = `
+                <div class="modal-overlay active" id="codeVerificationModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">
+                                <i class="fas fa-shield-alt" style="color: var(--primary-500); margin-right: 0.5rem;"></i>
+                                Accès à l'Inventaire - ${agence}
+                            </h3>
+                            <button class="modal-close" onclick="fermerCodeDialog()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert-message alert-info" style="margin-bottom: 1.5rem;">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                Accès sécurisé requis pour l'agence ${agence}. Un code de vérification a été envoyé par email.
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Code de vérification à 6 chiffres :</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="codeInput"
+                                       maxlength="6"
+                                       placeholder="000000"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6)">
+                                <div style="font-size: 0.875rem; color: var(--gray-500); margin-top: 0.5rem;">Veuillez saisir le code reçu par email</div>
+                                <input type="hidden" id="agenceInventaire" value="${agence}">
+                            </div>
+                            
+                            <div id="codeMessage" class="alert-message" style="display: none;"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="verifierCodeAcces()" id="btnVerifierCode">
+                                <i class="fas fa-check"></i> Vérifier le code
+                            </button>
+                            <button class="btn btn-secondary" onclick="regenererCode()">
+                                <i class="fas fa-sync-alt"></i> Renvoyer le code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modalContainer.innerHTML = codeDialogHTML;
+            
+            setTimeout(() => {
+                const codeInput = document.getElementById('codeInput');
+                if (codeInput) codeInput.focus();
+            }, 100);
+            
+            regenererCode();
+        }
+
+        function fermerCodeDialog() {
+            const modal = document.getElementById('codeVerificationModal');
+            if (modal) modal.remove();
+        }
+
+        async function regenererCode() {
+            try {
+                const btnVerifier = document.getElementById('btnVerifierCode');
+                const messageDiv = document.getElementById('codeMessage');
+                
+                btnVerifier.disabled = true;
+                btnVerifier.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+                
+                if (messageDiv) messageDiv.style.display = 'none';
+                
+                await fetch(`${API_BASE_URL}?action=accesinventaire`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                
+                btnVerifier.disabled = false;
+                btnVerifier.innerHTML = '<i class="fas fa-check"></i> Vérifier le code';
+                
+                showCodeMessage('✅ Nouveau code généré et envoyé par email !', 'success');
+                
+                const codeInput = document.getElementById('codeInput');
+                if (codeInput) {
+                    codeInput.value = '';
+                    codeInput.focus();
+                }
+                
+            } catch (error) {
+                console.error('Erreur génération code:', error);
+                showCodeMessage('❌ Erreur lors de la génération du code', 'error');
+                
+                const btnVerifier = document.getElementById('btnVerifierCode');
+                if (btnVerifier) {
+                    btnVerifier.disabled = false;
+                    btnVerifier.innerHTML = '<i class="fas fa-check"></i> Vérifier le code';
+                }
+            }
+        }
+
+        async function verifierCodeAcces() {
+            const codeInput = document.getElementById('codeInput');
+            const agence = document.getElementById('agenceInventaire').value;
+            const code = codeInput.value.trim();
+            
+            if (!code || code.length !== 6) {
+                showCodeMessage('❌ Veuillez saisir un code à 6 chiffres', 'error');
+                codeInput.focus();
+                return;
+            }
+            
+            try {
+                const btnVerifier = document.getElementById('btnVerifierCode');
+                btnVerifier.disabled = true;
+                btnVerifier.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Vérification...';
+                
+                await fetch(`${API_BASE_URL}?action=codeaccess&code=${code}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                
+                setTimeout(() => {
+                    btnVerifier.disabled = false;
+                    btnVerifier.innerHTML = '<i class="fas fa-check"></i> Vérifier le code';
+                    
+                    if (code.length === 6 && /^\d+$/.test(code)) {
+                        showCodeMessage('✅ Code vérifié avec succès ! Ouverture de l\'inventaire...', 'success');
+                        
+                        setTimeout(() => {
+                            fermerCodeDialog();
+                            openInventaireUpdate(agence);
+                        }, 1500);
+                    } else {
+                        showCodeMessage('❌ Code incorrect. Veuillez réessayer.', 'error');
+                        codeInput.focus();
+                        codeInput.select();
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Erreur vérification code:', error);
+                showCodeMessage('❌ Erreur lors de la vérification du code', 'error');
+                
+                const btnVerifier = document.getElementById('btnVerifierCode');
+                if (btnVerifier) {
+                    btnVerifier.disabled = false;
+                    btnVerifier.innerHTML = '<i class="fas fa-check"></i> Vérifier le code';
+                }
+            }
+        }
+
+        function showCodeMessage(message, type) {
+            const messageDiv = document.getElementById('codeMessage');
+            if (messageDiv) {
+                messageDiv.textContent = message;
+                messageDiv.className = `alert-message alert-${type}`;
+                messageDiv.style.display = 'flex';
+            }
+        }
+
+        function openInventaireUpdate(agence) {
+            const config = AGENCE_CONFIG[agence];
+            const stockKey = config.stockKey;
+            const data = stockData[stockKey].allData;
+            
+            if (!data || !data.length) {
+                showToast(`Aucune donnée trouvée pour l'agence ${agence}`, 'error');
+                return;
+            }
+            
+            const modalContainer = document.getElementById('modal-container');
+            const inventaireHTML = `
+                <div class="modal-overlay active" id="inventaireModal">
+                    <div class="modal-content xlarge-modal">
+                        <div class="modal-header">
+                            <h3 class="modal-title">
+                                <i class="fas fa-clipboard-list" style="color: var(--primary-500); margin-right: 0.5rem;"></i>
+                                Inventaire - Agence ${agence}
+                            </h3>
+                            <button class="modal-close" onclick="closeModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert-message alert-info" style="margin-bottom: 1.5rem;">
+                                <i class="fas fa-info-circle"></i> 
+                                Mettez à jour les quantités disponibles pour l'agence ${agence}.
+                            </div>
+                            
+                            <div class="search-box" style="margin-bottom: 1rem;">
+                                <i class="fas fa-search"></i>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="searchReference"
+                                       placeholder="Rechercher une référence..."
+                                       autocomplete="off"
+                                       onkeyup="filterProducts()">
+                            </div>
+                            
+                            <div class="table-container">
+                                <div class="table-wrapper">
+                                    <table class="stock-table" id="inventaireTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Catégorie</th>
+                                                <th>Référence</th>
+                                                <th class="text-end">Stock départ</th>
+                                                <th class="text-end">Prix vente</th>
+                                                <th class="text-end">Stock Physique</th>
+                                                <th class="text-end">Nouveau Stock</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="inventaireData">
+                                            ${data.map(item => {
+                                                const reference = item['Référence'] || '';
+                                                const stockPhysique = item['Stock Physique'] || 0;
+                                                
+                                                return `
+                                                <tr class="product-row" data-reference="${String(reference).toLowerCase()}">
+                                                    <td>${formatDate(item['Date'] || '')}</td>
+                                                    <td>${item['Catégorie'] || ''}</td>
+                                                    <td class="reference-cell">${reference}</td>
+                                                    <td class="text-end">${item['Stock de depart'] || 0}</td>
+                                                    <td class="text-end">${formatCurrency(item['Prix de vente'] || 0)}</td>
+                                                    <td class="text-end stock-actuel">${stockPhysique}</td>
+                                                    <td>
+                                                        <input type="number" 
+                                                               class="form-control nouvelle-quantite" 
+                                                               data-reference="${String(reference)}"
+                                                               data-categorie="${item['Catégorie'] || ''}"
+                                                               data-prix="${item['Prix de vente'] || 0}"
+                                                               data-stockdepart="${item['Stock de depart'] || 0}"
+                                                               min="0" 
+                                                               value="${stockPhysique}"
+                                                               placeholder="Qté"
+                                                               style="width: 100px;">
+                                                    </td>
+                                                </tr>
+                                            `}).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" id="agenceInventaireUpdate" value="${agence}">
+                            
+                            <div id="inventaire-progress" style="display: none; margin-top: 1.5rem;">
+                                <div class="progress-bar" style="height: 6px;">
+                                    <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+                                </div>
+                                <div id="progress-text" style="text-align: center; font-size: 0.875rem; color: var(--gray-600); margin-top: 0.5rem;"></div>
+                            </div>
+                            
+                            <div id="inventaire-message" class="alert-message" style="display: none;"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success" onclick="validerMiseAJourInventaire()" id="btnValiderInventaire">
+                                <i class="fas fa-check"></i> Valider la mise à jour
+                            </button>
+                            <button class="btn btn-secondary" onclick="closeModal()">
+                                <i class="fas fa-times"></i> Fermer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modalContainer.innerHTML = inventaireHTML;
+            
+            setTimeout(() => {
+                const searchInput = document.getElementById('searchReference');
+                if (searchInput) searchInput.focus();
+            }, 100);
+        }
+
+        function filterProducts() {
+            const searchInput = document.getElementById('searchReference');
+            if (!searchInput) return;
+            
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#inventaireData .product-row');
+            
+            rows.forEach(row => {
+                const reference = row.getAttribute('data-reference') || '';
+                const referenceCell = row.querySelector('.reference-cell');
+                
+                if (searchTerm === '' || reference.includes(searchTerm)) {
+                    row.style.display = '';
+                    
+                    if (searchTerm !== '' && referenceCell) {
+                        const originalText = referenceCell.textContent || '';
+                        try {
+                            const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                            referenceCell.innerHTML = originalText.replace(regex, '<mark style="background-color: #f59e0b; color: white; padding: 2px 4px; border-radius: 3px;">$1</mark>');
+                        } catch (e) {
+                            referenceCell.textContent = originalText;
+                        }
+                    }
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        async function validerMiseAJourInventaire() {
+            const quantiteInputs = document.querySelectorAll('.nouvelle-quantite');
+            const agence = document.getElementById('agenceInventaireUpdate').value;
+            const modifications = [];
+            
+            const username = localStorage.getItem('username') || "Admin";
+            
+            quantiteInputs.forEach(input => {
+                if (input.closest('tr').style.display !== 'none') {
+                    const nouvelleQuantite = parseInt(input.value) || 0;
+                    const ancienneQuantite = parseInt(input.closest('tr').querySelector('.stock-actuel').textContent) || 0;
+                modifications.push({
+                reference: input.dataset.reference || '',
+                categorie: input.dataset.categorie || '',
+                agence: agence,
+                prix: input.dataset.prix || '',
+                nouvelleQuantite: nouvelleQuantite,
+                ancienneQuantite: ancienneQuantite,
+            });
+
+                }
+            });
+            
+            if (modifications.length === 0) {
+                showInventaireMessage('Aucun produit à mettre à jour.', 'warning');
+                return;
+            }
+            
+            const confirmation = confirm(
+                `Êtes-vous sûr de vouloir mettre à jour ${modifications.length} produit(s) pour l'agence ${agence} ?`
+            );
+            
+            if (!confirmation) return;
+            
+            const btnValider = document.getElementById('btnValiderInventaire');
+            const progressContainer = document.getElementById('inventaire-progress');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progress-text');
+            
+            btnValider.disabled = true;
+            btnValider.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+            progressContainer.style.display = 'block';
+            
+            showProgressOverlay('Mise à jour de l\'inventaire...');
+            
+            try {
+                const inventaireData = {
+                    action: 'inventaire',
+                    utilisateur: username,
+                    agence: agence,
+                    modifications: modifications,
+                    timestamp: new Date().toISOString()
+                };
+                
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    if (progress <= 100) {
+                        progressBar.style.width = `${progress}%`;
+                        progressText.textContent = `Mise à jour en cours... ${progress}%`;
+                    }
+                }, 100);
+                
+                await fetch(`${API_BASE_URL}?action=inventaire`, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(inventaireData)
+                });
+                
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Mise à jour terminée !';
+                
+                hideProgressOverlay();
+                showInventaireMessage(
+                    `✅ Mise à jour réussie ! ${modifications.length} produit(s) mis à jour pour ${agence}.`,
+                    'success'
+                );
+                
+                setTimeout(() => {
+                    closeModal();
+                    refreshStockData(agence);
+                }, 2000);
+                
+            } catch (error) {
+                console.error("Erreur:", error);
+                hideProgressOverlay();
+                showInventaireMessage(
+                    `❌ Erreur de connexion au serveur`,
+                    'error'
+                );
+                
+                btnValider.disabled = false;
+                btnValider.innerHTML = '<i class="fas fa-check"></i> Valider la mise à jour';
+            }
+        }
+
+        function showInventaireMessage(message, type) {
+            const messageDiv = document.getElementById('inventaire-message');
+            if (messageDiv) {
+                messageDiv.textContent = message;
+                messageDiv.className = `alert-message alert-${type}`;
+                messageDiv.style.display = 'flex';
+            }
+        }
+
+        function showProgressOverlay(message = 'Traitement en cours...') {
+            const overlay = document.createElement('div');
+            overlay.className = 'progress-overlay active';
+            overlay.innerHTML = `
+                <div class="progress-modal">
+                    <div class="progress-content">
+                        <div class="progress-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <div class="progress-text">
+                            <h4>${message}</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            overlay.id = 'global-progress-overlay';
+            document.body.appendChild(overlay);
+            
+            const progressFill = overlay.querySelector('.progress-fill');
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width < 80) {
+                    width += 5;
+                    progressFill.style.width = width + '%';
+                }
+            }, 200);
+            
+            overlay.dataset.interval = interval;
+        }
+
+        function hideProgressOverlay() {
+            const overlay = document.getElementById('global-progress-overlay');
+            if (overlay) {
+                clearInterval(overlay.dataset.interval);
+                const progressFill = overlay.querySelector('.progress-fill');
+                if (progressFill) progressFill.style.width = '100%';
+                
+                setTimeout(() => overlay.remove(), 500);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay.active');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const codeModal = document.getElementById('codeVerificationModal');
+                if (codeModal) verifierCodeAcces();
+            }
+        });
+
+        window.showStockSection = showStockSection;
+        window.loadAgenceStock = loadAgenceStock;
+        window.applyStockFilter = applyStockFilter;
+        window.sortTable = sortTable;
+        window.changeItemsPerPage = changeItemsPerPage;
+        window.changePage = changePage;
+        window.refreshStockData = refreshStockData;
+        window.exportStockData = exportStockData;
+        window.demarrerInventaire = demarrerInventaire;
+        window.fermerCodeDialog = fermerCodeDialog;
+        window.regenererCode = regenererCode;
+        window.verifierCodeAcces = verifierCodeAcces;
+        window.validerMiseAJourInventaire = validerMiseAJourInventaire;
+        window.filterProducts = filterProducts;
+        window.closeModal = closeModal;
+        window.goBack = goBack;
+        window.scrollToTop = scrollToTop;
+        window.closeToast = closeToast;
+        
+    </script>
+</body>
+</html>
