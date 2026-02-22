@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>VisioPro</title>
+    <title>VisioPro - Prospects</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1681,7 +1681,7 @@ textarea.form-control {
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title"><i class="fas fa-clipboard-list"></i> Consigner l'appel</h3>
-                <button class="modal-close" onclick="fermerConsignation()">&times;</button>
+                <button class="modal-close" onclick="telephone.fermerConsignation()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -1707,10 +1707,10 @@ textarea.form-control {
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="fermerConsignation()">
+                <button class="btn btn-secondary" onclick="telephone.fermerConsignation()">
                     <i class="fas fa-times"></i> Ne Pas Consigner
                 </button>
-                <button class="btn btn-primary" id="saveLogBtn" onclick="sauvegarderConsignation()">
+                <button class="btn btn-primary" id="saveLogBtn" onclick="telephone.sauvegarderConsignation()">
                     <i class="fas fa-save"></i> Consigner
                 </button>
             </div>
@@ -1888,30 +1888,35 @@ textarea.form-control {
     <script>
         const API_BASE = 'https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec';
         
-        // Objet téléphone pour gérer les consignations
+        // ==================== OBJET TÉLÉPHONE POUR LA CONSIGNATION ====================
         const telephone = {
-            modal: null,
-            clientId: null,
-            phoneNumber: null,
-            userName: null,
+            currentCallData: null,
             
             ouvrirConsignation: function(clientId, phoneNumber) {
-                this.clientId = clientId;
-                this.phoneNumber = phoneNumber;
-                this.userName = document.getElementById('usernameDisplay').textContent || 'Commercial';
+                const username = document.getElementById('usernameDisplay').textContent || 'Commercial';
+                
+                this.currentCallData = {
+                    clientId: clientId,
+                    phoneNumber: phoneNumber,
+                    username: username,
+                    timestamp: Date.now()
+                };
                 
                 document.getElementById('logClientId').value = clientId;
-                document.getElementById('logUser').value = this.userName;
+                document.getElementById('logUser').value = username;
                 document.getElementById('logPhoneNumber').value = phoneNumber;
                 document.getElementById('logNote').value = '';
                 
                 document.getElementById('logCallModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                setTimeout(() => document.getElementById('logNote')?.focus(), 100);
             },
             
             fermerConsignation: function() {
                 document.getElementById('logCallModal').classList.remove('active');
-                this.clientId = null;
-                this.phoneNumber = null;
+                document.body.style.overflow = '';
+                this.currentCallData = null;
             },
             
             sauvegarderConsignation: async function() {
@@ -1922,13 +1927,13 @@ textarea.form-control {
                     return;
                 }
                 
-                if (!this.clientId || !this.phoneNumber) {
-                    showAlert('Informations client manquantes', 'error');
+                if (!this.currentCallData) {
+                    showAlert('Informations d\'appel manquantes', 'error');
                     return;
                 }
                 
                 // Trouver le prospect
-                const prospect = prospectsData.find(p => p['Idprospect'] === this.clientId);
+                const prospect = prospectsData.find(p => p['Idprospect'] === this.currentCallData.clientId);
                 if (!prospect) {
                     showAlert('Prospect non trouvé', 'error');
                     return;
@@ -1974,7 +1979,7 @@ textarea.form-control {
                 
                 try {
                     const data = {
-                        Idprospect: this.clientId,
+                        Idprospect: this.currentCallData.clientId,
                         ...updates
                     };
                     
@@ -1989,8 +1994,8 @@ textarea.form-control {
                     this.fermerConsignation();
                     
                     // Rafraîchir la vue si le détail est ouvert
-                    if (currentDetailId === this.clientId) {
-                        ouvrirDetailProspect(this.clientId);
+                    if (currentDetailId === this.currentCallData.clientId) {
+                        ouvrirDetailProspect(this.currentCallData.clientId);
                     }
                     
                 } catch (error) {
@@ -2002,6 +2007,7 @@ textarea.form-control {
             }
         };
         
+        // ==================== VARIABLES GLOBALES ====================
         let prospectsData = [];
         let filteredProspects = [];
         let currentPage = 1;
@@ -2012,8 +2018,8 @@ textarea.form-control {
         let listeAgences = new Set();
         let pendingUpdates = new Map();
         let updateTimeout = null;
-        let toastId = 0;
 
+        // ==================== FONCTIONS D'INITIALISATION ====================
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
             
@@ -2081,6 +2087,7 @@ textarea.form-control {
             });
         }
 
+        // ==================== CHARGEMENT DES DONNÉES ====================
         async function chargerProspects() {
             showLoading(true);
             try {
@@ -2464,76 +2471,75 @@ textarea.form-control {
                 `<option value="${agence}" ${prospect['Agence'] === agence ? 'selected' : ''}>${agence}</option>`
             ).join('');
 
-            // Dans la fonction ouvrirDetailProspect, remplacez la partie qui génère les appelsHtml :
-
-// Générer les affichages des appels
-const appelsHtml = [];
-for (let i = 1; i <= 5; i++) {
-    const dateField = `Date Appel ${i}`;
-    const consigneField = `consigne appel ${i}`;
-    const dateValue = prospect[dateField] || '';
-    const consigneValue = prospect[consigneField] || '';
-    
-    if (dateValue && consigneValue) {
-        // Formater la date si c'est au format ISO
-        let dateFormatee = dateValue;
-        if (dateValue.includes('T') || dateValue.includes('-')) {
-            try {
-                const date = new Date(dateValue);
-                if (!isNaN(date.getTime())) {
-                    const jour = date.getDate().toString().padStart(2, '0');
-                    const mois = (date.getMonth() + 1).toString().padStart(2, '0');
-                    const annee = date.getFullYear();
-                    dateFormatee = `${jour}/${mois}/${annee}`;
+            // Générer les affichages des appels
+            const appelsHtml = [];
+            for (let i = 1; i <= 5; i++) {
+                const dateField = `Date Appel ${i}`;
+                const consigneField = `consigne appel ${i}`;
+                const dateValue = prospect[dateField] || '';
+                const consigneValue = prospect[consigneField] || '';
+                
+                if (dateValue && consigneValue) {
+                    // Formater la date si c'est au format ISO
+                    let dateFormatee = dateValue;
+                    if (dateValue.includes('T') || dateValue.includes('-')) {
+                        try {
+                            const date = new Date(dateValue);
+                            if (!isNaN(date.getTime())) {
+                                const jour = date.getDate().toString().padStart(2, '0');
+                                const mois = (date.getMonth() + 1).toString().padStart(2, '0');
+                                const annee = date.getFullYear();
+                                dateFormatee = `${jour}/${mois}/${annee}`;
+                            }
+                        } catch (e) {
+                            // Garder la valeur originale si erreur
+                            dateFormatee = dateValue;
+                        }
+                    }
+                    
+                    appelsHtml.push(`
+                        <div class="detail-item" style="flex-direction: column; align-items: flex-start; gap: 0.3rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%;">
+                                <span class="detail-item-label" style="width: auto;"><i class="fas fa-phone"></i> Appel ${i}:</span>
+                                <span class="badge badge-info">${dateFormatee}</span>
+                            </div>
+                            <div style="margin-left: 1.5rem; font-size: 0.85rem; color: var(--gray-700); background: var(--gray-50); padding: 0.4rem; border-radius: var(--border-radius-sm); width: 100%;">
+                                <i class="fas fa-comment-dots" style="color: var(--primary-400); margin-right: 0.3rem;"></i>
+                                ${consigneValue}
+                            </div>
+                        </div>
+                    `);
                 }
-            } catch (e) {
-                // Garder la valeur originale si erreur
-                dateFormatee = dateValue;
             }
-        }
-        
-        appelsHtml.push(`
-            <div class="detail-item" style="flex-direction: column; align-items: flex-start; gap: 0.3rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                    <span class="detail-item-label" style="width: auto;"><i class="fas fa-phone"></i> Appel ${i}:</span>
-                    <span class="badge badge-info">${dateFormatee}</span>
-                </div>
-                <div style="margin-left: 1.5rem; font-size: 0.85rem; color: var(--gray-700); background: var(--gray-50); padding: 0.4rem; border-radius: var(--border-radius-sm); width: 100%;">
-                    <i class="fas fa-comment-dots" style="color: var(--primary-400); margin-right: 0.3rem;"></i>
-                    ${consigneValue}
-                </div>
-            </div>
-        `);
-    }
-}
 
-// Appel 6 (sans consigne)
-const dateAppel6 = prospect['Date Appel 6'] || '';
-if (dateAppel6) {
-    // Formater la date si c'est au format ISO
-    let dateFormatee = dateAppel6;
-    if (dateAppel6.includes('T') || dateAppel6.includes('-')) {
-        try {
-            const date = new Date(dateAppel6);
-            if (!isNaN(date.getTime())) {
-                const jour = date.getDate().toString().padStart(2, '0');
-                const mois = (date.getMonth() + 1).toString().padStart(2, '0');
-                const annee = date.getFullYear();
-                dateFormatee = `${jour}/${mois}/${annee}`;
+            // Appel 6 (sans consigne)
+            const dateAppel6 = prospect['Date Appel 6'] || '';
+            if (dateAppel6) {
+                // Formater la date si c'est au format ISO
+                let dateFormatee = dateAppel6;
+                if (dateAppel6.includes('T') || dateAppel6.includes('-')) {
+                    try {
+                        const date = new Date(dateAppel6);
+                        if (!isNaN(date.getTime())) {
+                            const jour = date.getDate().toString().padStart(2, '0');
+                            const mois = (date.getMonth() + 1).toString().padStart(2, '0');
+                            const annee = date.getFullYear();
+                            dateFormatee = `${jour}/${mois}/${annee}`;
+                        }
+                    } catch (e) {
+                        // Garder la valeur originale si erreur
+                        dateFormatee = dateAppel6;
+                    }
+                }
+                
+                appelsHtml.push(`
+                    <div class="detail-item">
+                        <span class="detail-item-label"><i class="fas fa-phone"></i> Appel 6:</span>
+                        <span class="badge badge-info">${dateFormatee}</span>
+                    </div>
+                `);
             }
-        } catch (e) {
-            // Garder la valeur originale si erreur
-            dateFormatee = dateAppel6;
-        }
-    }
-    
-    appelsHtml.push(`
-        <div class="detail-item">
-            <span class="detail-item-label"><i class="fas fa-phone"></i> Appel 6:</span>
-            <span class="badge badge-info">${dateFormatee}</span>
-        </div>
-    `);
-}
+            
             const html = `
                 <div class="detail-container">
                     <div class="detail-header-card">
@@ -2551,7 +2557,7 @@ if (dateAppel6) {
                     </div>
 
                     <div class="action-bar-modern">
-                        <button class="action-btn-modern call" onclick="appelerProspect('${telephone}')">
+                        <button class="action-btn-modern call" onclick="appelerProspect('${telephone}', '${prospectId}')">
                             <i class="fas fa-phone-alt"></i> Appeler
                         </button>
                         <button class="action-btn-modern delete" onclick="confirmDelete('${prospectId}')">
@@ -3000,37 +3006,23 @@ if (dateAppel6) {
             afficherTableau();
         }
 
-function appelerProspect(numero) {
-    if (!numero) {
-        showAlert('Numéro de téléphone non disponible', 'error');
-        return;
-    }
-    
-    const tel = String(numero).replace(/\s+/g, '');
-    
-    // Récupérer l'ID du prospect actuellement affiché
-    const prospectId = currentDetailId;
-    
-    if (confirm(`Appeler le ${tel} ?`)) {
-        window.location.href = `tel:${tel}`;
-        
-        // Ouvrir le modal de consignation après 6 secondes
-        setTimeout(() => {
-            // Vérifier que le prospect est toujours le même (pas de navigation)
-            if (prospectId === currentDetailId) {
-                // Utiliser l'objet telephone global (pas le paramètre)
-                window.telephone.ouvrirConsignation(prospectId, tel);
+        // Fonction modifiée pour que le modal apparaisse après l'appel
+        function appelerProspect(numero, prospectId) {
+            if (!numero) {
+                showAlert('Numéro de téléphone non disponible', 'error');
+                return;
             }
-        }, 6000); // 6 secondes
-    }
-}
-
-        function fermerConsignation() {
-            telephone.fermerConsignation();
-        }
-
-        function sauvegarderConsignation() {
-            telephone.sauvegarderConsignation();
+            
+            const tel = String(numero).replace(/\s+/g, '');
+            
+            if (confirm(`Appeler le ${tel} ?`)) {
+                window.location.href = `tel:${tel}`;
+                
+                // Ouvrir le modal de consignation après 6 secondes
+                setTimeout(() => {
+                    telephone.ouvrirConsignation(prospectId, tel);
+                }, 6000); // 6 secondes
+            }
         }
 
         function ouvrirModalAjout() {
@@ -3229,8 +3221,6 @@ function appelerProspect(numero) {
         window.ouvrirDetailProspect = ouvrirDetailProspect;
         window.fermerDetailModal = fermerDetailModal;
         window.appelerProspect = appelerProspect;
-        window.fermerConsignation = fermerConsignation;
-        window.sauvegarderConsignation = sauvegarderConsignation;
         window.confirmDelete = confirmDelete;
         window.fermerDeleteModal = fermerDeleteModal;
         window.activerEditionDate = activerEditionDate;
