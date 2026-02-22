@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>VisioPro - Prospects</title>
+    <title>VisioPro</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1569,6 +1569,103 @@ textarea.form-control {
 
 .close-square:hover {
     background-color: #cc0000;
+}
+
+/* ==================== MODAL DE CONSIGNATION D'APPEL - PRIORITÉ MAXIMALE ==================== */
+#logCallModal.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5); /* Fond plus foncé pour mieux ressortir */
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999 !important; /* Valeur extrêmement élevée pour être au-dessus de tout */
+    animation: fadeIn 0.3s ease;
+}
+
+#logCallModal.modal-overlay.active {
+    display: flex;
+}
+
+#logCallModal .modal-content {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); /* Ombre plus prononcée */
+    width: 500px;
+    max-width: 95%;
+    max-height: 90vh;
+    position: relative;
+    z-index: 1000000 !important; /* Encore plus haut que l'overlay */
+    animation: modalPopIn 0.3s ease;
+    border: 2px solid white; /* Bordure pour mieux ressortir */
+    margin: auto; /* Centrage parfait */
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+}
+
+#logCallModal .modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+}
+
+#logCallModal .modal-body {
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+#logCallModal .modal-footer {
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background: white;
+    border-radius: 0 0 var(--border-radius-xl) var(--border-radius-xl);
+}
+
+/* Animation d'entrée */
+@keyframes modalPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Empêcher le défilement du body quand le modal est ouvert */
+body.modal-open {
+    overflow: hidden !important;
+}
+
+/* Pour mobile */
+@media (max-width: 768px) {
+    #logCallModal .modal-content {
+        width: 95%;
+        margin: 1rem;
+        max-height: 85vh;
+    }
+    
+    #logCallModal .modal-footer {
+        flex-direction: column-reverse;
+    }
+    
+    #logCallModal .modal-footer .btn {
+        width: 100%;
+    }
 }
     </style>
 </head>
