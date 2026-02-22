@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>VisioPro - Prospects</title>
+    <title>VisioPro</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -2464,41 +2464,76 @@ textarea.form-control {
                 `<option value="${agence}" ${prospect['Agence'] === agence ? 'selected' : ''}>${agence}</option>`
             ).join('');
 
-            // Générer les affichages des appels
-            const appelsHtml = [];
-            for (let i = 1; i <= 5; i++) {
-                const dateField = `Date Appel ${i}`;
-                const consigneField = `consigne appel ${i}`;
-                const dateValue = prospect[dateField] || '';
-                const consigneValue = prospect[consigneField] || '';
-                
-                if (dateValue && consigneValue) {
-                    appelsHtml.push(`
-                        <div class="detail-item" style="flex-direction: column; align-items: flex-start; gap: 0.3rem;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%;">
-                                <span class="detail-item-label" style="width: auto;"><i class="fas fa-phone"></i> Appel ${i}:</span>
-                                <span class="badge badge-info">${dateValue}</span>
-                            </div>
-                            <div style="margin-left: 1.5rem; font-size: 0.85rem; color: var(--gray-700); background: var(--gray-50); padding: 0.4rem; border-radius: var(--border-radius-sm); width: 100%;">
-                                <i class="fas fa-comment-dots" style="color: var(--primary-400); margin-right: 0.3rem;"></i>
-                                ${consigneValue}
-                            </div>
-                        </div>
-                    `);
-                }
-            }
-            
-            // Appel 6 (sans consigne)
-            const dateAppel6 = prospect['Date Appel 6'] || '';
-            if (dateAppel6) {
-                appelsHtml.push(`
-                    <div class="detail-item">
-                        <span class="detail-item-label"><i class="fas fa-phone"></i> Appel 6:</span>
-                        <span class="badge badge-info">${dateAppel6}</span>
-                    </div>
-                `);
-            }
+            // Dans la fonction ouvrirDetailProspect, remplacez la partie qui génère les appelsHtml :
 
+// Générer les affichages des appels
+const appelsHtml = [];
+for (let i = 1; i <= 5; i++) {
+    const dateField = `Date Appel ${i}`;
+    const consigneField = `consigne appel ${i}`;
+    const dateValue = prospect[dateField] || '';
+    const consigneValue = prospect[consigneField] || '';
+    
+    if (dateValue && consigneValue) {
+        // Formater la date si c'est au format ISO
+        let dateFormatee = dateValue;
+        if (dateValue.includes('T') || dateValue.includes('-')) {
+            try {
+                const date = new Date(dateValue);
+                if (!isNaN(date.getTime())) {
+                    const jour = date.getDate().toString().padStart(2, '0');
+                    const mois = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const annee = date.getFullYear();
+                    dateFormatee = `${jour}/${mois}/${annee}`;
+                }
+            } catch (e) {
+                // Garder la valeur originale si erreur
+                dateFormatee = dateValue;
+            }
+        }
+        
+        appelsHtml.push(`
+            <div class="detail-item" style="flex-direction: column; align-items: flex-start; gap: 0.3rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%;">
+                    <span class="detail-item-label" style="width: auto;"><i class="fas fa-phone"></i> Appel ${i}:</span>
+                    <span class="badge badge-info">${dateFormatee}</span>
+                </div>
+                <div style="margin-left: 1.5rem; font-size: 0.85rem; color: var(--gray-700); background: var(--gray-50); padding: 0.4rem; border-radius: var(--border-radius-sm); width: 100%;">
+                    <i class="fas fa-comment-dots" style="color: var(--primary-400); margin-right: 0.3rem;"></i>
+                    ${consigneValue}
+                </div>
+            </div>
+        `);
+    }
+}
+
+// Appel 6 (sans consigne)
+const dateAppel6 = prospect['Date Appel 6'] || '';
+if (dateAppel6) {
+    // Formater la date si c'est au format ISO
+    let dateFormatee = dateAppel6;
+    if (dateAppel6.includes('T') || dateAppel6.includes('-')) {
+        try {
+            const date = new Date(dateAppel6);
+            if (!isNaN(date.getTime())) {
+                const jour = date.getDate().toString().padStart(2, '0');
+                const mois = (date.getMonth() + 1).toString().padStart(2, '0');
+                const annee = date.getFullYear();
+                dateFormatee = `${jour}/${mois}/${annee}`;
+            }
+        } catch (e) {
+            // Garder la valeur originale si erreur
+            dateFormatee = dateAppel6;
+        }
+    }
+    
+    appelsHtml.push(`
+        <div class="detail-item">
+            <span class="detail-item-label"><i class="fas fa-phone"></i> Appel 6:</span>
+            <span class="badge badge-info">${dateFormatee}</span>
+        </div>
+    `);
+}
             const html = `
                 <div class="detail-container">
                     <div class="detail-header-card">
@@ -2985,6 +3020,7 @@ textarea.form-control {
                 
                 // Lancer l'appel
                 window.location.href = `tel:${tel}`;
+                telephone.ouvrirConsignation(prospect['Idprospect'], tel);
             }
         }
 
