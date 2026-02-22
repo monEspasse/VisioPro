@@ -3000,29 +3000,30 @@ if (dateAppel6) {
             afficherTableau();
         }
 
-        function appelerProspect(telephone) {
-            if (!telephone) {
-                showAlert('Numéro de téléphone non disponible', 'error');
-                return;
+function appelerProspect(numero) {
+    if (!numero) {
+        showAlert('Numéro de téléphone non disponible', 'error');
+        return;
+    }
+    
+    const tel = String(numero).replace(/\s+/g, '');
+    
+    // Récupérer l'ID du prospect actuellement affiché
+    const prospectId = currentDetailId;
+    
+    if (confirm(`Appeler le ${tel} ?`)) {
+        window.location.href = `tel:${tel}`;
+        
+        // Ouvrir le modal de consignation après 6 secondes
+        setTimeout(() => {
+            // Vérifier que le prospect est toujours le même (pas de navigation)
+            if (prospectId === currentDetailId) {
+                // Utiliser l'objet telephone global (pas le paramètre)
+                window.telephone.ouvrirConsignation(prospectId, tel);
             }
-            
-            const tel = String(telephone).replace(/\s+/g, '');
-            
-            // Ouvrir la modal de consignation après confirmation
-            if (confirm(`Appeler le ${tel} ?`)) {
-                // Ouvrir la modal de consignation
-                const prospect = prospectsData.find(p => p['Numero de telephone'] === telephone || 
-                    p['Numero de telephone'] === tel);
-                
-                if (prospect) {
-                    telephone.ouvrirConsignation(prospect['Idprospect'], tel);
-                }
-                
-                // Lancer l'appel
-                window.location.href = `tel:${tel}`;
-                telephone.ouvrirConsignation(prospect['Idprospect'], tel);
-            }
-        }
+        }, 6000); // 6 secondes
+    }
+}
 
         function fermerConsignation() {
             telephone.fermerConsignation();
