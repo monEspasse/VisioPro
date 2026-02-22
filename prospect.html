@@ -3007,23 +3007,23 @@ textarea.form-control {
         }
 
         // Fonction modifiée pour que le modal apparaisse après l'appel
-        function appelerProspect(numero, prospectId) {
-            if (!numero) {
-                showAlert('Numéro de téléphone non disponible', 'error');
-                return;
-            }
-            
-            const tel = String(numero).replace(/\s+/g, '');
-            
-            if (confirm(`Appeler le ${tel} ?`)) {
-                window.location.href = `tel:${tel}`;
-                
-                // Ouvrir le modal de consignation après 6 secondes
-                setTimeout(() => {
-                    telephone.ouvrirConsignation(prospectId, tel);
-                }, 6000); // 6 secondes
-            }
-        }
+function appelerProspect(numero, prospectId) {
+    if (!numero) {
+        showAlert('Numéro de téléphone non disponible', 'error');
+        return;
+    }
+    
+    const tel = String(numero).replace(/\s+/g, '');
+    
+    if (confirm(`Appeler le ${tel} ?`)) {
+        window.location.href = `tel:${tel}`;
+        
+        // Ouvrir le modal de consignation après 6 secondes
+        setTimeout(() => {
+            telephone.ouvrirConsignation(prospectId, tel);
+        }, 6000);
+    }
+}
 
         function ouvrirModalAjout() {
             currentEditId = null;
