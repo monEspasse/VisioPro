@@ -3,1767 +3,1845 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>VisionPro - Gestion des Prospects</title>
+    <title>VisioPro - Prospects</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Version Desktop - Inchangée */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #3b82f6;
-            --secondary: #7c3aed;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --radius-sm: 0.375rem;
-            --radius: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea0d 0%, #764ba20d 100%), 
-                        linear-gradient(180deg, var(--gray-50) 0%, white 100%);
-            min-height: 100vh;
-            color: var(--gray-800);
-            line-height: 1.5;
-        }
-
-        .dashboard-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-
-        .header {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 1.25rem 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--gray-200);
-        }
-
-        .header-left h1 {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-size: 1.875rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--gray-100);
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-lg);
-        }
-
-        .section-header {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--gray-200);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--gray-800);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .section-title i {
-            color: var(--primary);
-        }
-
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            align-items: end;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .filter-label {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--gray-700);
-        }
-
-        .filter-input {
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius);
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .filter-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px -1px rgba(37, 99, 235, 0.3);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 1px solid var(--gray-300);
-        }
-
-        .btn-secondary:hover {
-            background: var(--gray-50);
-            border-color: var(--primary);
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            overflow: auto;
-            border: 1px solid var(--gray-200);
-            margin-bottom: 1.5rem;
-        }
-
-        .prospects-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.875rem;
-        }
-
-        .prospects-table th {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            font-weight: 600;
-            padding: 1rem;
-            text-align: left;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .prospects-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .prospects-table tbody tr {
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .prospects-table tbody tr:hover {
-            background: var(--gray-50);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .client-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .client-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
-        }
-
-        .badge-success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .badge-warning {
-            background: #fed7aa;
-            color: #92400e;
-        }
-
-        .badge-danger {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .badge-purple {
-            background: #ede9fe;
-            color: #5b21b6;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--gray-200);
-        }
-
-        .pagination-info {
-            color: var(--gray-600);
-            font-size: 0.875rem;
-        }
-
-        .pagination-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .page-btn {
-            padding: 0.5rem 0.75rem;
-            border: 1px solid var(--gray-300);
-            background: white;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .page-btn:hover:not(:disabled) {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .page-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        #detailModal.modal-overlay {
-            justify-content: flex-end;
-        }
-
-        #detailModal .modal {
-            width: 65%;
-            max-width: 65%;
-            height: 100vh;
-            max-height: 100vh;
-            margin: 0;
-            border-radius: var(--radius-xl) 0 0 var(--radius-xl);
-            animation: modalSlideInLeft 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        @keyframes modalSlideInLeft {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .modal {
-            background: white;
-            border-radius: var(--radius-xl);
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--gray-200);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-        }
-
-        #detailModal .modal-header {
-            border-radius: var(--radius-xl) 0 0 0;
-        }
-
-        .modal-header h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.2s ease;
-        }
-
-        .modal-close:hover {
-            opacity: 1;
-        }
-
-        .modal-body {
-            padding: 2rem;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .modal-footer {
-            padding: 1.5rem;
-            border-top: 1px solid var(--gray-200);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            background: var(--gray-50);
-        }
-
-        .detail-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .detail-header-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            border: 1px solid var(--gray-200);
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .detail-avatar-large {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: 600;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
-            border: 3px solid white;
-        }
-
-        .detail-header-info h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--gray-800);
-            margin-bottom: 0.25rem;
-        }
-
-        .detail-header-meta {
-            display: flex;
-            gap: 1.5rem;
-            color: var(--gray-600);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-        }
-
-        .detail-header-meta i {
-            color: var(--primary);
-            width: 16px;
-            margin-right: 0.25rem;
-        }
-
-        .action-bar-modern {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 1rem;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
-            justify-content: center;
-        }
-
-        .action-btn-modern {
-            padding: 0.625rem 1.25rem;
-            border: none;
-            border-radius: var(--radius-lg);
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: white;
-            color: var(--gray-700);
-            border: 1px solid var(--gray-300);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .action-btn-modern:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .action-btn-modern.call {
-            background: var(--success);
-            color: white;
-            border-color: var(--success);
-        }
-
-        .action-btn-modern.edit {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .action-btn-modern.calendar {
-            background: var(--warning);
-            color: white;
-            border-color: var(--warning);
-        }
-
-        .action-btn-modern.delete {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        .detail-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 1.25rem;
-            border: 1px solid var(--gray-200);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-        }
-
-        .detail-card:hover {
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary-light);
-        }
-
-        .detail-card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--gray-700);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid;
-            border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;
-            border-bottom-style: solid;
-        }
-
-        .detail-card-title i {
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
-
-        .detail-item {
-            display: flex;
-            margin-bottom: 0.75rem;
-            padding: 0.5rem;
-            background: var(--gray-50);
-            border-radius: var(--radius);
-            transition: all 0.2s ease;
-        }
-
-        .detail-item:hover {
-            background: white;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .detail-item-label {
-            width: 100px;
-            font-weight: 600;
-            color: var(--gray-600);
-            font-size: 0.813rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .detail-item-label i {
-            color: var(--primary);
-            font-size: 0.75rem;
-        }
-
-        .detail-item-value {
-            flex: 1;
-            color: var(--gray-900);
-            font-weight: 500;
-            font-size: 0.875rem;
-        }
-
-        .status-badge-large {
-            display: inline-block;
-            padding: 0.375rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.813rem;
-            font-weight: 600;
-        }
-
-        .notes-section {
-            grid-column: span 2;
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 1.25rem;
-            border: 1px solid var(--gray-200);
-            box-shadow: var(--shadow-sm);
-            position: relative;
-        }
-
-        .notes-section .action-btn-modern {
-            background: white;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .notes-section .action-btn-modern:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .notes-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        .note-item-modern {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 0.75rem;
-            border-radius: var(--radius-lg);
-            border-left: 4px solid var(--primary);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-            font-size: 0.813rem;
-            min-height: 80px;
-            max-height: 120px;
-            overflow-y: auto;
-            word-wrap: break-word;
-        }
-
-        .note-item-modern:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .note-item-modern i {
-            margin-right: 0.25rem;
-            font-size: 0.75rem;
-        }
-
-        .comments-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-top: 1rem;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
-        }
-
-        .comment-item-modern {
-            background: white;
-            padding: 1rem;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
-            box-shadow: var(--shadow-sm);
-            position: relative;
-            padding-left: 2.5rem;
-            animation: fadeIn 0.3s ease;
-            font-size: 0.875rem;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
-
-        .comment-item-modern::before {
-            content: '"';
-            position: absolute;
-            left: 1rem;
-            top: 0.5rem;
-            font-size: 2rem;
-            color: var(--primary-light);
-            font-family: serif;
-            opacity: 0.5;
-        }
-
-        .comment-item-modern span {
-            display: block;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .prospect-modal-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .prospect-form-section {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            border: 1px solid var(--gray-200);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .prospect-section-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--gray-700);
-            margin-bottom: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid;
-            border-image: linear-gradient(to right, var(--primary), var(--secondary)) 1;
-            border-bottom-style: solid;
-        }
-
-        .prospect-section-title i {
-            color: var(--primary);
-        }
-
-        .prospect-form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-        }
-
-        .prospect-form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .prospect-form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .prospect-form-label {
-            font-weight: 600;
-            color: var(--gray-700);
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .prospect-form-label i {
-            color: var(--primary);
-            font-size: 0.875rem;
-            width: 16px;
-        }
-
-        .prospect-form-label .required {
-            color: var(--danger);
-            font-size: 0.75rem;
-            margin-left: 0.25rem;
-        }
-
-        .prospect-form-control {
-            padding: 0.875rem 1rem;
-            border: 2px solid var(--gray-200);
-            border-radius: var(--radius-lg);
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .prospect-form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-
-        .prospect-notes-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-        }
-
-        .floating-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-        }
-
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--gray-200);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .alert-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 2000;
-        }
-
-        .alert {
-            background: white;
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 0.5rem;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            animation: slideIn 0.3s ease;
-            border-left: 4px solid;
-        }
-
-        .alert-success {
-            border-left-color: var(--success);
-        }
-
-        .alert-success i {
-            color: var(--success);
-        }
-
-        .alert-error {
-            border-left-color: var(--danger);
-        }
-
-        .alert-error i {
-            color: var(--danger);
-        }
-
-        .alert-info {
-            border-left-color: var(--info);
-        }
-
-        .alert-info i {
-            color: var(--info);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Scrollbar personnalisée */
-        .notes-container::-webkit-scrollbar,
-        .comments-container::-webkit-scrollbar,
-        .note-item-modern::-webkit-scrollbar,
-        .comment-item-modern span::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .notes-container::-webkit-scrollbar-track,
-        .comments-container::-webkit-scrollbar-track,
-        .note-item-modern::-webkit-scrollbar-track,
-        .comment-item-modern span::-webkit-scrollbar-track {
-            background: var(--gray-100);
-            border-radius: 10px;
-        }
-
-        .notes-container::-webkit-scrollbar-thumb,
-        .comments-container::-webkit-scrollbar-thumb,
-        .note-item-modern::-webkit-scrollbar-thumb,
-        .comment-item-modern span::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
-            border-radius: 10px;
-        }
-
-        .notes-container::-webkit-scrollbar-thumb:hover,
-        .comments-container::-webkit-scrollbar-thumb:hover,
-        .note-item-modern::-webkit-scrollbar-thumb:hover,
-        .comment-item-modern span::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
-        }
-
-        /* ========== VERSION MOBILE OPTIMISÉE ========== */
-        @media screen and (max-width: 768px) {
-            /* Layout général */
-            .dashboard-container {
-                padding: 0.75rem;
-            }
-
-            /* Header compact */
-            .header {
-                padding: 1rem;
-                flex-direction: column;
-                gap: 0.75rem;
-                text-align: center;
-            }
-
-            .header-left h1 {
-                font-size: 1.5rem;
-            }
-
-            .user-info {
-                width: 100%;
-                justify-content: center;
-                padding: 0.5rem;
-            }
-
-            /* FILTRES HORIZONTAUX SCROLLABLES */
-            .filters-grid {
-                display: flex;
-                flex-direction: row;
-                overflow-x: auto;
-                gap: 0.75rem;
-                padding-bottom: 0.75rem;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: thin;
-                white-space: nowrap;
-                flex-wrap: nowrap;
-            }
-            
-            .filters-grid::-webkit-scrollbar {
-                height: 4px;
-            }
-            
-            .filters-grid::-webkit-scrollbar-thumb {
-                background: var(--primary-light);
-                border-radius: 4px;
-            }
-
-            .filter-group {
-                min-width: 180px;
-                flex-shrink: 0;
-            }
-
-            .filter-input {
-                font-size: 16px; /* Évite le zoom sur iOS */
-                min-height: 44px;
-            }
-
-            /* Tableau responsive */
-            .table-container {
-                margin: 0 -0.75rem;
-                border-radius: 0;
-                width: calc(100% + 1.5rem);
-                overflow-x: auto;
-            }
-
-            .prospects-table {
-                min-width: 800px;
-            }
-
-            .prospects-table th,
-            .prospects-table td {
-                padding: 0.75rem;
-                font-size: 0.813rem;
-                white-space: nowrap;
-            }
-
-            .client-avatar {
-                width: 30px;
-                height: 30px;
-                font-size: 0.75rem;
-            }
-
-            /* Pagination verticale */
-            .pagination {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-                text-align: center;
-            }
-
-            .pagination-controls {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .page-btn {
-                min-width: 40px;
-                min-height: 40px;
-                padding: 0.5rem;
-            }
-
-            /* Bouton flottant repositionné */
-            .floating-btn {
-                bottom: 1rem;
-                right: 1rem;
-                width: 56px;
-                height: 56px;
-                font-size: 1.25rem;
-            }
-
-            /* Modal de détail plein écran */
-            #detailModal.modal-overlay {
-                justify-content: center;
-                align-items: flex-end;
-            }
-
-            #detailModal .modal {
-                width: 100%;
-                max-width: 100%;
-                height: 90vh;
-                max-height: 90vh;
-                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-                animation: modalSlideUp 0.3s ease;
-            }
-
-            @keyframes modalSlideUp {
-                from { transform: translateY(100%); }
-                to { transform: translateY(0); }
-            }
-
-            #detailModal .modal-header {
-                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            }
-
-            /* Contenu du détail */
-            .detail-header-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 1rem;
-                gap: 0.5rem;
-            }
-
-            .detail-avatar-large {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-
-            .detail-header-info h2 {
-                font-size: 1.25rem;
-            }
-
-            .detail-header-meta {
-                flex-direction: column;
-                gap: 0.25rem;
-                align-items: center;
-            }
-
-            /* Actions en grille 2 colonnes */
-            .action-bar-modern {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-                padding: 0.75rem;
-            }
-
-            .action-btn-modern {
-                width: 100%;
-                padding: 0.75rem 0.5rem;
-                font-size: 0.813rem;
-                justify-content: center;
-                min-height: 44px;
-            }
-
-            /* Grille de détails en 1 colonne */
-            .detail-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-
-            .notes-section {
-                grid-column: span 1;
-            }
-
-            /* Notes en grille 2 colonnes */
-            .notes-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-            }
-
-            .note-item-modern {
-                min-height: 60px;
-                max-height: 100px;
-                font-size: 0.75rem;
-                padding: 0.5rem;
-            }
-
-            /* Commentaires */
-            .comments-container {
-                max-height: 200px;
-            }
-
-            .comment-item-modern {
-                padding: 0.75rem;
-                padding-left: 2rem;
-                font-size: 0.813rem;
-            }
-
-            .comment-item-modern::before {
-                font-size: 1.5rem;
-                left: 0.75rem;
-                top: 0.25rem;
-            }
-
-            /* Modal d'ajout/édition */
-            #prospectModal .modal {
-                width: 95%;
-                max-height: 85vh;
-            }
-
-            .prospect-form-grid,
-            .prospect-notes-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-
-            .prospect-form-group.full-width {
-                grid-column: span 1;
-            }
-
-            .prospect-form-control {
-                font-size: 16px;
-                min-height: 44px;
-            }
-
-            .modal-header {
-                padding: 1rem;
-            }
-
-            .modal-header h3 {
-                font-size: 1.1rem;
-            }
-
-            .modal-body {
-                padding: 1rem;
-            }
-
-            .modal-footer {
-                padding: 1rem;
-                flex-direction: column-reverse;
-                gap: 0.5rem;
-            }
-
-            .modal-footer .btn {
-                width: 100%;
-                min-height: 44px;
-            }
-
-            /* Alertes repositionnées */
-            .alert-container {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                max-width: calc(100% - 20px);
-            }
-
-            .alert {
-                padding: 0.75rem 1rem;
-                font-size: 0.875rem;
-            }
-
-            /* Optimisations tactiles */
-            .prospects-table tbody tr:hover {
-                transform: none;
-            }
-
-            .prospects-table tbody tr:active {
-                background: var(--gray-200);
-            }
-
-            .btn:active,
-            .action-btn-modern:active,
-            .page-btn:active,
-            .floating-btn:active {
-                transform: scale(0.95);
-            }
-
-            .filter-input,
-            .prospect-form-control,
-            .btn,
-            .action-btn-modern,
-            .page-btn {
-                -webkit-tap-highlight-color: transparent;
-            }
-        }
-
-        /* Très petits écrans */
-        @media screen and (max-width: 380px) {
-            .notes-container {
-                grid-template-columns: 1fr;
-            }
-
-            .action-bar-modern {
-                grid-template-columns: 1fr;
-            }
-
-            .detail-item {
-                flex-direction: column;
-                gap: 0.25rem;
-            }
-
-            .detail-item-label {
-                width: 100%;
-            }
-
-            .badge {
-                font-size: 0.7rem;
-                padding: 0.2rem 0.5rem;
-            }
-        }
-
-        /* Mode paysage sur mobile */
-        @media screen and (max-width: 768px) and (orientation: landscape) {
-            #detailModal .modal {
-                height: 100vh;
-                max-height: 100vh;
-            }
-
-            .notes-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .action-bar-modern {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .detail-header-meta {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        }
-
-        /* Optimisation pour le tactile pur */
-        @media (hover: none) and (pointer: coarse) {
-            .prospects-table tbody tr:hover,
-            .btn:hover,
-            .action-btn-modern:hover,
-            .page-btn:hover {
-                transform: none;
-            }
-
-            .prospects-table tbody tr:active {
-                background: var(--gray-100);
-            }
-
-            .btn:active,
-            .action-btn-modern:active,
-            .page-btn:active {
-                transform: scale(0.97);
-            }
-
-            /* Zone tactile minimale */
-            .btn,
-            .action-btn-modern,
-            .page-btn,
-            .floating-btn,
-            .filter-input,
-            .prospect-form-control {
-                min-height: 44px;
-                min-width: 44px;
-            }
-        }
-        /* Header fixe */
-.header-fixed {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(8px);
-    background: rgba(255, 255, 255, 0.95);
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Ajustement du padding du conteneur pour compenser le header fixe */
-.dashboard-container {
-    padding-top: 1rem;
-}
-
-/* Version mobile */
-@media screen and (max-width: 768px) {
-    .header-fixed {
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: var(--shadow-md);
-    }
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --warning-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
     
-    .dashboard-container {
-        padding-top: 0.5rem;
-    }
+    --primary-50: #f0f4ff;
+    --primary-100: #d9e4ff;
+    --primary-200: #b3c9ff;
+    --primary-300: #8daef8;
+    --primary-400: #6793f1;
+    --primary-500: #4f46e5;
+    --primary-600: #4338ca;
+    --primary-700: #3730a3;
+    --primary-800: #312e81;
+    --primary-900: #1e1b4b;
+    
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-200: #e5e5e5;
+    --gray-300: #d4d4d4;
+    --gray-400: #a3a3a3;
+    --gray-500: #737373;
+    --gray-600: #525252;
+    --gray-700: #404040;
+    --gray-800: #262626;
+    --gray-900: #171717;
+    
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 14px;
+    --border-radius-xl: 18px;
+    --border-radius-full: 9999px;
+    
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Support pour les navigateurs qui ne supportent pas backdrop-filter */
-@supports not (backdrop-filter: blur(8px)) {
-    .header-fixed {
-        background: white;
-        border-bottom: 2px solid var(--primary-light);
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-        /* Style compact pour la pagination */
-.pagination {
+
+html {
+    font-size: 15px;
+    scroll-behavior: smooth;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+}
+
+body {
+    background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: #2d3748;
+    position: relative;
+    padding-bottom: 0;
+    height: 100%;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: var(--border-radius-sm);
+    min-height: 1em;
+}
+
+.skeleton-text {
+    height: 1em;
+    margin-bottom: 0.3rem;
+    width: 100%;
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+.skeleton-text.medium {
+    width: 80%;
+}
+
+.dashboard-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 1rem;
+    animation: fadeIn 0.5s ease;
+    min-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.5rem;
+    box-shadow: var(--glass-shadow);
+    margin-bottom: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--gray-200);
-    flex-wrap: wrap;
+    animation: fadeIn 0.6s ease 0.1s both;
+}
+
+.header-left h1 {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 1.75rem;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--gray-600);
+}
+
+.theme-toggle:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: scale(1.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
     gap: 0.5rem;
 }
 
-.pagination-rows {
+.profile-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-300);
+    transition: transform 0.3s ease;
+}
+
+.profile-img:hover {
+    transform: scale(1.05);
+}
+
+.btn {
+    position: relative;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(40, 40);
+        opacity: 0;
+    }
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
+}
+
+.btn-success {
+    background: var(--success-gradient);
+    color: white;
+}
+
+.btn-secondary {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: var(--primary-600);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--danger-gradient);
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.back-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    z-index: 1001;
+    margin: 0;
+}
+
+.back-btn .btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    border: none;
+    background: var(--primary-gradient);
+}
+
+.back-btn .btn span {
+    display: none;
+}
+
+.back-btn .btn i {
+    margin: 0;
+    font-size: 1.3rem;
+    color: white;
+}
+
+.back-btn .btn:active {
+    transform: scale(0.9);
+}
+
+.fab {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.5rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.fab:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+}
+
+/* ==================== SECTION HEADER ==================== */
+.section-header {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.section-title {
+    margin: 0;
+    font-size: 1.3rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ==================== FILTRES ==================== */
+.controls-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.6rem 0.8rem 0.6rem 2.5rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius-md);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.3s var(--transition-smooth);
+    background: white;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.search-box i {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    font-size: 0.9rem;
+}
+
+.filters-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius-md);
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: white;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.3s var(--transition-smooth);
+    min-width: 150px;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ==================== TABLEAU ==================== */
+.table-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 0;
+    overflow: hidden;
+    max-height: none;
+    animation: fadeIn 0.5s ease 0.2s both;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-wrapper {
+    overflow-y: auto;
+    overflow-x: auto;
+    flex: 1;
+    max-height: none;
+}
+
+.prospects-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    min-width: 1000px;
+}
+
+.prospects-table th {
+    text-align: left;
+    padding: 0.8rem;
+    background: rgba(79, 70, 229, 0.95);
+    color: white;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-300);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    font-size: 0.85rem;
+}
+
+.prospects-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--glass-border);
+    transition: background-color 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.prospects-table tbody tr {
+    animation: fadeIn 0.3s ease;
+    animation-fill-mode: both;
+    cursor: pointer;
+}
+
+.prospects-table tbody tr:hover {
+    background: rgba(79, 70, 229, 0.05);
+    transform: translateX(3px);
+    transition: transform 0.2s ease;
+}
+
+.text-end {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* ==================== BADGES ==================== */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.badge-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-warning {
+    background: #fed7aa;
+    color: #92400e;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-purple {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.client-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.client-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+/* ==================== PAGINATION ==================== */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius-md);
+    background: white;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--primary-50);
+    border-color: var(--primary-300);
+    color: var(--primary-600);
+    transform: translateY(-1px);
+}
+
+.pagination-btn.active {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    margin: 0 0.8rem;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+}
+
+.items-per-page {
+    min-width: 80px;
+}
+
+/* ==================== ALERTES ==================== */
+.alert-message {
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius-md);
+    margin: 0.8rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: slideIn 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-left: 3px solid #10b981;
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-left: 3px solid #ef4444;
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border-left: 3px solid #f59e0b;
+}
+
+.alert-info {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-left: 3px solid #3b82f6;
+}
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    gap: 0.8rem;
+}
+
+.spinner-border {
+    width: 1.8rem;
+    height: 1.8rem;
+    border: 3px solid var(--primary-400);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.no-data {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--gray-500);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* ==================== MODALS ==================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(2px) brightness(0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    width: 45%;
+    max-width: none;
+    height: 100vh;
+    max-height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0; 
+    left: auto; 
+    margin: 0;
+    border-radius: 0; 
+    overflow: hidden;
+    animation: slideInFromRight 0.4s ease;
+}
+
+.xlarge-modal {
+    max-width: 1200px;
+    width: 95%;
+    max-height: 90vh;
+}
+
+.modal-content.xlarge-modal .modal-body {
+    max-height: calc(90vh - 120px);
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.modal-header {
+    padding: 1.2rem;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+    padding: 1.2rem;
+    height: calc(100vh - 120px); 
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
+
+/* Animation d'entrée depuis la droite */
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* ==================== FORMULAIRES ==================== */
+.form-group {
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    font-size: 0.85rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius-md);
+    font-family: inherit;
+    font-size: 0.9rem;
+    transition: all 0.3s var(--transition-smooth);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    transform: translateY(-1px);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.prospect-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.prospect-form-group.full-width {
+    grid-column: span 2;
+}
+
+.prospect-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-700);
+    margin: 1rem 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-200);
+}
+
+.prospect-section-title i {
+    color: var(--primary-500);
+}
+
+.prospect-notes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.required {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-left: 0.25rem;
+}
+
+/* ==================== DÉTAIL PROSPECT ==================== */
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-header-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.detail-avatar-large {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.detail-header-info h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.detail-header-meta {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+.detail-header-meta i {
+    color: var(--primary-500);
+    width: 16px;
+    margin-right: 0.25rem;
+}
+
+.action-bar-modern {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 1rem;
+    border-radius: var(--border-radius-lg);
+}
+
+.action-btn-modern {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: white;
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
+}
+
+.action-btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.action-btn-modern.call {
+    background: var(--success-gradient);
+    color: white;
+    border-color: transparent;
+}
+
+.action-btn-modern.delete {
+    background: var(--danger-gradient);
+    color: white;
+    border-color: transparent;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.detail-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
+    box-shadow: var(--glass-shadow);
+}
+
+.detail-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary-700);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--primary-200);
+}
+
+.detail-item {
+    display: flex;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+    background: var(--gray-50);
+    border-radius: var(--border-radius-sm);
+}
+
+.detail-item-label {
+    width: 90px;
+    font-weight: 600;
+    color: var(--gray-600);
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     gap: 0.25rem;
 }
 
-.rows-select {
-    padding: 0.4rem 1.5rem 0.4rem 0.75rem;
-    border: 1px solid var(--gray-300);
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    background: white;
+.detail-item-label i {
+    color: var(--primary-400);
+    font-size: 0.7rem;
+}
+
+.detail-item-value {
+    flex: 1;
+    color: var(--gray-900);
+    font-weight: 500;
+    font-size: 0.85rem;
     cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.25rem center;
-    background-size: 1rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--border-radius-sm);
 }
 
-.rows-select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+.detail-item-value:hover {
+    background: rgba(79, 70, 229, 0.1);
 }
 
-.rows-label {
-    color: var(--gray-600);
-    font-size: 0.875rem;
-    white-space: nowrap;
+.notes-section {
+    grid-column: span 2;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
 }
 
-/* Version mobile */
-@media screen and (max-width: 768px) {
-    .pagination {
-        padding: 0.75rem;
-        gap: 0.75rem;
+.notes-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.note-item-modern {
+    background: var(--gray-50);
+    padding: 0.5rem;
+    border-radius: var(--border-radius-md);
+    border-left: 3px solid var(--primary-400);
+    font-size: 0.8rem;
+    min-height: 60px;
+    max-height: 80px;
+    overflow-y: auto;
+    word-wrap: break-word;
+    cursor: pointer;
+}
+
+.note-item-modern:hover {
+    background: var(--primary-50);
+}
+
+.comments-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.comment-item-modern {
+    background: var(--gray-50);
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--gray-200);
+    position: relative;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.comment-item-modern::before {
+    content: '"';
+    position: absolute;
+    left: 0.3rem;
+    top: 0.2rem;
+    font-size: 1.2rem;
+    color: var(--primary-400);
+    opacity: 0.5;
+}
+
+.comment-item-modern:hover {
+    background: var(--primary-50);
+}
+
+.status-badge-large {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ==================== OVERLAYS ==================== */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--gray-200);
+    border-top-color: var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 4000;
+}
+
+.alert {
+    background: white;
+    border-radius: var(--border-radius-md);
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: slideIn 0.3s ease;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: #10b981;
+}
+
+.alert-success i {
+    color: #10b981;
+}
+
+.alert-error {
+    border-left-color: #ef4444;
+}
+
+.alert-error i {
+    color: #ef4444;
+}
+
+.alert-info {
+    border-left-color: #3b82f6;
+}
+
+.alert-info i {
+    color: #3b82f6;
+}
+
+.alert-warning {
+    border-left-color: #f59e0b;
+}
+
+.alert-warning i {
+    color: #f59e0b;
+}
+
+/* ==================== MEDIA QUERIES ==================== */
+@media (max-width: 1024px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
     }
-    
-    .pagination-rows {
+    .notes-section {
+        grid-column: span 1;
+    }
+    .notes-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 0;
+    }
+
+    .dashboard-container {
+        min-height: calc(100vh - 30px);
+        padding: 0.8rem;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 0.8rem;
+        text-align: center;
+    }
+
+    .header-left h1 {
+        font-size: 1.5rem;
+    }
+
+    .user-info {
         width: 100%;
         justify-content: center;
     }
-    
-    .rows-select {
-        min-height: 40px;
-        font-size: 16px;
+
+    .section-header {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: stretch;
+    }
+
+    .section-header .btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .controls-panel {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .search-box {
+        min-width: 100%;
+        margin-bottom: 0;
+    }
+
+    .filters-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .filter-select {
+        width: 100%;
+        min-width: 0;
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+
+    .filters-group select:last-child {
+        grid-column: span 2;
+    }
+
+    .table-container {
+        margin: 0 -0.8rem;
+        width: calc(100% + 1.6rem);
+        border-radius: 0;
+        max-height: none;
+    }
+
+    .table-wrapper {
+        max-height: none;
+    }
+
+    .prospects-table {
+        min-width: 900px;
+    }
+
+    .pagination-controls {
+        flex-wrap: wrap;
+        padding: 0.5rem;
+    }
+
+    .pagination-info {
+        width: 100%;
+        text-align: center;
+        margin: 0.3rem 0;
+    }
+
+    .fab {
+        bottom: 1.5rem;
+    }
+
+    .back-btn {
+        bottom: 1.5rem;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+
+    .xlarge-modal {
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .modal-footer {
+        flex-direction: column-reverse;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+
+    .detail-header-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .detail-header-meta {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .action-bar-modern {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .action-btn-modern {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .prospect-form-grid,
+    .prospect-notes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prospect-form-group.full-width {
+        grid-column: span 1;
+    }
+
+    .notes-container {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
-/* Style pour le bouton retour */
-.btn-retour {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    z-index: 100;
-    width: auto;
+
+@media (min-width: 769px) {
+    .filters-group {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .filter-select {
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        min-height: calc(100vh - 20px);
+    }
+
+    .header-left h1 {
+        font-size: 1.2rem;
+    }
+
+    .profile-img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .notes-container {
+        grid-template-columns: 1fr;
+    }
+
+    .action-bar-modern {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .detail-item-label {
+        width: 100%;
+    }
+}
+
+/* ==================== MODAL DE CONFIRMATION SUPPRESSION ==================== */
+#deleteModal.modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+#deleteModal .modal-content {
+    max-width: 400px;
+    width: 90%;
     height: auto;
-    border-radius: var(--radius-lg);
-    padding: 0.75rem 1.5rem;
-    box-shadow: var(--shadow-lg);
-    background: white;
-    color: var(--primary);
-    border: 1px solid var(--primary);
+    position: relative;
+    top: auto;
+    right: auto;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: modalPopIn 0.3s ease;
 }
 
-.btn-retour:hover {
-    background: var(--primary);
+#deleteModal .modal-header {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    padding: 1.2rem 1.5rem;
+}
+
+#deleteModal .modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+#deleteModal .modal-title i {
+    font-size: 1.3rem;
+}
+
+#deleteModal .modal-body {
+    padding: 2rem 1.5rem;
+    max-height: none;
+    height: auto;
+}
+
+#deleteModal .modal-body p {
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0;
+    color: #333;
+    line-height: 1.5;
+}
+
+#deleteModal .modal-footer {
+    padding: 1.2rem 1.5rem;
+    gap: 1rem;
+    justify-content: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#deleteModal .btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.95rem;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+#deleteModal .btn-secondary {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+}
+
+#deleteModal .btn-secondary:hover {
+    background: #e9ecef;
+    border-color: #ced4da;
+}
+
+#deleteModal .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
     color: white;
+}
+
+#deleteModal .btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
 }
 
-/* Version mobile */
-@media screen and (max-width: 768px) {
-    .btn-retour {
-        bottom: 1rem;
-        left: 1rem;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
+#deleteModal .btn i {
+    margin-right: 0.5rem;
+}
+
+@keyframes modalPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
     }
-    
-    .btn-retour span {
-        display: inline-block;
+    100% {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
-/* Très petits écrans */
-@media screen and (max-width: 380px) {
-    .btn-retour span {
-        display: none;
+#deleteModal.modal-overlay.active .modal-content {
+    animation: modalPopIn 0.3s ease;
+}
+
+/* ==================== MODAL DE CONSIGNATION D'APPEL ==================== */
+#logCallModal .modal-content {
+    max-width: 500px;
+    width: 90%;
+    height: auto;
+    position: relative;
+    top: auto;
+    right: auto;
+    border-radius: var(--border-radius-lg);
+    animation: modalPopIn 0.3s ease;
+}
+
+#logCallModal .modal-header {
+    background: var(--primary-gradient);
+}
+
+#logCallModal .modal-body {
+    height: auto;
+    max-height: 70vh;
+    padding: 1.5rem;
+}
+
+#logCallModal .form-group {
+    margin-bottom: 1.2rem;
+}
+
+#logCallModal .form-control[readonly] {
+    background-color: var(--gray-100);
+    cursor: not-allowed;
+}
+
+#logCallModal .modal-footer {
+    display: flex;
+    gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    #deleteModal .modal-content,
+    #logCallModal .modal-content {
+        width: 95%;
+        margin: 1rem;
     }
     
-    .btn-retour i {
-        margin: 0;
+    #deleteModal .modal-footer,
+    #logCallModal .modal-footer {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
     }
+    
+    #deleteModal .btn,
+    #logCallModal .btn {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.close-square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: #ff0000;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.close-square:hover {
+    background-color: #cc0000;
 }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-<header class="header header-fixed">
-    <div class="header-left">
-        <h1>Prospects</h1>
-    </div>
-    <div class="user-info">
-        <i class="fas fa-user-circle" style="color: var(--primary); font-size: 1.5rem;"></i>
-        <span id="usernameDisplay" style="font-weight: 600;">Commercial</span>
-    </div>
-</header>
+    <div class="alert-container" id="alertContainer"></div>
 
-        <div class="section-header">
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label class="filter-label">Recherche</label>
-                    <input type="text" class="filter-input" id="searchInput" placeholder="Nom, téléphone, ID...">
+    <button class="fab" onclick="scrollToTop()" id="fab" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div class="dashboard-container">
+        <header class="header">
+            <div class="header-left">
+                <h1>Prospects</h1>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Basculer le mode sombre">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-info">
+                    <span id="usernameDisplay">Commercial</span>
+                    <img src="https://ui-avatars.com/api/?name=Commercial&background=6366f1&color=fff" alt="Photo de profil" class="profile-img">
                 </div>
-                <div class="filter-group">
-                    <label class="filter-label">Agence</label>
-                    <select class="filter-input" id="agenceFilter">
-                        <option value="">Toutes les agences</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Statut Prospect</label>
-                    <select class="filter-input" id="statusFilter">
-                        <option value="">Tous les statuts</option>
-                        <option value="Nouveau prospect">Nouveau prospect</option>
-                        <option value="Intéressé">Intéressé</option>
-                        <option value="Converti (Client)">Converti (Client)</option>
-                        <option value="Perdu / Refusé">Perdu / Refusé</option>
-                        <option value="Mauvais Numero">Mauvais Numero</option>
-                        <option value="Ne decroche pas">Ne decroche pas</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Statut RDV</label>
-                    <select class="filter-input" id="rdvStatusFilter">
-                        <option value="">Tous les RDV</option>
-                        <option value="Planifié">Planifié</option>
-                        <option value="Confirmé">Confirmé</option>
-                        <option value="Terminé">Terminé</option>
-                        <option value="Reporté">Reporté</option>
-                        <option value="Annulé">Annulé</option>
-                        <option value="Manqué">Manqué</option>
-                    </select>
-                </div>
+            </div>
+        </header>
+
+        <div class="back-btn">
+            <button class="btn btn-primary" onclick="ouvrirModalAjout()">
+                    <i class="fas fa-user-plus"></i>
+                <span>Nouveau prospect</span> 
+                </button>
+            <button class="btn btn-primary" onclick="openVueGlobale()">
+                <i class="fas fa-arrow-left"></i> 
+                <span>Retour</span> 
+            </button>
+        </div>
+<div class="controls-panel">
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Rechercher par nom, téléphone, ID...">
+    </div>
+    <div class="filters-group">
+        <select class="filter-select" id="agenceFilter">
+            <option value="">Toutes les agences</option>
+        </select>
+        <select class="filter-select" id="statusFilter">
+            <option value="">Tous les statuts</option>
+            <option value="Nouveau prospect">Nouveau prospect</option>
+            <option value="Intéressé">Intéressé</option>
+            <option value="Converti (Client)">Converti (Client)</option>
+            <option value="Perdu / Refusé">Perdu / Refusé</option>
+            <option value="Mauvais Numero">Mauvais Numero</option>
+            <option value="Ne decroche pas">Ne decroche pas</option>
+        </select>
+        <select class="filter-select" id="rdvStatusFilter">
+            <option value="">Tous les RDV</option>
+            <option value="Planifié">Planifié</option>
+            <option value="Confirmé">Confirmé</option>
+            <option value="Terminé">Terminé</option>
+            <option value="Reporté">Reporté</option>
+            <option value="Annulé">Annulé</option>
+            <option value="Manqué">Manqué</option>
+        </select>
+    </div>
+</div>
+
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table class="prospects-table" id="prospectsTable">
+                    <thead>
+                        <tr>
+                            <th>ID Prospect</th>
+                            <th>Nom complet</th>
+                            <th>Téléphone</th>
+                            <th>Date création</th>
+                            <th>Agence</th>
+                            <th>Statut Prospect</th>
+                            <th>Date RDV</th>
+                            <th>Statut RDV</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prospectsTableBody">
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                <div class="loading-indicator">
+                                    <div class="spinner-border"></div>
+                                    <div>Chargement des prospects...</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <div class="table-container">
-            <table class="prospects-table">
-                <thead>
-                    <tr>
-                        <th>ID Prospect</th>
-                        <th>Nom complet</th>
-                        <th>Téléphone</th>
-                        <th>Date création</th>
-                        <th>Agence</th>
-                        <th>Statut Prospect</th>
-                        <th>Date RDV</th>
-                        <th>Statut RDV</th>
-                    </tr>
-                </thead>
-                <tbody id="prospectsTableBody">
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 3rem;">
-                            <div class="spinner" style="margin: 0 auto 1rem;"></div>
-                            Chargement des prospects...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="pagination-controls" id="paginationControls">
+            <span class="pagination-info" id="paginationInfo"></span>
+            <div id="paginationButtons"></div>
+            <select class="filter-select items-per-page" id="rowsPerPage">
+                <option value="10">10 / page</option>
+                <option value="25">25 / page</option>
+                <option value="50">50 / page</option>
+                <option value="100">100 / page</option>
+            </select>
         </div>
-        <div class="pagination">
-    <div class="pagination-info" id="paginationInfo"></div>
-    <div class="pagination-controls" id="paginationControls"></div>
-    <div class="pagination-rows">
-        <select class="rows-select" id="rowsPerPage" aria-label="Lignes par page">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-        <span class="rows-label">/page</span>
-    </div>
-</div>
     </div>
 
-<!-- Bouton d'ajout (flottant) -->
-<button class="floating-btn" onclick="ouvrirModalAjout()">
-    <i class="fas fa-plus"></i>
-</button>
-
-<!-- Bouton retour (positionné) -->
-<button class="btn btn-primary btn-retour" onclick="openVueGlobale()">
-    <i class="fas fa-arrow-left"></i> 
-    <span>Retour</span>
-</button>
-
-    <!-- Modal de détail -->
-    <div class="modal-overlay" id="detailModal">
-        <div class="modal">
+    <!-- Modal de consignation d'appel -->
+    <div class="modal-overlay" id="logCallModal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>
+                <h3 class="modal-title"><i class="fas fa-clipboard-list"></i> Consigner l'appel</h3>
+                <button class="modal-close" onclick="fermerConsignation()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">ID Client</label>
+                    <input type="text" id="logClientId" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Utilisateur</label>
+                    <input type="text" id="logUser" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Numéro appelé</label>
+                    <input type="text" id="logPhoneNumber" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        Notes de l'appel <span style="color: #ef4444;">*</span>
+                    </label>
+                    <textarea id="logNote" class="form-control" rows="4" placeholder="Décrivez le contenu de l'appel, les décisions prises, les actions à suivre..."></textarea>
+                    <div style="font-size: 0.8rem; color: var(--gray-500); margin-top: 5px;">
+                        Minimum 5 caractères requis
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="fermerConsignation()">
+                    <i class="fas fa-times"></i> Ne Pas Consigner
+                </button>
+                <button class="btn btn-primary" id="saveLogBtn" onclick="sauvegarderConsignation()">
+                    <i class="fas fa-save"></i> Consigner
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de détail prospect -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content xlarge-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
                     <i class="fas fa-user-circle"></i>
                     Fiche Prospect
                 </h3>
-                <button class="modal-close" onclick="fermerDetailModal()">&times;</button>
+                <button class="modal-close" onclick="fermerDetailModal()">
+    <span class="close-square">&times;</span>
+</button>
             </div>
-            <div class="modal-body" id="detailModalBody"></div>
+            <div class="modal-body" id="detailModalBody">
+                <!-- Contenu dynamique -->
+            </div>
         </div>
     </div>
 
-    <!-- Modal d'ajout/édition -->
+    <!-- Modal d'ajout/édition prospect -->
     <div class="modal-overlay" id="prospectModal">
-        <div class="modal">
+        <div class="modal-content xlarge-modal">
             <div class="modal-header">
-                <h3 id="modalTitle">
+                <h3 class="modal-title" id="modalTitle">
                     <i class="fas fa-user-plus"></i>
                     Ajouter un prospect
                 </h3>
-                <button class="modal-close" onclick="fermerModal()">&times;</button>
+                <button class="modal-close" onclick="fermerModal()">
+    <span class="close-square">&times;</span>
+</button>
             </div>
             <div class="modal-body">
-                <div class="prospect-modal-container">
-                    <div class="prospect-form-section">
-                        <div class="prospect-section-title">
-                            <i class="fas fa-info-circle"></i>
-                            Informations principales
-                        </div>
-                        <div class="prospect-form-grid">
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">
-                                    <i class="fas fa-id-card"></i>
-                                    ID Prospect <span class="required">*</span>
-                                </label>
-                                <input type="text" class="prospect-form-control" id="editId" placeholder="PROP-001">
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">
-                                    <i class="fas fa-user"></i>
-                                    Nom complet <span class="required">*</span>
-                                </label>
-                                <input type="text" class="prospect-form-control" id="editNom" placeholder="Jean Dupont">
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">
-                                    <i class="fas fa-phone"></i>
-                                    Téléphone <span class="required">*</span>
-                                </label>
-                                <input type="tel" class="prospect-form-control" id="editTel" placeholder="0612345678">
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">
-                                    <i class="fas fa-building"></i>
-                                    Agence
-                                </label>
-                                <select class="prospect-form-control" id="editAgence">
-                                    <option value="">Sélectionner une agence</option>
-                                </select>
-                            </div>
-                        </div>
+                <div class="prospect-section-title">
+                    <i class="fas fa-info-circle"></i> Informations principales
+                </div>
+                <div class="prospect-form-grid">
+                    <div class="form-group">
+                        <label class="form-label">ID Prospect <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="editId" placeholder="PROP-001">
                     </div>
-
-                    <div class="prospect-form-section">
-                        <div class="prospect-section-title">
-                            <i class="fas fa-chart-line"></i>
-                            Statuts
-                        </div>
-                        <div class="prospect-form-grid">
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">
-                                    <i class="fas fa-user-tag"></i>
-                                    Statut prospect
-                                </label>
-                                <select class="prospect-form-control" id="editStatutProspect">
-                                    <option value="Nouveau prospect">Nouveau prospect</option>
-                                    <option value="Intéressé">Intéressé</option>
-                                    <option value="Converti (Client)">Converti (Client)</option>
-                                    <option value="Perdu / Refusé">Perdu / Refusé</option>
-                                    <option value="Mauvais Numero">Mauvais Numero</option>
-                                    <option value="Ne decroche pas">Ne decroche pas</option>
-                                </select>
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    Date RDV
-                                </label>
-                                <input type="date" class="prospect-form-control" id="editDateRdv">
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">
-                                    <i class="fas fa-clock"></i>
-                                    Statut RDV
-                                </label>
-                                <select class="prospect-form-control" id="editStatutRdv">
-                                    <option value="">Non défini</option>
-                                    <option value="Planifié">Planifié</option>
-                                    <option value="Confirmé">Confirmé</option>
-                                    <option value="Terminé">Terminé</option>
-                                    <option value="Reporté">Reporté</option>
-                                    <option value="Annulé">Annulé</option>
-                                    <option value="Manqué">Manqué</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Nom complet <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="editNom" placeholder="Jean Dupont">
                     </div>
-
-                    <div class="prospect-form-section">
-                        <div class="prospect-section-title">
-                            <i class="fas fa-sticky-note"></i>
-                            Notes (max 5)
-                        </div>
-                        <div class="prospect-notes-grid">
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">Note 1</label>
-                                <textarea class="prospect-form-control" id="editNote1" rows="2" placeholder="Note..."></textarea>
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">Note 2</label>
-                                <textarea class="prospect-form-control" id="editNote2" rows="2" placeholder="Note..."></textarea>
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">Note 3</label>
-                                <textarea class="prospect-form-control" id="editNote3" rows="2" placeholder="Note..."></textarea>
-                            </div>
-                            <div class="prospect-form-group">
-                                <label class="prospect-form-label">Note 4</label>
-                                <textarea class="prospect-form-control" id="editNote4" rows="2" placeholder="Note..."></textarea>
-                            </div>
-                            <div class="prospect-form-group full-width">
-                                <label class="prospect-form-label">Note 5</label>
-                                <textarea class="prospect-form-control" id="editNote5" rows="2" placeholder="Note..."></textarea>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Téléphone <span class="required">*</span></label>
+                        <input type="tel" class="form-control" id="editTel" placeholder="0612345678">
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Agence</label>
+                        <select class="form-control" id="editAgence">
+                            <option value="">Sélectionner une agence</option>
+                        </select>
+                    </div>
+                </div>
 
-                    <div class="prospect-form-section">
-                        <div class="prospect-section-title">
-                            <i class="fas fa-comments"></i>
-                            Commentaires
-                        </div>
-                        <div class="prospect-form-grid">
-                            <div class="prospect-form-group full-width">
-                                <label class="prospect-form-label">Commentaire 1</label>
-                                <textarea class="prospect-form-control" id="editComment1" rows="3" placeholder="Commentaire..."></textarea>
-                            </div>
-                            <div class="prospect-form-group full-width">
-                                <label class="prospect-form-label">Commentaire 2</label>
-                                <textarea class="prospect-form-control" id="editComment2" rows="3" placeholder="Commentaire..."></textarea>
-                            </div>
-                        </div>
+                <div class="prospect-section-title">
+                    <i class="fas fa-chart-line"></i> Statuts
+                </div>
+                <div class="prospect-form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Statut prospect</label>
+                        <select class="form-control" id="editStatutProspect">
+                            <option value="Nouveau prospect">Nouveau prospect</option>
+                            <option value="Intéressé">Intéressé</option>
+                            <option value="Converti (Client)">Converti (Client)</option>
+                            <option value="Perdu / Refusé">Perdu / Refusé</option>
+                            <option value="Mauvais Numero">Mauvais Numero</option>
+                            <option value="Ne decroche pas">Ne decroche pas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date RDV</label>
+                        <input type="date" class="form-control" id="editDateRdv">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Statut RDV</label>
+                        <select class="form-control" id="editStatutRdv">
+                            <option value="">Non défini</option>
+                            <option value="Planifié">Planifié</option>
+                            <option value="Confirmé">Confirmé</option>
+                            <option value="Terminé">Terminé</option>
+                            <option value="Reporté">Reporté</option>
+                            <option value="Annulé">Annulé</option>
+                            <option value="Manqué">Manqué</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="prospect-section-title">
+                    <i class="fas fa-sticky-note"></i> Notes (max 5)
+                </div>
+                <div class="prospect-notes-grid">
+                    <div class="form-group">
+                        <label class="form-label">Note 1</label>
+                        <textarea class="form-control" id="editNote1" rows="2" placeholder="Note..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Note 2</label>
+                        <textarea class="form-control" id="editNote2" rows="2" placeholder="Note..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Note 3</label>
+                        <textarea class="form-control" id="editNote3" rows="2" placeholder="Note..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Note 4</label>
+                        <textarea class="form-control" id="editNote4" rows="2" placeholder="Note..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Note 5</label>
+                        <textarea class="form-control" id="editNote5" rows="2" placeholder="Note..."></textarea>
+                    </div>
+                </div>
+
+                <div class="prospect-section-title">
+                    <i class="fas fa-comments"></i> Commentaires
+                </div>
+                <div class="prospect-form-grid">
+                    <div class="form-group full-width">
+                        <label class="form-label">Commentaire 1</label>
+                        <textarea class="form-control" id="editComment1" rows="3" placeholder="Commentaire..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Commentaire 2</label>
+                        <textarea class="form-control" id="editComment2" rows="3" placeholder="Commentaire..."></textarea>
                     </div>
                 </div>
             </div>
@@ -1780,9 +1858,9 @@
 
     <!-- Modal de confirmation suppression -->
     <div class="modal-overlay" id="deleteModal">
-        <div class="modal" style="max-width: 400px;">
-            <div class="modal-header" style="background: linear-gradient(135deg, var(--danger), #dc2626);">
-                <h3>
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header" style="background: var(--danger-gradient);">
+                <h3 class="modal-title">
                     <i class="fas fa-exclamation-triangle"></i>
                     Confirmation
                 </h3>
@@ -1807,11 +1885,122 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- Conteneur d'alertes -->
-    <div class="alert-container" id="alertContainer"></div>
-
     <script>
         const API_BASE = 'https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec';
+        
+        // Objet téléphone pour gérer les consignations
+        const telephone = {
+            modal: null,
+            clientId: null,
+            phoneNumber: null,
+            userName: null,
+            
+            ouvrirConsignation: function(clientId, phoneNumber) {
+                this.clientId = clientId;
+                this.phoneNumber = phoneNumber;
+                this.userName = document.getElementById('usernameDisplay').textContent || 'Commercial';
+                
+                document.getElementById('logClientId').value = clientId;
+                document.getElementById('logUser').value = this.userName;
+                document.getElementById('logPhoneNumber').value = phoneNumber;
+                document.getElementById('logNote').value = '';
+                
+                document.getElementById('logCallModal').classList.add('active');
+            },
+            
+            fermerConsignation: function() {
+                document.getElementById('logCallModal').classList.remove('active');
+                this.clientId = null;
+                this.phoneNumber = null;
+            },
+            
+            sauvegarderConsignation: async function() {
+                const note = document.getElementById('logNote').value.trim();
+                
+                if (!note || note.length < 5) {
+                    showAlert('La note doit contenir au moins 5 caractères', 'error');
+                    return;
+                }
+                
+                if (!this.clientId || !this.phoneNumber) {
+                    showAlert('Informations client manquantes', 'error');
+                    return;
+                }
+                
+                // Trouver le prospect
+                const prospect = prospectsData.find(p => p['Idprospect'] === this.clientId);
+                if (!prospect) {
+                    showAlert('Prospect non trouvé', 'error');
+                    return;
+                }
+                
+                // Chercher le premier emplacement vide pour Date Appel X et consigne appel X
+                let emplacementLibre = null;
+                for (let i = 1; i <= 5; i++) {
+                    const dateField = `Date Appel ${i}`;
+                    const consigneField = `consigne appel ${i}`;
+                    
+                    if (!prospect[dateField] && !prospect[consigneField]) {
+                        emplacementLibre = i;
+                        break;
+                    }
+                }
+                
+                // Si aucun emplacement libre, utiliser le 6ème (Date Appel 6 seulement)
+                if (!emplacementLibre) {
+                    emplacementLibre = 6;
+                }
+                
+                const dateActuelle = getDateDuJourJJMMAAAA();
+                
+                // Préparer les données pour la mise à jour
+                const updates = {};
+                
+                if (emplacementLibre <= 5) {
+                    updates[`Date Appel ${emplacementLibre}`] = dateActuelle;
+                    updates[`consigne appel ${emplacementLibre}`] = note;
+                } else {
+                    updates['Date Appel 6'] = dateActuelle;
+                    // Pour l'appel 6, on n'a pas de colonne consigne
+                }
+                
+                // Mettre à jour le prospect localement
+                Object.keys(updates).forEach(key => {
+                    prospect[key] = updates[key];
+                });
+                
+                // Envoyer à l'API
+                showLoading(true);
+                
+                try {
+                    const data = {
+                        Idprospect: this.clientId,
+                        ...updates
+                    };
+                    
+                    await fetch(`${API_BASE}?action=udprospect`, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data),
+                    });
+                    
+                    showAlert('Appel consigné avec succès', 'success');
+                    this.fermerConsignation();
+                    
+                    // Rafraîchir la vue si le détail est ouvert
+                    if (currentDetailId === this.clientId) {
+                        ouvrirDetailProspect(this.clientId);
+                    }
+                    
+                } catch (error) {
+                    console.error('Erreur consignation:', error);
+                    showAlert('Erreur lors de la consignation', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            }
+        };
         
         let prospectsData = [];
         let filteredProspects = [];
@@ -1823,37 +2012,74 @@
         let listeAgences = new Set();
         let pendingUpdates = new Map();
         let updateTimeout = null;
+        let toastId = 0;
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Récupération du nom d'utilisateur
-    const user = sessionStorage.getItem('utilisateur') || localStorage.getItem('utilisateur') || 'Commercial';
-    
-    // Mise à jour de l'affichage du nom
-    const usernameDisplay = document.getElementById('usernameDisplay');
-    if (usernameDisplay) {
-        usernameDisplay.textContent = user;
-    }
-    
-    chargerProspects();
-    
-    document.getElementById('searchInput').addEventListener('input', appliquerFiltres);
-    document.getElementById('agenceFilter').addEventListener('change', appliquerFiltres);
-    document.getElementById('statusFilter').addEventListener('change', appliquerFiltres);
-    document.getElementById('rdvStatusFilter').addEventListener('change', appliquerFiltres);
-    document.getElementById('rowsPerPage').addEventListener('change', (e) => {
-        perPage = parseInt(e.target.value);
-        currentPage = 1;
-        appliquerFiltres();
-    });
-    
-    document.addEventListener('click', (e) => {
-        const row = e.target.closest('tr[data-id]');
-        if (row && !e.target.closest('button') && !e.target.closest('input[type="checkbox"]')) {
-            const id = row.dataset.id;
-            ouvrirDetailProspect(id);
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            
+            const user = sessionStorage.getItem('utilisateur') || localStorage.getItem('utilisateur') || 'Commercial';
+            document.getElementById('usernameDisplay').textContent = user;
+            
+            chargerProspects();
+            
+            document.getElementById('searchInput').addEventListener('input', appliquerFiltres);
+            document.getElementById('agenceFilter').addEventListener('change', appliquerFiltres);
+            document.getElementById('statusFilter').addEventListener('change', appliquerFiltres);
+            document.getElementById('rdvStatusFilter').addEventListener('change', appliquerFiltres);
+            document.getElementById('rowsPerPage').addEventListener('change', (e) => {
+                perPage = parseInt(e.target.value);
+                currentPage = 1;
+                appliquerFiltres();
+            });
+            
+            document.addEventListener('click', (e) => {
+                const row = e.target.closest('tr[data-id]');
+                if (row && !e.target.closest('button') && !e.target.closest('input')) {
+                    const id = row.dataset.id;
+                    ouvrirDetailProspect(id);
+                }
+            });
+            
+            window.addEventListener('scroll', handleScroll);
+        });
+
+        function initTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
         }
-    });
-});
+
+        function handleScroll() {
+            const fab = document.getElementById('fab');
+            if (window.scrollY > 300) {
+                fab.style.display = 'flex';
+            } else {
+                fab.style.display = 'none';
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
 
         async function chargerProspects() {
             showLoading(true);
@@ -1873,6 +2099,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         return obj;
                     });
                     
+                    // TRI PAR DATE DE CRÉATION (LA PLUS RÉCENTE EN HAUT)
+                    prospectsData.sort((a, b) => {
+                        const dateA = a['date de creaction'] ? new Date(a['date de creaction']) : new Date(0);
+                        const dateB = b['date de creaction'] ? new Date(b['date de creaction']) : new Date(0);
+                        return dateB - dateA; // Décroissant : plus récent en premier
+                    });
+                    
                     listeAgences.clear();
                     prospectsData.forEach(p => {
                         if (p['Agence'] && p['Agence'].trim() !== '') {
@@ -1883,8 +2116,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     mettreAJourListesAgences();
                 }
             } catch (error) {
-                showAlert('Erreur de chargement', 'error');
-                console.error(error);
+                console.error('Erreur chargement:', error);
+                showAlert('Erreur de chargement des prospects', 'error');
             }
             
             showLoading(false);
@@ -1924,6 +2157,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const matchRdv = !rdvF || p['Statut du Rdv'] === rdvF;
                 
                 return matchSearch && matchAgence && matchStatut && matchRdv;
+            });
+
+            // TRIER LES PROSPECTS FILTRÉS PAR DATE (PLUS RÉCENT EN HAUT)
+            filteredProspects.sort((a, b) => {
+                const dateA = a['date de creaction'] ? new Date(a['date de creaction']) : new Date(0);
+                const dateB = b['date de creaction'] ? new Date(b['date de creaction']) : new Date(0);
+                return dateB - dateA;
             });
 
             currentPage = 1;
@@ -1997,13 +2237,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const pageData = filteredProspects.slice(debut, fin);
 
             if (!pageData.length) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem;">Aucun prospect trouvé</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="no-data">Aucun prospect trouvé</td></tr>`;
                 mettreAJourPagination();
                 return;
             }
 
             let html = '';
-            pageData.forEach(p => {
+            pageData.forEach((p, index) => {
                 const id = p['Idprospect'] || '-';
                 
                 let tel = p['Numero de telephone'] || '-';
@@ -2027,7 +2267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 else if (statutRdv === 'Reporté') rdvBadgeClass = 'badge-warning';
                 else if (statutRdv === 'Annulé' || statutRdv === 'Manqué') rdvBadgeClass = 'badge-danger';
 
-                html += `<tr data-id="${id}">
+                html += `<tr data-id="${id}" style="animation-delay: ${index * 0.02}s">
                     <td>${id}</td>
                     <td>
                         <div class="client-info">
@@ -2045,31 +2285,63 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             tbody.innerHTML = html;
-            
             mettreAJourPagination();
         }
 
         function mettreAJourPagination() {
-            const totalPages = Math.ceil(filteredProspects.length / perPage);
-            const controls = document.getElementById('paginationControls');
+            const totalItems = filteredProspects.length;
+            const totalPages = Math.ceil(totalItems / perPage);
             
-            let btns = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changerPage(${currentPage-1})">
-                <i class="fas fa-chevron-left"></i>
-            </button>`;
+            const paginationDiv = document.getElementById('paginationButtons');
+            const paginationInfo = document.getElementById('paginationInfo');
             
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === 1 || i === totalPages || (i >= currentPage-2 && i <= currentPage+2)) {
-                    btns += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changerPage(${i})">${i}</button>`;
-                } else if (i === currentPage-3 || i === currentPage+3) {
-                    btns += `<button class="page-btn" disabled>...</button>`;
+            if (totalPages <= 1) {
+                paginationDiv.innerHTML = '';
+                paginationInfo.textContent = `${totalItems} prospect(s)`;
+                return;
+            }
+            
+            let html = '';
+            
+            html += `<button class="pagination-btn" onclick="changerPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                     </button>`;
+            
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            if (startPage > 1) {
+                html += `<button class="pagination-btn" onclick="changerPage(1)">1</button>`;
+                if (startPage > 2) {
+                    html += `<span style="margin: 0 0.3rem; color: var(--gray-500);">...</span>`;
                 }
             }
             
-            btns += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changerPage(${currentPage+1})">
-                <i class="fas fa-chevron-right"></i>
-            </button>`;
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changerPage(${i})">${i}</button>`;
+            }
             
-            controls.innerHTML = btns;
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += `<span style="margin: 0 0.3rem; color: var(--gray-500);">...</span>`;
+                }
+                html += `<button class="pagination-btn" onclick="changerPage(${totalPages})">${totalPages}</button>`;
+            }
+            
+            html += `<button class="pagination-btn" onclick="changerPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                     </button>`;
+            
+            paginationDiv.innerHTML = html;
+            
+            const debut = (currentPage - 1) * perPage + 1;
+            const fin = Math.min(currentPage * perPage, totalItems);
+            paginationInfo.textContent = `${debut}-${fin} sur ${totalItems} prospect(s)`;
         }
 
         function changerPage(page) {
@@ -2077,6 +2349,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (page < 1 || page > totalPages) return;
             currentPage = page;
             afficherTableau();
+            
+            const tableContainer = document.querySelector('.table-container');
+            if (tableContainer) {
+                tableContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         async function envoyerModifications(id) {
@@ -2094,9 +2371,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await fetch(`${API_BASE}?action=udprospect`, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data),
                 });
                 
@@ -2136,7 +2411,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const noteStr = String(note).trim();
                     if (noteStr !== '') {
                         notes.push(`<div class="note-item-modern" title="Double-clic pour éditer">
-                            <i class="fas fa-sticky-note" style="color: var(--primary);"></i>
+                            <i class="fas fa-sticky-note" style="color: var(--primary-500);"></i>
                             <span ondblclick="activerEditionNote('${id}', ${i}, this)">${noteStr}</span>
                         </div>`);
                     } else {
@@ -2154,7 +2429,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const commentaires = [];
-            
             for (let i = 1; i <= 2; i++) {
                 const commentaire = prospect[`Commentaire ${i}`];
                 if (commentaire !== null && commentaire !== undefined && commentaire !== '') {
@@ -2189,6 +2463,41 @@ document.addEventListener('DOMContentLoaded', () => {
             const agencesOptions = Array.from(listeAgences).sort().map(agence => 
                 `<option value="${agence}" ${prospect['Agence'] === agence ? 'selected' : ''}>${agence}</option>`
             ).join('');
+
+            // Générer les affichages des appels
+            const appelsHtml = [];
+            for (let i = 1; i <= 5; i++) {
+                const dateField = `Date Appel ${i}`;
+                const consigneField = `consigne appel ${i}`;
+                const dateValue = prospect[dateField] || '';
+                const consigneValue = prospect[consigneField] || '';
+                
+                if (dateValue && consigneValue) {
+                    appelsHtml.push(`
+                        <div class="detail-item" style="flex-direction: column; align-items: flex-start; gap: 0.3rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%;">
+                                <span class="detail-item-label" style="width: auto;"><i class="fas fa-phone"></i> Appel ${i}:</span>
+                                <span class="badge badge-info">${dateValue}</span>
+                            </div>
+                            <div style="margin-left: 1.5rem; font-size: 0.85rem; color: var(--gray-700); background: var(--gray-50); padding: 0.4rem; border-radius: var(--border-radius-sm); width: 100%;">
+                                <i class="fas fa-comment-dots" style="color: var(--primary-400); margin-right: 0.3rem;"></i>
+                                ${consigneValue}
+                            </div>
+                        </div>
+                    `);
+                }
+            }
+            
+            // Appel 6 (sans consigne)
+            const dateAppel6 = prospect['Date Appel 6'] || '';
+            if (dateAppel6) {
+                appelsHtml.push(`
+                    <div class="detail-item">
+                        <span class="detail-item-label"><i class="fas fa-phone"></i> Appel 6:</span>
+                        <span class="badge badge-info">${dateAppel6}</span>
+                    </div>
+                `);
+            }
 
             const html = `
                 <div class="detail-container">
@@ -2243,7 +2552,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="detail-item">
                                 <span class="detail-item-label"><i class="fas fa-user-tag"></i> Prospect:</span>
                                 <span class="detail-item-value" ondblclick="activerEditionSelect('${id}', 'Statut du prospect', this, ['Nouveau prospect','Intéressé','Converti (Client)','Perdu / Refusé','Mauvais Numero','Ne decroche pas'])">
-                                    <span class="status-badge-large ${statutClass}">${statutProspect}</span>
+                                    <span class="status-badge-large" style="background: ${statutClass === 'badge-info' ? '#dbeafe' : statutClass === 'badge-success' ? '#d1fae5' : statutClass === 'badge-purple' ? '#ede9fe' : statutClass === 'badge-danger' ? '#fee2e2' : '#fed7aa'}; color: ${statutClass === 'badge-info' ? '#1e40af' : statutClass === 'badge-success' ? '#065f46' : statutClass === 'badge-purple' ? '#5b21b6' : statutClass === 'badge-danger' ? '#991b1b' : '#92400e'};">${statutProspect}</span>
                                 </span>
                             </div>
                             <div class="detail-item">
@@ -2253,8 +2562,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="detail-item">
                                 <span class="detail-item-label"><i class="fas fa-clock"></i> Statut RDV:</span>
                                 <span class="detail-item-value" ondblclick="activerEditionSelect('${id}', 'Statut du Rdv', this, ['','Planifié','Confirmé','Terminé','Reporté','Annulé','Manqué'])">
-                                    ${statutRdv ? `<span class="status-badge-large ${rdvClass}">${statutRdv}</span>` : 'Non défini'}
+                                    ${statutRdv ? `<span class="status-badge-large" style="background: ${rdvClass === 'badge-success' ? '#d1fae5' : rdvClass === 'badge-info' ? '#dbeafe' : rdvClass === 'badge-purple' ? '#ede9fe' : rdvClass === 'badge-danger' ? '#fee2e2' : '#fed7aa'}; color: ${rdvClass === 'badge-success' ? '#065f46' : rdvClass === 'badge-info' ? '#1e40af' : rdvClass === 'badge-purple' ? '#5b21b6' : rdvClass === 'badge-danger' ? '#991b1b' : '#92400e'};">${statutRdv}</span>` : 'Non défini'}
                                 </span>
+                            </div>
+                        </div>
+
+                        <div class="notes-section">
+                            <div class="detail-card-title">
+                                <i class="fas fa-phone-volume"></i> Historique des appels
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                ${appelsHtml.length ? appelsHtml.join('') : '<p style="color: var(--gray-500); text-align: center; padding: 1rem;">Aucun appel consigné</p>'}
                             </div>
                         </div>
 
@@ -2272,7 +2590,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="detail-card-title" style="margin-bottom: 0;">
                                     <i class="fas fa-comments"></i> Commentaires 
                                 </div>
-                                <button class="action-btn-modern" onclick="ajouterCommentaire('${prospectId}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" ${commentaires.length >= 2 ? 'disabled' : ''}>
+                                <button class="action-btn-modern" onclick="ajouterCommentaire('${prospectId}')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;" ${commentaires.length >= 2 ? 'disabled' : ''}>
                                     <i class="fas fa-plus"></i> Ajouter
                                 </button>
                             </div>
@@ -2292,7 +2610,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ancienneValeur = element.innerText.trim();
             const input = document.createElement('input');
             input.type = 'date';
-            input.className = 'prospect-form-control';
+            input.className = 'form-control';
             input.style.width = '100%';
             
             if (ancienneValeur && ancienneValeur !== 'Non planifié' && ancienneValeur !== '-') {
@@ -2343,14 +2661,13 @@ document.addEventListener('DOMContentLoaded', () => {
             element.innerHTML = '';
             element.appendChild(input);
             input.focus();
-            input.showPicker();
+            if (input.showPicker) input.showPicker();
         }
 
         function ajouterCommentaire(id) {
             const prospect = prospectsData.find(p => p['Idprospect'] === id);
             if (!prospect) return;
             
-            // Compter les commentaires existants non vides
             let commentairesExistants = 0;
             for (let i = 1; i <= 2; i++) {
                 if (prospect[`Commentaire ${i}`] && prospect[`Commentaire ${i}`].trim() !== '') {
@@ -2363,7 +2680,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Trouver le premier emplacement libre
             let emplacementLibre = null;
             for (let i = 1; i <= 2; i++) {
                 if (!prospect[`Commentaire ${i}`] || prospect[`Commentaire ${i}`].trim() === '') {
@@ -2377,7 +2693,7 @@ document.addEventListener('DOMContentLoaded', () => {
             commentaireDiv.style.padding = '1rem';
             
             const textarea = document.createElement('textarea');
-            textarea.className = 'prospect-form-control';
+            textarea.className = 'form-control';
             textarea.placeholder = 'Saisissez votre commentaire...';
             textarea.rows = 3;
             textarea.style.width = '100%';
@@ -2408,7 +2724,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const commentsContainer = document.querySelector('.comments-container');
             if (commentsContainer) {
-                // Si le conteneur contient le message "Aucun commentaire", on le vide
                 if (commentsContainer.innerHTML.includes('Aucun commentaire')) {
                     commentsContainer.innerHTML = '';
                 }
@@ -2419,7 +2734,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             btnAnnuler.onclick = () => {
                 commentaireDiv.remove();
-                // Si plus aucun commentaire, remettre le message
                 if (commentsContainer && commentsContainer.children.length === 0) {
                     commentsContainer.innerHTML = '<p style="color: var(--gray-500); text-align: center; padding: 1rem;">Aucun commentaire - Cliquez sur "Ajouter" pour en créer un</p>';
                 }
@@ -2440,9 +2754,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pendingUpdates.get(id)[`Commentaire ${emplacementLibre}`] = nouveauCommentaire;
                 
                 ouvrirDetailProspect(id);
-                
                 planifierEnvoi(id);
-                
                 showAlert('Commentaire ajouté', 'success');
             };
             
@@ -2458,7 +2770,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = document.createElement('input');
             input.type = 'text';
             input.value = ancienneValeur === 'Non spécifiée' || ancienneValeur === '-' ? '' : ancienneValeur;
-            input.className = 'prospect-form-control';
+            input.className = 'form-control';
             input.style.width = '100%';
             
             input.onblur = () => {
@@ -2491,7 +2803,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function activerEditionSelectAgence(id, element, valeurActuelle) {
             const select = document.createElement('select');
-            select.className = 'prospect-form-control';
+            select.className = 'form-control';
             
             const optionVide = document.createElement('option');
             optionVide.value = '';
@@ -2532,7 +2844,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function activerEditionSelect(id, champ, element, options) {
             const select = document.createElement('select');
-            select.className = 'prospect-form-control';
+            select.className = 'form-control';
             
             options.forEach(opt => {
                 const option = document.createElement('option');
@@ -2564,7 +2876,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     
                     ouvrirDetailProspect(id);
-                    
                     planifierEnvoi(id);
                 }
             };
@@ -2576,12 +2887,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function activerEditionNote(id, index, element) {
             const ancienneValeur = element.innerText.trim();
-            // Si c'est le texte "Note X vide", on met une chaîne vide
             const valeurInitiale = ancienneValeur.includes('vide') ? '' : ancienneValeur;
             
             const input = document.createElement('textarea');
             input.value = valeurInitiale;
-            input.className = 'prospect-form-control';
+            input.className = 'form-control';
             input.rows = 2;
             input.style.width = '100%';
             input.style.fontSize = '0.813rem';
@@ -2598,9 +2908,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     pendingUpdates.get(id)[`Note ${index}`] = nouvelleValeur;
                     
-                    // Recharger la vue pour afficher correctement
                     ouvrirDetailProspect(id);
-                    
                     planifierEnvoi(id);
                 }
             };
@@ -2620,7 +2928,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ancienneValeur = element.innerText.trim();
             const input = document.createElement('textarea');
             input.value = ancienneValeur;
-            input.className = 'prospect-form-control';
+            input.className = 'form-control';
             input.rows = 3;
             input.style.width = '100%';
             
@@ -2636,9 +2944,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     pendingUpdates.get(id)[`Commentaire ${index}`] = nouvelleValeur;
                     
-                    // Recharger la vue pour afficher correctement
                     ouvrirDetailProspect(id);
-                    
                     planifierEnvoi(id);
                 }
             };
@@ -2666,9 +2972,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const tel = String(telephone).replace(/\s+/g, '');
+            
+            // Ouvrir la modal de consignation après confirmation
             if (confirm(`Appeler le ${tel} ?`)) {
+                // Ouvrir la modal de consignation
+                const prospect = prospectsData.find(p => p['Numero de telephone'] === telephone || 
+                    p['Numero de telephone'] === tel);
+                
+                if (prospect) {
+                    telephone.ouvrirConsignation(prospect['Idprospect'], tel);
+                }
+                
+                // Lancer l'appel
                 window.location.href = `tel:${tel}`;
             }
+        }
+
+        function fermerConsignation() {
+            telephone.fermerConsignation();
+        }
+
+        function sauvegarderConsignation() {
+            telephone.sauvegarderConsignation();
         }
 
         function ouvrirModalAjout() {
@@ -2735,9 +3060,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await fetch(`${API_BASE}?action=addprospect`, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data),
                 });
                 
@@ -2749,8 +3072,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 1000);
                 
             } catch (error) {
-                console.error('Erreur détaillée:', error);
-                showAlert('Erreur lors de l\'enregistrement: ' + error.message, 'error');
+                console.error('Erreur:', error);
+                showAlert('Erreur lors de l\'enregistrement', 'error');
                 showLoading(false);
             }
         }
@@ -2775,9 +3098,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await fetch(`${API_BASE}?action=delectprospect`, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ Idprospect: id }),
                 });
                 
@@ -2789,7 +3110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             } catch (error) {
                 console.error('Erreur suppression:', error);
-                showAlert('Erreur lors de la suppression: ' + error.message, 'error');
+                showAlert('Erreur lors de la suppression', 'error');
                 showLoading(false);
             }
         }
@@ -2827,14 +3148,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        function showAlert(message, type = 'info') {
+        function showAlert(message, type = 'info', duration = 3000) {
             const container = document.getElementById('alertContainer');
+            const id = `alert-${Date.now()}-${Math.random()}`;
+            
             const alert = document.createElement('div');
             alert.className = `alert alert-${type}`;
+            alert.id = id;
             
             let icon = 'info-circle';
-            if (type === 'success') icon = 'check-circle';
-            if (type === 'error') icon = 'exclamation-circle';
+            switch(type) {
+                case 'success': icon = 'check-circle'; break;
+                case 'error': icon = 'exclamation-circle'; break;
+                case 'warning': icon = 'exclamation-triangle'; break;
+                default: icon = 'info-circle';
+            }
             
             alert.innerHTML = `
                 <i class="fas fa-${icon}"></i>
@@ -2842,12 +3170,43 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             
             container.appendChild(alert);
-            setTimeout(() => alert.remove(), 3000);
+            
+            setTimeout(() => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.animation = 'slideIn 0.3s ease reverse';
+                    setTimeout(() => element.remove(), 300);
+                }
+            }, duration);
         }
 
         function openVueGlobale() {
-        window.location.href = 'Accueil.html';
+            window.location.href = 'Accueil.html';
         }
+
+        // Exposer les fonctions nécessaires
+        window.telephone = telephone;
+        window.ouvrirModalAjout = ouvrirModalAjout;
+        window.fermerModal = fermerModal;
+        window.sauvegarderProspect = sauvegarderProspect;
+        window.ouvrirDetailProspect = ouvrirDetailProspect;
+        window.fermerDetailModal = fermerDetailModal;
+        window.appelerProspect = appelerProspect;
+        window.fermerConsignation = fermerConsignation;
+        window.sauvegarderConsignation = sauvegarderConsignation;
+        window.confirmDelete = confirmDelete;
+        window.fermerDeleteModal = fermerDeleteModal;
+        window.activerEditionDate = activerEditionDate;
+        window.activerEditionTexte = activerEditionTexte;
+        window.activerEditionSelectAgence = activerEditionSelectAgence;
+        window.activerEditionSelect = activerEditionSelect;
+        window.activerEditionNote = activerEditionNote;
+        window.activerEditionCommentaire = activerEditionCommentaire;
+        window.ajouterCommentaire = ajouterCommentaire;
+        window.changerPage = changerPage;
+        window.chargerProspects = chargerProspects;
+        window.scrollToTop = scrollToTop;
+        window.openVueGlobale = openVueGlobale;
     </script>
 </body>
 </html>
