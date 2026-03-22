@@ -2830,126 +2830,89 @@ display(historyData) {
                 }
             };
 
-            // ================================
-            // GESTION DE L'IMPRESSION / PDF
-            // ================================
-            const ImpressionManager = {
-                async generer() {
-                    const clientId = document.getElementById('client-id').textContent;
-                    
-                    try {
-                        // Afficher l'indicateur de chargement
-                        this.showLoadingIndicator('Génération du PDF en cours...');
-                        
-                        // 1. Demander la création du reçu
-                        const addRecuUrl = `${CONFIG.API_BASE}?action=addrecu`;
-                        await fetch(addRecuUrl, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ clientId })
-                        });
-                        
-                        // 2. Attendre un peu pour que le serveur traite les données
-                        await new Promise(resolve => setTimeout(resolve, 3000));
-                        
-                        // 3. Récupérer le lien du PDF généré
-                        const pdfUrl = `${CONFIG.API_BASE}?action=getrecucaissepdf`;
-                        
-                        const response = await fetch(pdfUrl);
-                        
-                        if (!response.ok) {
-                            throw new Error(`Erreur HTTP: ${response.status}`);
-                        }
-                        
-                        const result = await response.json();
-                        console.log("Réponse PDF:", result);
-                        
-                        let finalPdfUrl = null;
-                        
-                        if (result.succès === true && result.data && result.data.pdfUrl) {
-                            finalPdfUrl = result.data.pdfUrl;
-                        } else if (result.success === true && result.data && result.data.pdfUrl) {
-                            finalPdfUrl = result.data.pdfUrl;
-                        } else if (result.pdfUrl) {
-                            finalPdfUrl = result.pdfUrl;
-                        } else if (result.data && result.data.url) {
-                            finalPdfUrl = result.data.url;
-                        } else if (result.url) {
-                            finalPdfUrl = result.url;
-                        } else if (result.message === "Le PDF est en cours de génération. Veuillez patienter quelques secondes.") {
-                            this.hideLoadingIndicator();
-                            Utils.showMessage("PDF en cours de génération, veuillez réessayer dans quelques instants", "warning");
-                            return;
-                        } else {
-                            console.error("Structure de réponse inattendue:", result);
-                            throw new Error("Format de réponse inattendu");
-                        }
-                        
-                        if (finalPdfUrl) {
-                            // Ouvrir le PDF dans un nouvel onglet
-                            window.open(finalPdfUrl, '_blank');
-                            Utils.showMessage("PDF généré avec succès!", "success");
-                        } else {
-                            throw new Error("URL du PDF non trouvée dans la réponse");
-                        }
-                        
-                    } catch (error) {
-                        console.error("Erreur PDF:", error);
-                        Utils.showMessage("Erreur lors de la génération du PDF: " + error.message, "error");
-                    } finally {
-                        this.hideLoadingIndicator();
-                    }
-                },
-                
-                showLoadingIndicator(message) {
-                    this.hideLoadingIndicator();
-                    
-                    const loadingDiv = document.createElement('div');
-                    loadingDiv.id = 'pdf-loading-indicator';
-                    loadingDiv.style.cssText = `
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(0, 0, 0, 0.7);
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        align-items: center;
-                        z-index: 10000;
-                        color: white;
-                        font-family: Arial, sans-serif;
-                    `;
-                    
-                    loadingDiv.innerHTML = `
-                        <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; color: #333; max-width: 400px;">
-                            <div style="margin-bottom: 15px;">
-                                <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #4f46e5; border-radius: 50%; margin: 0 auto; animation: spin 1s linear infinite;"></div>
-                            </div>
-                            <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">${message}</div>
-                            <div style="font-size: 12px; color: #666;">Veuillez patienter...</div>
-                            <style>
-                                @keyframes spin {
-                                    0% { transform: rotate(0deg); }
-                                    100% { transform: rotate(360deg); }
-                                }
-                            </style>
-                        </div>
-                    `;
-                    
-                    document.body.appendChild(loadingDiv);
-                },
-                
-                hideLoadingIndicator() {
-                    const existingIndicator = document.getElementById('pdf-loading-indicator');
-                    if (existingIndicator) {
-                        document.body.removeChild(existingIndicator);
-                    }
-                }
-            };
+   // ================================
+// GESTION DE L'IMPRESSION / PDF
+// ================================
+const ImpressionManager = {
+    async generer() {
+        const clientId = document.getElementById('client-id').textContent;
 
+        try {
+            this.showLoadingIndicator('Génération du PDF en cours...');
+
+            const apiUrl = `${CONFIG.API_BASE}?action=addrecu`;
+            await fetch(apiUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clientId })
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            const pdfUrl = `${CONFIG.API_BASE}?action=getrecucaissepdf`;
+            const response = await fetch(pdfUrl);
+
+            if (!response.ok) throw new Error(`Erreur HTTP! statut: ${response.status}`);
+
+            const result = await response.json();
+
+            const isSuccess = result.succès || result.success;
+            let finalPdfUrl = null;
+
+            if (isSuccess && result.data && result.data.pdfUrl) {
+                finalPdfUrl = result.data.pdfUrl;
+            } else if (result.message === "Le PDF est en cours de génération. Veuillez patienter quelques secondes.") {
+                this.hideLoadingIndicator();
+                Utils.showMessage("Le PDF est en cours de génération. Veuillez patienter quelques secondes puis réessayer.", "warning");
+                return;
+            } else {
+                this.hideLoadingIndicator();
+                Utils.showMessage("Erreur inattendue lors de la génération du PDF.", "error");
+                return;
+            }
+
+            if (finalPdfUrl) {
+                this.hideLoadingIndicator();
+                window.open(finalPdfUrl, '_blank');
+                Utils.showMessage("PDF généré avec succès! Ouverture dans un nouvel onglet.", "success");
+            }
+
+        } catch (error) {
+            console.error("❌ Erreur génération PDF:", error);
+            this.hideLoadingIndicator();
+            Utils.showMessage("Erreur lors de la génération du PDF: " + error.message, "error");
+        }
+    },
+
+    showLoadingIndicator(message) {
+        this.hideLoadingIndicator();
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'pdf-loading-indicator';
+        loadingDiv.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 10000;
+        `;
+        loadingDiv.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; color: #333;">
+                <div style="margin-bottom: 15px;">
+                    <div style="width: 2rem; height: 2rem; border: 3px solid #6366f1; border-right-color: transparent;
+                        border-radius: 50%; margin: 0 auto; animation: spin 1s linear infinite;"></div>
+                </div>
+                <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">${message}</div>
+                <div style="font-size: 12px; color: #666;">Veuillez patienter...</div>
+                <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+            </div>
+        `;
+        document.body.appendChild(loadingDiv);
+    },
+
+    hideLoadingIndicator() {
+        const el = document.getElementById('pdf-loading-indicator');
+        if (el) document.body.removeChild(el);
+    }
+};
             // ================================
             // POINT D'ENTRÉE PRINCIPAL
             // ================================
@@ -3020,131 +2983,9 @@ display(historyData) {
             document.addEventListener('DOMContentLoaded', () => App.init());
         })();
 
-        // ==================== IMPRESSION ====================
-        async function printClientDetails() {
-            try {
-                // Collecter toutes les données client
-                const params = new URLSearchParams();
-                
-                // Fonction pour ajouter un paramètre
-                function addParam(id, paramName) {
-                    const el = document.getElementById(id);
-                    if (el && el.textContent) {
-                        // Nettoyer le texte (enlever les suffixes comme " FCFA")
-                        let value = el.textContent.trim();
-                        if (paramName.includes('montant') || paramName.includes('total') || paramName.includes('reste') || paramName.includes('acompte')) {
-                            value = value.replace(' FCFA', '').trim();
-                        }
-                        params.append(paramName, value);
-                    }
-                }
-                
-                // Ajouter tous les paramètres
-                addParam('client-fullname', 'nom');
-                addParam('client-id', 'id');
-                addParam('client-phone', 'tel');
-                addParam('client-company', 'entreprise');
-                addParam('client-delivery-date', 'dateLivraison');
-                addParam('agency', 'agence');
-                addParam('frame-choice', 'monture');
-                addParam('frame-amount', 'montantMonture');
-                addParam('lens-type', 'typeVerre');
-                addParam('lens-range', 'gammeVerres');
-                addParam('lens-amount', 'montantVerres');
-                addParam('net-amount', 'total');
-                addParam('deposit-amount-payment', 'acompte');
-                addParam('remaining-amount', 'reste');
-                addParam('payment-status', 'statut');
-                addParam('policy-number', 'numeroPolice');
-                addParam('complement1-amount', 'complement1');
-                addParam('complement2-amount', 'complement2');
-                
-                // INFORMATIONS D'ASSURANCE
-                const insurancePartEl = document.getElementById('insurance-part');
-                if (insurancePartEl && insurancePartEl.textContent) {
-                    let insuranceValue = insurancePartEl.textContent.trim().replace(' FCFA', '').replace(/\s/g, '');
-                    params.append('insurance-part', insuranceValue);
-                    console.log('✅ Part assurance ajoutée:', insuranceValue, 'FCFA');
-                }
-                
-                const insuranceCompanyEl = document.getElementById('insurance-company');
-                if (insuranceCompanyEl && insuranceCompanyEl.textContent) {
-                    params.append('compagnieAssurance', insuranceCompanyEl.textContent.trim());
-                    console.log('✅ Compagnie assurance ajoutée:', insuranceCompanyEl.textContent.trim());
-                }
-                
-                const insuranceEl = document.getElementById('insurance');
-                if (insuranceEl && insuranceEl.textContent) {
-                    params.append('assurance', insuranceEl.textContent.trim());
-                }
-                
-                const coverageRateEl = document.getElementById('coverage-rate');
-                if (coverageRateEl && coverageRateEl.textContent) {
-                    params.append('tauxCouverture', coverageRateEl.textContent.trim().replace('%', ''));
-                }
-                
-                const insuredNameEl = document.getElementById('insured-name');
-                if (insuredNameEl && insuredNameEl.textContent) {
-                    params.append('assurePrincipal', insuredNameEl.textContent.trim());
-                }
-                
-                // INFORMATIONS FOURNISSEUR
-                const supplierNameEl = document.getElementById('supplier-name');
-                if (supplierNameEl && supplierNameEl.textContent && supplierNameEl.textContent !== '-') {
-                    params.append('fournisseur', supplierNameEl.textContent.trim());
-                }
-                
-                const orderDateEl = document.getElementById('order-date');
-                if (orderDateEl && orderDateEl.textContent && orderDateEl.textContent !== '-') {
-                    params.append('dateCommandeFournisseur', orderDateEl.textContent.trim());
-                }
-                
-                const deliveryDateEl = document.getElementById('delivery-date');
-                if (deliveryDateEl && deliveryDateEl.textContent && deliveryDateEl.textContent !== '-') {
-                    params.append('dateReceptionPrevue', deliveryDateEl.textContent.trim());
-                }
-                
-                // Données médicales
-                addParam('od-sphere', 'odSphere');
-                addParam('od-cylinder', 'odCylindre');
-                addParam('od-axis', 'odAxe');
-                addParam('od-add', 'odAdd');
-                addParam('od-dp', 'odDp');
-                addParam('od-height', 'odHauteur');
-                addParam('og-sphere', 'ogSphere');
-                addParam('og-cylinder', 'ogCylindre');
-                addParam('og-axis', 'ogAxe');
-                addParam('og-add', 'ogAdd');
-                addParam('og-dp', 'ogDp');
-                addParam('og-height', 'ogHauteur');
-                
-                // Date d'impression
-                params.append('date', new Date().toLocaleDateString('fr-FR'));
-                
-                // Calculer le total si nécessaire
-                const montantMonture = parseFloat(document.getElementById('frame-amount')?.textContent.replace(/[^0-9]/g, '') || 0);
-                const montantVerres = parseFloat(document.getElementById('lens-amount')?.textContent.replace(/[^0-9]/g, '') || 0);
-                const total = montantMonture + montantVerres;
-                if (!params.get('total')) {
-                    params.append('total', total.toLocaleString('fr-FR'));
-                }
-                
-                // Afficher tous les paramètres dans la console pour déboguer
-                console.log('=== PARAMÈTRES ENVOYÉS AU REÇU ===');
-                for (let [key, value] of params.entries()) {
-                    console.log(`  ${key}: "${value}"`);
-                }
-
-                const printWindow = window.open(`recu.html?${params.toString()}`, '_blank');     
-            } catch (error) {
-                console.error("❌ Erreur lors de l'impression:", error);
-                if (window.Utils) {
-                    window.Utils.showMessage("Erreur lors de l'impression", "error");
-                } else {
-                    alert("Erreur lors de l'impression");
-                }
-            }
-        }
+  async function printClientDetails() {
+    await app.impression.generer();
+}
     </script>
 </body>
 </html>
