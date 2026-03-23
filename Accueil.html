@@ -5398,6 +5398,12 @@ if (!searchTerm) {
         };
 // MODALE NOUVELLE VENTE
 window.openNewSale = function() {
+    // Vérifier les droits d'accès
+    if (!hasCaisseAccess()) {
+        showAccessDenied("⛔ Accès refusé - Droits caisse requis pour créer une nouvelle vente");
+        return;
+    }
+    
     let modal = $('newSaleModal');
     if (!modal) {
         modal = document.createElement('div');
