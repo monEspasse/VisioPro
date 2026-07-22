@@ -4463,7 +4463,7 @@ async function apiCall(action, method = 'GET', data = null) {
 }
         // CONFIGURATION GLOBALE
         const CONFIG = {
-            API_BASE: 'https://script.google.com/macros/s/AKfycby-VNNfwpup075m9sQMoVtSK097KvQBvG1nujFuHtkwsA-DIQZB7n0CYhBqFk3YdIA_/exec',
+            API_BASE: 'https://script.google.com/macros/s/AKfycbwR8XauCznWasiPNbX3OXcihLFYDT_iDYnvPHCn0md3fA_SlzSR2vvT3H6w9CheVfzY/exec',
             ENDPOINTS: {
                 catalogue: '?action=catalogue',
                 addProduct: '?action=addProduct',
@@ -5369,27 +5369,39 @@ if (!searchTerm) {
             fields.innerHTML = html;
         };
 
-        async function loadFournisseurs(selectId) {
-            const select = $(selectId);
-            if (!select) return;
-            
-            select.innerHTML = '<option value="">-- Chargement --</option>';
-            try {
-                const response = await fetch(`${CONFIG.API_BASE}${CONFIG.ENDPOINTS.catalogue}`);
-                const data = await response.json();
-                if (data.success && data.data.fournisseur) {
-                    data.data.fournisseur.sort().forEach(f => {
-                        const option = document.createElement('option');
-                        option.value = f;
-                        option.textContent = f;
-                        select.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error("Erreur fournisseurs:", error);
-                select.innerHTML = '<option value="">-- Erreur --</option>';
-            }
+async function loadFournisseurs(selectId) {
+    const select = $(selectId);
+    if (!select) return;
+    
+    select.innerHTML = '<option value="">-- Chargement --</option>';
+    
+    try {
+        const token = sessionStorage.getItem('apiToken');
+        if (!token) {
+            console.error('❌ Pas de token');
+            select.innerHTML = '<option value="">-- Non authentifié --</option>';
+            return;
         }
+        
+        const response = await fetch(`${CONFIG.API_BASE}?action=catalogue&token=${encodeURIComponent(token)}`);
+        const data = await response.json();
+        
+        if (data.success && data.data.fournisseur) {
+            select.innerHTML = '<option value="">-- Sélectionnez --</option>';
+            data.data.fournisseur.sort().forEach(f => {
+                const option = document.createElement('option');
+                option.value = f;
+                option.textContent = f;
+                select.appendChild(option);
+            });
+        } else {
+            select.innerHTML = '<option value="">-- Aucune donnée --</option>';
+        }
+    } catch (error) {
+        console.error("Erreur fournisseurs:", error);
+        select.innerHTML = '<option value="">-- Erreur --</option>';
+    }
+}
 
         window.submitProductForm = async function() {
             const form = $('productForm');
@@ -6400,7 +6412,8 @@ function submitSaleForm() {
     })
     .then(() => {
         showSuccess('Vente enregistrée !');
-        setTimeout(() => closeModal(), 1500);
+// on utilise closeVente ( ne pas changer stp)
+        setTimeout(() => closeVente(), 1500);
     })
     .catch(error => {
         console.error('Erreur:', error);
@@ -6720,7 +6733,8 @@ function initProformaModal() {
 // Nouvelle fonction pour charger les données du catalogue pour la proforma
 async function loadProformaCatalogueData() {
     try {
-        const response = await fetch(`${CONFIG.API_BASE}${CONFIG.ENDPOINTS.catalogue}`);
+        const token = sessionStorage.getItem('apiToken');
+        const response = await fetch(`${CONFIG.API_BASE}?action=catalogue&token=${encodeURIComponent(token)}`);
         const data = await response.json();
         
         if (!data.success) return;
@@ -6961,9 +6975,15 @@ async function generateProformaPDF() {
     }
 }
 
+// ================================
+// GESTION DU PDF PROFORMA
+// ================================
 async function checkAndOpenProformaPDF() {
     try {
-        const url = `${CONFIG.API_BASE}${CONFIG.ENDPOINTS.getlastpdf}`;
+        const token = sessionStorage.getItem('apiToken');
+        const url = `${CONFIG.API_BASE}?action=getlastpdf&token=${encodeURIComponent(token)}`;
+        
+        console.log("📄 Récupération du dernier PDF:", url);
         
         const response = await fetch(url);
         
@@ -6972,7 +6992,7 @@ async function checkAndOpenProformaPDF() {
         }
         
         const result = await response.json();
-        console.log("Réponse du serveur:", result);
+        console.log("📄 Réponse du serveur:", result);
         
         const isSuccess = result.succès || result.success;
         const messageText = result.message || "";
@@ -6995,24 +7015,28 @@ async function checkAndOpenProformaPDF() {
         } 
         else {
             console.warn("⚠️ Structure de réponse inattendue:", result);
-            showError("Erreur inattendue lors de la génération du PDF.");
+            showMessage("Erreur inattendue lors de la génération du PDF.", "error");
             return;
         }
         
-
         if (pdfUrl) {
             console.log("📄 Ouverture du PDF:", pdfUrl);
             closeModal();
             window.open(pdfUrl, '_blank');
-            alert("PDF généré avec succès! Ouverture dans un nouvel onglet.");
+            showMessage("PDF généré avec succès! Ouverture dans un nouvel onglet.", "success");
         }
         
     } catch (error) {
         console.error("❌ Erreur ouverture PDF:", error);
-        showError("Erreur lors de l'ouverture du PDF: " + error.message);
+        showMessage("Erreur lors de l'ouverture du PDF: " + error.message, "error");
     }
 }
-    function closeModal() {
+function closeModal() {
+    document.getElementById('modal-container').innerHTML = '';
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+}
+
+    function closeVente() {
         // actualiser la page , pour etre sur que les donnée identique
         // donc ne pas changer
         window.location.href = 'Accueil.html';
@@ -7468,7 +7492,7 @@ async fetchSalesData() {
         }
         
         // Ajouter le token dans l'URL
-        const url = `https://script.google.com/macros/s/AKfycby-VNNfwpup075m9sQMoVtSK097KvQBvG1nujFuHtkwsA-DIQZB7n0CYhBqFk3YdIA_/exec?action=dataclient&token=${encodeURIComponent(token)}`;
+        const url = `https://script.google.com/macros/s/AKfycbwR8XauCznWasiPNbX3OXcihLFYDT_iDYnvPHCn0md3fA_SlzSR2vvT3H6w9CheVfzY/exec?action=dataclient&token=${encodeURIComponent(token)}`;
         
         const response = await fetch(url);
         
