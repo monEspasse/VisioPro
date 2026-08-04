@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VisioPro - Accès Sécurisé</title>
+    <title>VisioPro</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -20,6 +20,9 @@
             --glass-border: rgba(255, 255, 255, 0.35);
             --glass-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --success-color: #22c55e;
+            --error-color: #ff4d4d;
+            --warning-color: #ffb020;
         }
 
         * {
@@ -28,6 +31,8 @@
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
             background: url("image.png") no-repeat center center fixed;
@@ -42,24 +47,20 @@
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.35);
             z-index: -1;
         }
 
         body::after {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 101, 132, 0.1) 0%, transparent 50%),
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 101, 132, 0.12) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
             z-index: -1;
             pointer-events: none;
@@ -67,10 +68,8 @@
 
         .floating-elements {
             position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
             overflow: hidden;
             z-index: -1;
             pointer-events: none;
@@ -78,7 +77,7 @@
 
         .floating-element {
             position: absolute;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 50%;
             animation: float 15s infinite ease-in-out;
         }
@@ -96,10 +95,10 @@
 
         header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 15px 30px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             position: relative;
             z-index: 10;
         }
@@ -108,6 +107,12 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            animation: logoPop 0.6s ease-out;
+        }
+
+        @keyframes logoPop {
+            from { opacity: 0; transform: translateY(-12px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .logo-container img {
@@ -128,9 +133,9 @@
 
         .login-container {
             width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
-            animation: fadeIn 0.8s ease-out;
+            max-width: 440px;
+            margin: auto;
+            animation: fadeIn 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             z-index: 10;
         }
@@ -142,10 +147,10 @@
 
         .login-box {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 25px;
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            padding: 42px 40px;
+            border-radius: 26px;
             border: 1px solid var(--glass-border);
             box-shadow: var(--glass-shadow);
             position: relative;
@@ -156,56 +161,74 @@
         .login-box::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
             opacity: 0;
             transition: var(--transition);
+            pointer-events: none;
         }
 
         .login-box:hover::before { opacity: 1; }
-        .login-box:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+        .login-box:hover { transform: translateY(-4px); box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3); }
+
+        .lock-icon-wrap {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.45);
+        }
+
+        .lock-icon-wrap i { color: #fff; font-size: 1.6rem; }
 
         h2 {
             text-align: center;
             color: var(--text-light);
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            font-size: 1.7rem;
+            margin-bottom: 6px;
             font-weight: 600;
             text-shadow: 0 0 6px rgba(0,0,0,0.25);
-            position: relative;
-            padding-bottom: 15px;
         }
 
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            border-radius: 3px;
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 28px;
         }
 
         label {
             color: var(--text-light);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-bottom: 8px;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             font-weight: 500;
         }
 
-        .input-group { margin-bottom: 25px; }
+        .caps-lock-warning {
+            color: var(--warning-color);
+            font-size: 0.72rem;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+        .caps-lock-warning.visible { display: flex; }
+
+        .input-group { margin-bottom: 22px; }
 
         .input-field {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.16);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
             border-radius: 15px;
             padding: 0 15px;
             backdrop-filter: blur(8px);
@@ -214,15 +237,17 @@
             overflow: hidden;
         }
 
+        .input-field.field-error { border-color: var(--error-color); box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.18); }
+        .input-field.field-valid { border-color: var(--success-color); }
+
         .input-field::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: var(--transition);
+            transition: left 0.6s ease;
+            pointer-events: none;
         }
 
         .input-field:focus-within::before { left: 100%; }
@@ -238,12 +263,12 @@
         }
 
         .input-field input::placeholder { color: var(--text-muted); }
-        .input-field i { color: var(--text-light); font-size: 1rem; margin-right: 10px; transition: var(--transition); }
-        .input-field:focus-within { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3); }
-        .input-field:focus-within i { color: var(--primary-light); }
+        .input-field i { color: var(--text-light); font-size: 1rem; margin-right: 10px; transition: var(--transition); flex-shrink: 0; }
+        .input-field:focus-within { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3); transform: translateY(-1px); }
+        .input-field:focus-within i:first-child { color: var(--primary-light); }
 
-        .toggle-password { cursor: pointer; transition: var(--transition); }
-        .toggle-password:hover { color: var(--primary-light); transform: scale(1.1); }
+        .toggle-password { cursor: pointer; transition: var(--transition); padding: 4px; margin-right: -4px !important; }
+        .toggle-password:hover { color: var(--primary-light); transform: scale(1.15); }
 
         .login-button {
             width: 100%;
@@ -253,201 +278,193 @@
             color: var(--text-light);
             font-weight: 700;
             font-size: 1rem;
+            letter-spacing: 0.02em;
             cursor: pointer;
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            backdrop-filter: blur(6px);
             transition: var(--transition);
             position: relative;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .login-button::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: var(--transition);
+            transition: left 0.6s ease;
         }
 
         .login-button:hover::before { left: 100%; }
-        .login-button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(108, 99, 255, 0.6); }
-        .login-button:active { transform: translateY(0); }
-        .login-button.disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
-
-        .login-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            font-size: 0.85rem;
-        }
-
-        .remember-me { display: flex; align-items: center; gap: 8px; color: var(--text-muted); }
-        .remember-me input { accent-color: var(--primary-color); }
-        .forgot-password { color: var(--text-muted); text-decoration: none; transition: var(--transition); }
-        .forgot-password:hover { color: var(--primary-light); }
-
-        .separator {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .separator::before, .separator::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .separator span { padding: 0 15px; }
-
-        .social-login {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .social-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: var(--text-light);
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .social-btn:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-3px); }
-        .social-btn.google:hover { color: #DB4437; }
-        .social-btn.facebook:hover { color: #4267B2; }
-        .social-btn.twitter:hover { color: #1DA1F2; }
-
-        .register-link {
-            text-align: center;
-            margin-top: 25px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .register-link a { color: var(--primary-light); text-decoration: none; font-weight: 600; transition: var(--transition); }
-        .register-link a:hover { color: var(--accent-color); }
+        .login-button:hover:not(.disabled) { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(108, 99, 255, 0.6); }
+        .login-button:active:not(.disabled) { transform: translateY(0) scale(0.98); }
+        .login-button.disabled { opacity: 0.55; cursor: not-allowed; pointer-events: none; box-shadow: none; }
+        .login-button.loading { pointer-events: none; }
 
         #message {
-            margin-top: 15px;
-            padding: 12px;
-            font-size: 0.9rem;
-            border-radius: 10px;
+            margin-top: 16px;
+            padding: 12px 14px;
+            font-size: 0.87rem;
+            border-radius: 12px;
             text-align: center;
             display: none;
             backdrop-filter: blur(10px);
+            animation: slideDown 0.3s ease-out;
+            line-height: 1.4;
         }
 
-        .error-message { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.3); }
-        .success-message { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
-        .warning-message { background: rgba(255, 165, 0, 0.2); color: #ffa500; border: 1px solid rgba(255, 165, 0, 0.3); }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .error-message { background: rgba(255, 77, 77, 0.18); color: #ff8080; border: 1px solid rgba(255, 77, 77, 0.35); }
+        .success-message { background: rgba(34, 197, 94, 0.18); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35); }
+        .warning-message { background: rgba(255, 176, 32, 0.18); color: #ffc857; border: 1px solid rgba(255, 176, 32, 0.35); }
 
         .welcome-message {
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            padding: 40px 60px;
-            border-radius: 30px;
+            padding: 40px 55px;
+            border-radius: 28px;
             border: 1px solid var(--glass-border);
             box-shadow: var(--glass-shadow);
             z-index: 1000;
             text-align: center;
-            animation: fadeInScale 0.5s ease-out;
+            animation: fadeInScale 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: none;
         }
 
         @keyframes fadeInScale {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
             to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
-        .welcome-message i { font-size: 70px; color: var(--primary-light); margin-bottom: 20px; }
-        .welcome-message h3 { color: var(--text-light); font-size: 2rem; margin-bottom: 15px; font-weight: 600; }
-        .welcome-message p { color: var(--text-muted); font-size: 1.1rem; }
-        .welcome-message .user-name { color: var(--accent-color); font-weight: 700; font-size: 1.3rem; margin-top: 10px; }
+        .welcome-message i {
+            font-size: 60px;
+            color: var(--primary-light);
+            margin-bottom: 18px;
+            display: inline-block;
+            animation: iconBounce 0.6s ease-out 0.15s both;
+        }
+
+        @keyframes iconBounce {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .welcome-message h3 { color: var(--text-light); font-size: 1.7rem; margin-bottom: 12px; font-weight: 600; }
+        .welcome-message p { color: var(--text-muted); font-size: 1rem; }
+        .welcome-message .user-name { color: var(--accent-color); font-weight: 700; font-size: 1.25rem; margin-top: 8px; }
+
+        .welcome-progress {
+            margin-top: 18px;
+            width: 100%;
+            height: 3px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .welcome-progress-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--accent-color));
+            transform-origin: left;
+            animation: shrinkBar 3s linear forwards;
+        }
+        @keyframes shrinkBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
         .welcome-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
             z-index: 999;
             display: none;
+            animation: overlayFade 0.3s ease-out;
         }
+        @keyframes overlayFade { from { opacity: 0; } to { opacity: 1; } }
 
         .countdown-timer {
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 1.05rem;
+            font-weight: 600;
             color: var(--accent-color);
-            margin-top: 10px;
+            margin-top: 12px;
             text-align: center;
             background: rgba(0,0,0,0.3);
-            padding: 8px;
+            padding: 10px;
             border-radius: 50px;
             backdrop-filter: blur(5px);
         }
 
+        footer.page-footer {
+            text-align: center;
+            padding: 18px 0 4px;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            position: relative;
+            z-index: 10;
+        }
+
         @media (max-width: 768px) {
-            header { flex-direction: column; gap: 20px; padding: 15px 20px; }
-            .login-box { padding: 30px 25px; }
+            header { padding: 10px 20px; margin-bottom: 24px; }
+            .login-box { padding: 32px 26px; }
             h2 { font-size: 1.5rem; }
-            .login-options { flex-direction: column; gap: 15px; align-items: flex-start; }
-            .welcome-message { padding: 30px 40px; width: 90%; }
-            .welcome-message h3 { font-size: 1.5rem; }
-            .welcome-message i { font-size: 50px; }
+            .welcome-message { padding: 30px 40px; width: 88%; }
+            .welcome-message h3 { font-size: 1.4rem; }
+            .welcome-message i { font-size: 48px; }
         }
 
         @media (max-width: 480px) {
             .logo-container h1 { font-size: 1.5rem; }
-            .login-box { padding: 25px 20px; }
-            h2 { font-size: 1.4rem; }
-            .welcome-message { padding: 25px 30px; }
-            .welcome-message h3 { font-size: 1.3rem; }
+            .login-box { padding: 26px 20px; }
+            h2 { font-size: 1.35rem; }
+            .welcome-message { padding: 25px 26px; }
+            .welcome-message h3 { font-size: 1.25rem; }
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+            20%, 40%, 60%, 80% { transform: translateX(6px); }
         }
-        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        .shake { animation: shake 0.45s cubic-bezier(.36,.07,.19,.97) both; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Focus visible pour accessibilité clavier */
+        a:focus-visible, button:focus-visible, input:focus-visible, i.toggle-password:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 2px;
         }
-        .pulse { animation: pulse 1.5s infinite ease-in-out; }
 
-        input:disabled { opacity: 0.6; cursor: not-allowed; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
+
+.lock-icon-wrap { overflow: hidden; }
+.lock-icon-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.lock-icon-wrap i { display: none; align-items: center; justify-content: center; width: 100%; height: 100%; }
     </style>
 </head>
 
 <body>
-    <div class="floating-elements">
+    <div class="floating-elements" aria-hidden="true">
         <div class="floating-element"></div>
         <div class="floating-element"></div>
         <div class="floating-element"></div>
@@ -455,58 +472,60 @@
     </div>
 
     <div class="welcome-overlay" id="welcomeOverlay"></div>
-    <div class="welcome-message" id="welcomeMessage">
+    <div class="welcome-message" id="welcomeMessage" role="status" aria-live="polite">
         <i class="fas fa-user-circle"></i>
         <h3>Bonjour</h3>
         <div class="user-name" id="userNameDisplay"></div>
         <p>Bienvenue sur VisioPro</p>
+        <div class="welcome-progress"><div class="welcome-progress-fill" id="welcomeProgressFill"></div></div>
     </div>
-
-    <header>
-        <div class="logo-container">
-            <img src="logoSF.png" alt="Logo" onerror="this.style.display='none'">
-            <h1>VisioPro</h1>
-        </div>
-    </header>
 
     <div class="login-container">
         <div class="login-box">
-            <h2>Connexion</h2>
+            <div class="lock-icon-wrap" aria-hidden="true">
+    <img src="logoAppli.png" alt="" class="lock-icon-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <i class="fas fa-shield-halved" style="display:none;"></i>
+</div>
+            <h2>VisioPro</h2>
+            
 
-            <form id="login-form">
+            <form id="login-form" novalidate>
                 <div class="input-group">
-                    <label>Nom d'utilisateur</label>
-                    <div class="input-field">
-                        <i class="fa fa-user"></i>
-                        <input type="text" id="username" placeholder="Entrez votre nom" required autocomplete="username">
+                    <div class="input-field" id="usernameField">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input type="text" id="username" placeholder="Entrez votre nom" required autocomplete="username" aria-required="true">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Mot de passe</label>
-                    <div class="input-field">
-                        <i class="fa fa-lock"></i>
-                        <input type="password" id="password" placeholder="Mot de passe" required autocomplete="current-password">
-                        <i class="fa fa-eye toggle-password" id="togglePassword"></i>
+                    <label for="password">
+                        <span class="caps-lock-warning" id="capsLockWarning"><i class="fas fa-triangle-exclamation"></i> Verr. Maj activé</span>
+                    </label>
+                    <div class="input-field" id="passwordField">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input type="password" id="password" placeholder="Mot de passe" required autocomplete="current-password" aria-required="true">
+                        <i class="fa fa-eye toggle-password" id="togglePassword" tabindex="0" role="button" aria-label="Afficher le mot de passe"></i>
                     </div>
                 </div>
 
                 <button type="submit" class="login-button" id="loginBtn">
-                    <i class="fas fa-sign-in-alt"></i> Connexion
+                    <i class="fas fa-sign-in-alt"></i> <span id="loginBtnText">Connexion</span>
                 </button>
 
-                <div id="message"></div>
-                <div id="countdownDisplay" class="countdown-timer" style="display: none;"></div>
+                <div id="message" role="alert"></div>
+                <div id="countdownDisplay" class="countdown-timer" style="display: none;" role="status" aria-live="polite"></div>
             </form>
         </div>
     </div>
 
+    <footer class="page-footer">© VisioPro — Accès réservé au personnel autorisé</footer>
+
     <script>
         // ==================== CONFIGURATION ====================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwR8XauCznWasiPNbX3OXcihLFYDT_iDYnvPHCn0md3fA_SlzSR2vvT3H6w9CheVfzY/exec';
-        
+
         // ==================== FONCTIONS DE SÉCURITÉ ====================
-        
+
         function sanitizeInput(input) {
             if (!input) return '';
             return String(input)
@@ -518,22 +537,22 @@
                 })
                 .substring(0, 255);
         }
-        
+
         function isValidUsername(username) {
             const validPattern = /^[a-zA-Z0-9_@.\-]{3,50}$/;
             return validPattern.test(username);
         }
-        
+
         // ==================== GESTION DU TOKEN ====================
-        
+
         function getApiToken() {
             return sessionStorage.getItem('apiToken');
         }
-        
+
         function setApiToken(token) {
             if (token) sessionStorage.setItem('apiToken', token);
         }
-        
+
         function clearApiToken() {
             sessionStorage.removeItem('apiToken');
             sessionStorage.removeItem('utilisateur');
@@ -542,25 +561,22 @@
             sessionStorage.removeItem('agence');
             sessionStorage.removeItem('analyse');
         }
-        
-        
+
+
         async function apiCall(action, data = {}) {
             const token = getApiToken();
-            
+
             if (!token && action !== 'login') {
                 console.error('❌ Pas de token, redirection vers login');
                 window.location.href = 'index.html';
                 throw new Error('Non authentifié');
             }
-            
-            // Construire l'URL avec tous les paramètres (méthode GET)
+
             const params = new URLSearchParams();
             params.append('action', action);
-            
-            // Ajouter le token si présent
+
             if (token) params.append('token', token);
-            
-            // Ajouter toutes les données
+
             for (const [key, value] of Object.entries(data)) {
                 if (value !== undefined && value !== null) {
                     if (typeof value === 'object') {
@@ -570,34 +586,33 @@
                     }
                 }
             }
-            
+
             const url = `${SCRIPT_URL}?${params.toString()}`;
-            
-            // Pour les logs (masquer les données sensibles)
+
             const logUrl = url.replace(/password=[^&]*/, 'password=***');
             console.log(`📡 API Call (GET): ${action}`, logUrl);
-            
+
             try {
                 const response = await fetch(url, {
                     method: 'GET',
                     mode: 'cors',
                     cache: 'no-cache'
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
-                
+
                 const result = await response.json();
-                
+
                 if (!result.success && result.message && result.message.includes('Session')) {
                     console.warn('⚠️ Session expirée, redirection');
                     clearApiToken();
                     window.location.href = 'index.html';
                 }
-                
+
                 return result;
-                
+
             } catch (error) {
                 console.error(`❌ Erreur API ${action}:`, error);
                 return {
@@ -607,19 +622,19 @@
                 };
             }
         }
-        
+
 
         const STORAGE_KEY = "visiopro_login_block";
         const MAX_ATTEMPTS = 3;
         const BLOCK_DURATION_MS = 60 * 1000;
-        
+
         let blockData = null;
         let countdownInterval = null;
-        
+
         function initBlockSystem() {
             const stored = localStorage.getItem(STORAGE_KEY);
             const now = Date.now();
-            
+
             if (stored) {
                 try {
                     blockData = JSON.parse(stored);
@@ -640,21 +655,21 @@
                 resetBlockState();
             }
         }
-        
+
         function resetBlockState() {
             blockData = { attempts: 0, isBlocked: false, blockedUntil: null, lastAttemptTime: null };
             saveBlockState();
         }
-        
+
         function saveBlockState() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(blockData));
         }
-        
+
         function registerFailedAttempt() {
             if (blockData.isBlocked) return false;
             blockData.attempts++;
             blockData.lastAttemptTime = Date.now();
-            
+
             if (blockData.attempts >= MAX_ATTEMPTS) {
                 blockData.isBlocked = true;
                 blockData.blockedUntil = Date.now() + BLOCK_DURATION_MS;
@@ -665,27 +680,27 @@
             saveBlockState();
             return false;
         }
-        
+
         function activateBlockade(remainingMs) {
             const usernameInput = document.getElementById('username');
             const passwordInput = document.getElementById('password');
             const loginBtn = document.getElementById('loginBtn');
             const messageDiv = document.getElementById('message');
             const countdownDiv = document.getElementById('countdownDisplay');
-            
+
             usernameInput.disabled = true;
             passwordInput.disabled = true;
             loginBtn.disabled = true;
             loginBtn.classList.add('disabled');
-            
+
             const secondsRemaining = Math.ceil(remainingMs / 1000);
             messageDiv.textContent = `⛔ Trop de tentatives échouées. Accès bloqué pour ${secondsRemaining} secondes.`;
             messageDiv.className = 'warning-message';
             messageDiv.style.display = 'block';
             countdownDiv.style.display = 'block';
-            
+
             if (countdownInterval) clearInterval(countdownInterval);
-            
+
             let remaining = remainingMs;
             countdownInterval = setInterval(() => {
                 remaining -= 1000;
@@ -700,24 +715,24 @@
                 }
             }, 1000);
         }
-        
+
         function deactivateBlockade() {
             const usernameInput = document.getElementById('username');
             const passwordInput = document.getElementById('password');
             const loginBtn = document.getElementById('loginBtn');
             const messageDiv = document.getElementById('message');
             const countdownDiv = document.getElementById('countdownDisplay');
-            
+
             usernameInput.disabled = false;
             passwordInput.disabled = false;
             loginBtn.disabled = false;
             loginBtn.classList.remove('disabled');
             messageDiv.style.display = 'none';
             countdownDiv.style.display = 'none';
-            
+
             if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
         }
-        
+
         function isAccessBlocked() {
             if (blockData && blockData.isBlocked) {
                 if (Date.now() < blockData.blockedUntil) return true;
@@ -727,23 +742,31 @@
             }
             return false;
         }
-        
+
         // ==================== FONCTIONS PRINCIPALES ====================
-        
+
         const form = document.getElementById('login-form');
         const message = document.getElementById('message');
         const togglePassword = document.getElementById('togglePassword');
         const passwordInputField = document.getElementById('password');
+        const usernameInputField = document.getElementById('username');
+        const usernameFieldWrap = document.getElementById('usernameField');
+        const passwordFieldWrap = document.getElementById('passwordField');
         const welcomeMessageDiv = document.getElementById('welcomeMessage');
         const welcomeOverlay = document.getElementById('welcomeOverlay');
         const userNameDisplay = document.getElementById('userNameDisplay');
-        
+        const welcomeProgressFill = document.getElementById('welcomeProgressFill');
+        const capsLockWarning = document.getElementById('capsLockWarning');
+
         function showWelcomeMessage(username) {
             const safeUsername = sanitizeInput(username);
             userNameDisplay.textContent = safeUsername;
             welcomeOverlay.style.display = 'block';
             welcomeMessageDiv.style.display = 'block';
-            
+            welcomeProgressFill.style.animation = 'none';
+            void welcomeProgressFill.offsetWidth; // relance l'animation
+            welcomeProgressFill.style.animation = 'shrinkBar 3s linear forwards';
+
             setTimeout(() => {
                 welcomeMessageDiv.style.animation = 'fadeInScale 0.3s reverse';
                 setTimeout(() => {
@@ -753,58 +776,92 @@
                 }, 300);
             }, 3000);
         }
-        
+
         if (togglePassword) {
-            togglePassword.addEventListener('click', function() {
+            const togglePasswordVisibility = function() {
                 const type = passwordInputField.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInputField.setAttribute('type', type);
                 this.classList.toggle('fa-eye');
                 this.classList.toggle('fa-eye-slash');
+                this.setAttribute('aria-label', type === 'password' ? 'Afficher le mot de passe' : 'Masquer le mot de passe');
+                passwordInputField.focus();
+            };
+            togglePassword.addEventListener('click', togglePasswordVisibility);
+            togglePassword.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); togglePasswordVisibility.call(this); }
             });
         }
-        
+
+        // Détection Verrouillage Majuscules
+        passwordInputField.addEventListener('keyup', function(e) {
+            if (typeof e.getModifierState === 'function') {
+                const isCaps = e.getModifierState('CapsLock');
+                capsLockWarning.classList.toggle('visible', isCaps);
+            }
+        });
+        passwordInputField.addEventListener('blur', () => capsLockWarning.classList.remove('visible'));
+
+        // Efface l'état d'erreur dès que l'utilisateur retape
+        function clearFieldState(wrap) {
+            wrap.classList.remove('field-error');
+        }
+        usernameInputField.addEventListener('input', () => {
+            clearFieldState(usernameFieldWrap);
+            if (message.style.display === 'block' && message.className.includes('error')) message.style.display = 'none';
+        });
+        passwordInputField.addEventListener('input', () => {
+            clearFieldState(passwordFieldWrap);
+            if (message.style.display === 'block' && message.className.includes('error')) message.style.display = 'none';
+        });
+
         // Formulaire de connexion
         if (form) {
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
+
                 if (isAccessBlocked()) {
                     message.textContent = "⛔ Accès temporairement bloqué. Veuillez patienter.";
                     message.className = 'warning-message';
                     message.style.display = 'block';
                     return;
                 }
-                
-                const username = sanitizeInput(document.getElementById('username').value.trim());
-                const password = document.getElementById('password').value.trim();
-                
+
+                const username = sanitizeInput(usernameInputField.value.trim());
+                const password = passwordInputField.value.trim();
+
                 if (!username || !password) {
                     message.textContent = "Veuillez remplir tous les champs.";
                     message.className = 'error-message';
                     message.style.display = 'block';
+                    if (!username) usernameFieldWrap.classList.add('field-error');
+                    if (!password) passwordFieldWrap.classList.add('field-error');
+                    form.classList.add('shake');
+                    setTimeout(() => form.classList.remove('shake'), 450);
                     return;
                 }
-                
+
                 if (!isValidUsername(username)) {
                     message.textContent = "Nom d'utilisateur invalide (3-50 caractères)";
                     message.className = 'error-message';
                     message.style.display = 'block';
+                    usernameFieldWrap.classList.add('field-error');
                     return;
                 }
-                
+
                 const submitBtn = form.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+                const loginBtnText = document.getElementById('loginBtnText');
+                const originalBtnHTML = submitBtn.innerHTML;
+                submitBtn.classList.add('loading');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Connexion...</span>';
                 submitBtn.disabled = true;
                 message.style.display = 'none';
-                
+
                 try {
-                    // Utiliser GET pour éviter CORS
                     const result = await apiCall('login', {
                         username: username,
                         password: password
                     });
-                    
+
                     if (result.success && result.data && result.data.token) {
                         setApiToken(result.data.token);
                         sessionStorage.setItem("utilisateur", username);
@@ -812,28 +869,34 @@
                         sessionStorage.setItem("hasCaisseAccess", result.data.hasCaisseAccess ? "true" : "false");
                         sessionStorage.setItem("agence", result.data.agence || "");
                         sessionStorage.setItem("analyse", result.data.analyse || "");
-                        
+
                         resetBlockState();
                         deactivateBlockade();
                         showWelcomeMessage(username);
-                        
+
+                        submitBtn.innerHTML = '<i class="fas fa-check"></i> <span>Connecté</span>';
                         message.textContent = 'Connexion réussie ! Redirection...';
                         message.className = 'success-message';
                         message.style.display = 'block';
-                        
+                        usernameFieldWrap.classList.add('field-valid');
+                        passwordFieldWrap.classList.add('field-valid');
+
                         setTimeout(() => { window.location.href = 'Accueil.html'; }, 2000);
-                        
+
                     } else {
                         const wasBlocked = registerFailedAttempt();
                         const remainingAttempts = MAX_ATTEMPTS - blockData.attempts;
-                        
+
+                        usernameFieldWrap.classList.add('field-error');
+                        passwordFieldWrap.classList.add('field-error');
+
                         if (wasBlocked) {
                             message.textContent = "⛔ 3 tentatives échouées. Accès bloqué 1 minute.";
                             message.className = 'warning-message';
                         } else {
                             message.textContent = result.message || 'Identifiants incorrects.';
                             message.className = 'error-message';
-                            
+
                             if (remainingAttempts > 0 && remainingAttempts < MAX_ATTEMPTS) {
                                 setTimeout(() => {
                                     if (message.textContent.includes('incorrects')) {
@@ -850,28 +913,29 @@
                         form.classList.add('shake');
                         setTimeout(() => form.classList.remove('shake'), 500);
                     }
-                    
+
                 } catch (error) {
                     console.error('Erreur:', error);
                     message.textContent = "Erreur de connexion au serveur.";
                     message.className = 'error-message';
                     message.style.display = 'block';
                 } finally {
-                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.classList.remove('loading');
+                    submitBtn.innerHTML = originalBtnHTML;
                     if (!blockData.isBlocked) submitBtn.disabled = false;
                 }
             });
         }
-        
+
         // Initialisation
         console.log('=== APPLICATION SÉCURISÉE DÉMARRÉE ===');
         initBlockSystem();
-        
+
         if (isAccessBlocked() && blockData && blockData.blockedUntil) {
             const remaining = blockData.blockedUntil - Date.now();
             if (remaining > 0) activateBlockade(remaining);
         }
-        
+
         if (blockData && blockData.attempts > 0 && blockData.attempts < MAX_ATTEMPTS && !blockData.isBlocked) {
             const remaining = MAX_ATTEMPTS - blockData.attempts;
             message.textContent = `⚠️ Attention : ${remaining} tentative(s) restante(s) avant blocage.`;
@@ -881,7 +945,12 @@
                 if (message.textContent.includes('restante')) message.style.display = 'none';
             }, 5000);
         }
-        
+
+        // Autofocus sur le champ nom d'utilisateur si non bloqué
+        if (!(blockData && blockData.isBlocked)) {
+            usernameInputField.focus();
+        }
+
         console.log('=== APPLICATION PRÊTE ===');
     </script>
 </body>
